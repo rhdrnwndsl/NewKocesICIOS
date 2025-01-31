@@ -398,7 +398,7 @@ class KaKaoPaySdk {
         if TotalMoney > compareMoney {
             if KaKaoPaySdk.instance.전자서명사용여부 == "0" || KaKaoPaySdk.instance.전자서명사용여부 == "4" {
                 KaKaoPaySdk.instance.전자서명사용여부 = "4"
-                Utils.CardAnimationViewControllerInit(Message: scan_result == define.EasyPayMethod.Kakao.rawValue ? "서버에 조회중입니다":"서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
+                Utils.CardAnimationViewControllerInit(Message: scan_result == define.EasyPayMethod.Kakao.rawValue ? "서버에 조회중입니다":"서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                     switch scan_result {
@@ -608,7 +608,7 @@ class KaKaoPaySdk {
             }
             
         } else {
-            Utils.CardAnimationViewControllerInit(Message: scan_result == define.EasyPayMethod.Kakao.rawValue ? "서버에 조회중입니다":"서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
+            Utils.CardAnimationViewControllerInit(Message: scan_result == define.EasyPayMethod.Kakao.rawValue ? "서버에 조회중입니다":"서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
             KaKaoPaySdk.instance.전자서명사용여부 = "5"
             DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                 switch scan_result {
@@ -744,8 +744,6 @@ class KaKaoPaySdk {
             if !KaKaoPaySdk.instance.취소구분.isEmpty { 취소정보 = KaKaoPaySdk.instance.취소구분 + String(KaKaoPaySdk.instance.원거래일자.prefix(6)) + KaKaoPaySdk.instance.원승인번호 }
             KaKaoPaySdk.instance.전자서명사용여부 = "B"
             
-            Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
-            
             var convertMoney = ""
             var convertTax = ""
             var convertSvc = ""
@@ -771,6 +769,10 @@ class KaKaoPaySdk {
             
 //            convertMoney = Utils.leftPad(str: KaKaoPaySdk.instance.거래금액.trimmingCharacters(in: .whitespaces), fillChar: "0", length: 12)
             convertMoney = KaKaoPaySdk.instance.거래금액.trimmingCharacters(in: .whitespaces)
+            
+            var _TotalMoney = Int(KaKaoPaySdk.instance.거래금액.trimmingCharacters(in: .whitespaces))! + Int(KaKaoPaySdk.instance.봉사료.trimmingCharacters(in: .whitespaces))! + Int(KaKaoPaySdk.instance.세금.trimmingCharacters(in: .whitespaces))! + Int(KaKaoPaySdk.instance.비과세.trimmingCharacters(in: .whitespaces))!
+            Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney:String(_TotalMoney), Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
+            
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                 switch Scan_Data_Parser(Scan: KaKaoPaySdk.instance.바코드번호) {
@@ -1082,7 +1084,7 @@ class KaKaoPaySdk {
                     if _totalMoney > compareMoney {
                         if KaKaoPaySdk.instance.전자서명사용여부 == "0" || KaKaoPaySdk.instance.전자서명사용여부 == "4" {
                             KaKaoPaySdk.instance.전자서명사용여부 = "4"
-                            Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
+                            Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney:String(_totalMoney), Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                                 KocesSdk.instance.KakaoPay(Command: KaKaoPaySdk.instance.전문번호, Tid: KaKaoPaySdk.instance._Tid, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: KaKaoPaySdk.instance.단말버전, Etc: KaKaoPaySdk.instance.단말추가정보, CancelInfo: "", InputType: KaKaoPaySdk.instance.입력방법, BarCode: KaKaoPaySdk.instance.바코드번호, OTCCardCode: Command.StrToArr(String(_resData["Otc"] ?? "")), Money: Money, Tax: Tax, ServiceCharge: ServiceCharge, TaxFree: TaxFree, Currency: KaKaoPaySdk.instance.통화코드, Installment: KaKaoPaySdk.instance.할부개월, PayType: String(_resData["AuthType"]!), CancelMethod: "0", CancelType: "B", StoreCode: KaKaoPaySdk.instance.점포코드, PEM: String(_resData["Pem"]!), trid: String(_resData["Trid"]!), CardBIN: String(_resData["CardNo"]!), SearchNumber: String(_resData["TradeNo"]!), WorkingKeyIndex: KaKaoPaySdk.instance._WorkingKeyIndex, SignUse: KaKaoPaySdk.instance.전자서명사용여부, SignPadSerial: KaKaoPaySdk.instance.사인패드시리얼번호, SignData: KaKaoPaySdk.instance.전자서명데이터, StoreData: KaKaoPaySdk.instance.가맹점데이터,AppToApp: KaKaoPaySdk.instance.mDBAppToApp)
                             }
@@ -1106,7 +1108,7 @@ class KaKaoPaySdk {
                                     Utils.topMostViewController()?.present(signPad, animated: true, completion: nil)
                                 }
                             } else {
-                                Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
+                                Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney:String(_totalMoney), Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                                     KocesSdk.instance.KakaoPay(Command: KaKaoPaySdk.instance.전문번호, Tid: KaKaoPaySdk.instance._Tid, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: KaKaoPaySdk.instance.단말버전, Etc: KaKaoPaySdk.instance.단말추가정보, CancelInfo: "", InputType: KaKaoPaySdk.instance.입력방법, BarCode: KaKaoPaySdk.instance.바코드번호, OTCCardCode: Command.StrToArr(String(_resData["Otc"] ?? "")), Money: Money, Tax: Tax, ServiceCharge: ServiceCharge, TaxFree: TaxFree, Currency: KaKaoPaySdk.instance.통화코드, Installment: KaKaoPaySdk.instance.할부개월, PayType: String(_resData["AuthType"]!), CancelMethod: "0", CancelType: "B", StoreCode: KaKaoPaySdk.instance.점포코드, PEM: String(_resData["Pem"]!), trid: String(_resData["Trid"]!), CardBIN: String(_resData["CardNo"]!), SearchNumber: String(_resData["TradeNo"]!), WorkingKeyIndex: KaKaoPaySdk.instance._WorkingKeyIndex, SignUse: KaKaoPaySdk.instance.전자서명사용여부, SignPadSerial: KaKaoPaySdk.instance.사인패드시리얼번호, SignData: KaKaoPaySdk.instance.전자서명데이터, StoreData: KaKaoPaySdk.instance.가맹점데이터,AppToApp: KaKaoPaySdk.instance.mDBAppToApp)
                                 }
@@ -1118,7 +1120,7 @@ class KaKaoPaySdk {
                         
                     } else {
                         KaKaoPaySdk.instance.전자서명사용여부 = "5"
-                        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
+                        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney:String(_totalMoney), Listener: KaKaoPaySdk.instance.paylistener as! PayResultDelegate)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                             KocesSdk.instance.KakaoPay(Command: KaKaoPaySdk.instance.전문번호, Tid: KaKaoPaySdk.instance._Tid, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: KaKaoPaySdk.instance.단말버전, Etc: KaKaoPaySdk.instance.단말추가정보, CancelInfo: "", InputType: KaKaoPaySdk.instance.입력방법, BarCode: KaKaoPaySdk.instance.바코드번호, OTCCardCode: Command.StrToArr(String(_resData["Otc"] ?? "")), Money: Money, Tax: Tax, ServiceCharge: ServiceCharge, TaxFree: TaxFree, Currency: KaKaoPaySdk.instance.통화코드, Installment: KaKaoPaySdk.instance.할부개월, PayType: String(_resData["AuthType"]!), CancelMethod: "0", CancelType: "B", StoreCode: KaKaoPaySdk.instance.점포코드, PEM: String(_resData["Pem"]!), trid: String(_resData["Trid"]!), CardBIN: String(_resData["CardNo"]!), SearchNumber: String(_resData["TradeNo"]!), WorkingKeyIndex: KaKaoPaySdk.instance._WorkingKeyIndex, SignUse: KaKaoPaySdk.instance.전자서명사용여부, SignPadSerial: KaKaoPaySdk.instance.사인패드시리얼번호, SignData: KaKaoPaySdk.instance.전자서명데이터, StoreData: KaKaoPaySdk.instance.가맹점데이터,AppToApp: KaKaoPaySdk.instance.mDBAppToApp)
                         }

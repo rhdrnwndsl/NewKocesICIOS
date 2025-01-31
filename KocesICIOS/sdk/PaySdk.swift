@@ -320,7 +320,8 @@ class PaySdk
             return;
         }
         
-        Utils.CardAnimationViewControllerInit(Message: "MSR카드를 읽어주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var TotalMoney:Int = Int(_icMoney)! + _tax + _serviceCharge
+        Utils.CardAnimationViewControllerInit(Message: "MSR카드를 읽어주세요", isButton: true, CountDown: Setting.shared.mDgTmout, TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         
 //        mPosSdk.__PosInit("99",null,mPosSdk.AllDeviceAddr());  //먼저 장비를 초기화 시킨다.
         KocesSdk.instance.DeviceInit(VanCode: "99")
@@ -329,7 +330,6 @@ class PaySdk
         
         /** 초기화 후 2초 뒤에 실행 */
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley) { [self] in
-//            Utils.CardAnimationViewControllerInit(Message: "MSR카드를 읽어주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
             var type = "06"; //거래구분
             if(_privateorbusiness==3)
             {
@@ -441,8 +441,8 @@ class PaySdk
         }
         
         let CovertMoney:String = Utils.leftPad(str: String(PaySdk.instance.mMoney), fillChar: "0", length: 10)
-//        let CovertMoney:String = String(PaySdk.instance.mMoney)
-        Utils.CardAnimationViewControllerInit(Message: "카드를 읽어주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var TotalMoney:Int = PaySdk.instance.mMoney + _tax + _serviceCharge
+        Utils.CardAnimationViewControllerInit(Message: "IC카드를 넣어주세요", isButton: true, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         
         KocesSdk.instance.DeviceInit(VanCode: "99")
 
@@ -541,7 +541,8 @@ class PaySdk
         
         
         let CovertMoney:String = Utils.leftPad(str: String(PaySdk.instance.mMoney), fillChar: "0", length: 10)
-        Utils.CardAnimationViewControllerInit(Message: "포인트카드를 읽혀주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var TotalMoney:Int = PaySdk.instance.mMoney
+        Utils.CardAnimationViewControllerInit(Message: "포인트카드를 읽혀주세요", isButton: true, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         
         KocesSdk.instance.DeviceInit(VanCode: "99")
 
@@ -651,7 +652,8 @@ class PaySdk
         
         
         let CovertMoney:String = Utils.leftPad(str: String(PaySdk.instance.mMoney), fillChar: "0", length: 10)
-        Utils.CardAnimationViewControllerInit(Message: "멤버십카드를 읽혀주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var TotalMoney:Int = PaySdk.instance.mMoney
+        Utils.CardAnimationViewControllerInit(Message: "멤버십카드를 읽혀주세요", isButton: true, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         
         KocesSdk.instance.DeviceInit(VanCode: "99")
 
@@ -1258,7 +1260,8 @@ class PaySdk
         case "09":
             //IC카드입니다. IC 우선 거래해 주세요 여기서 다시 거래를 시작한다 이번에는 "01" -> "02"
 //            Utils.customAlertBoxClear()
-            Utils.CardAnimationViewControllerInit(Message: "IC카드입니다. IC 우선 거래해 주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+            var TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+            Utils.CardAnimationViewControllerInit(Message: "IC카드입니다. IC 우선 거래해 주세요", isButton: true, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
             DispatchQueue.main.asyncAfter(deadline: .now() + mDeley){ [self] in
                 PaySdk.instance.mICType = "02"
 //                Utils.customAlertBoxInit(Title: "거래불가", Message: "IC카드입니다. IC 우선 거래해 주세요", LoadingBar: true, GetButton: "")
@@ -1414,7 +1417,8 @@ class PaySdk
             }
 
 //            Utils.customAlertBoxClear()
-            Utils.CardAnimationViewControllerInit(Message: "IC오류입니다. 마그네틱을 읽혀주세요", isButton: true, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+            var TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+            Utils.CardAnimationViewControllerInit(Message: "IC오류입니다. 마그네틱을 읽혀주세요", isButton: true, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
             DispatchQueue.main.asyncAfter(deadline: .now() + mDeley){ [self] in
                 var icType = ""
                 if PaySdk.instance.mICType == "01" { icType = "07"; } else { icType = "10"; }
@@ -1871,7 +1875,8 @@ class PaySdk
        */
     func Req_tcp_Cash(Tid _Tid:String,CancelInfo _CancelInfo:String,InputMethod _InputMethod:String,Id _id:[UInt8],idEncrpyt _idEncrpyt:[UInt8],PB _PB:String,CancelReason _CancelReason:String,ptCardCode _ptCardCode:String,ptAcceptNum _ptAcceptNum:String,businessData _businessData:String,Bangi _Bangi:String,KocesTradeNumber _KocesTradeNumber:String)
       {
-        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+          var TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley){ [self] in
 
             KocesSdk.instance.Cash(Command: !_CancelInfo.isEmpty ? Command.CMD_CASH_RECEIPT_CANCEL_REQ : Command.CMD_CASH_RECEIPT_REQ , Tid: _Tid, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelInfo: _CancelInfo, InputMethod: _InputMethod, Id: _id, Idencrypt: _idEncrpyt, Money: String(PaySdk.instance.mMoney), Tax: PaySdk.instance.mTax, ServiceCharge: PaySdk.instance.mServiceCharge, TaxFree: PaySdk.instance.mTaxfree, PrivateOrCorp: _PB, CancelReason: _CancelReason, pointCardCode: _ptCardCode, pointAceeptNum: _ptAcceptNum, businessData: _businessData, bangi: _Bangi, kocesNumber: _KocesTradeNumber,AppToApp: PaySdk.instance.mDBAppToApp)
@@ -1897,7 +1902,8 @@ class PaySdk
        */
     func Req_tcp_Point(TrdType _trdType:String,Tid _Tid:String,CancelInfo _CancelInfo:String,InputMethod _InputMethod:String,PointCardNumber _pointCardNumber:[UInt8],idEncrpyt _idEncrpyt:[UInt8],ptCardCode _ptCardCode:String,PayType _payType:String,businessData _businessData:String)
       {
-        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+          var TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley){ [self] in
 
             KocesSdk.instance.PointPay(Command: _trdType, Tid: _Tid, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", ResonCancel: _CancelInfo, InputType: _InputMethod, CardNumber: _pointCardNumber, EncryptInfo: _idEncrpyt, Money: String(PaySdk.instance.mMoney), PointCode: _ptCardCode, PayType: _payType, WorkingKeyIndex: "", Password: PaySdk.instance.mPointPassWd, PosData: _businessData, AppToApp: PaySdk.instance.mDBAppToApp)
@@ -1908,7 +1914,8 @@ class PaySdk
     
     func Req_tcp_Member(TrdType _trdType:String,Tid _Tid:String,CancelInfo _CancelInfo:String,InputMethod _InputMethod:String,PointCardNumber _pointCardNumber:[UInt8],idEncrpyt _idEncrpyt:[UInt8],memberProductCode _memberProductCode:String)
       {
-        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+          var TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley){ [self] in
 
             KocesSdk.instance.MemberPay(Command: _trdType, Tid: _Tid, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", ResonCancel: _CancelInfo, InputType: _InputMethod, CardNumber: _pointCardNumber, EncryptInfo: _idEncrpyt, Money: String(PaySdk.instance.mMoney), memberProductCode: "", dongul: "", PosData: "", AppToApp: PaySdk.instance.mDBAppToApp)
@@ -2021,9 +2028,8 @@ class PaySdk
         let CovertMoney = _icMoney
         // 문자열 공백제거
 
-        
-//        Utils.customAlertBoxInit(Title: "현금거래", Message: "서버에 요청중입니다", LoadingBar: true, GetButton: "확인")
-        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var _TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(_TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         var id:[UInt8] = [UInt8]()
         for _ in 0 ..< 40 {
             id.append(0x20)
@@ -2102,8 +2108,8 @@ class PaySdk
         }
 //        let CovertMoney = Utils.leftPad(str: String(TotalMoney), fillChar: "0", length: 10)
         let CovertMoney = String(TotalMoney)
-//        Utils.customAlertBoxInit(Title: "신용거래", Message: "서버에 요청중입니다", LoadingBar: true, GetButton: "확인")
-        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var _TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(_TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
         var _Poscer = _PoscertifiNum
         if _Poscer.isEmpty {
 //            _Poscer = Utils.AppTmlcNo()
@@ -2123,7 +2129,8 @@ class PaySdk
      * @param _kocesUnique
      */
     func Req_tcp_Credit(_Tid:String,_img:[UInt8],_CodeNversion:String, _cancelInfo:String, _kocesUnique:String) {
-        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout, Listener: PaySdk.instance.paylistener as! PayResultDelegate)
+        var TotalMoney:Int = PaySdk.instance.mMoney + (Int(PaySdk.instance.mTax) ?? 0) + (Int(PaySdk.instance.mServiceCharge) ?? 0)
+        Utils.CardAnimationViewControllerInit(Message: "서버에 요청중입니다", isButton: false, CountDown: Setting.shared.mDgTmout,TotalMoney: String(TotalMoney), Listener: PaySdk.instance.paylistener as! PayResultDelegate)
 //        Utils.customAlertBoxInit(Title: "신용거래", Message: "서버에 요청중입니다", LoadingBar: true, GetButton: "확인")
         if(!_cancelInfo.isEmpty)
         {

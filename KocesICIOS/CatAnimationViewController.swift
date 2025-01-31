@@ -12,21 +12,22 @@ import SwiftUI
 class CatAnimationViewController: UIViewController {
     var mCatSdk:CatSdk = CatSdk.instance
     var catlistener:CatResultDelegate?
-//    var tcplinstener:TcpResultDelegate?
-//    let mTcpSocket: TcpSocket = TcpSocket()
     var connectionTimeout:Timer?
     
     @IBOutlet weak var mbtnCancel: UIButton!
+    
     @IBOutlet weak var mTitleMsg: UILabel!
-    @IBOutlet weak var mCountMsg: UILabel!
     @IBOutlet weak var mCardImg: UIImageView!
     @IBOutlet weak var mCountLayerStack: UIStackView!
-
     @IBOutlet weak var mNavigationBar: UINavigationBar!
     
+    @IBOutlet weak var mMoneyStack: UIStackView!
+    
+    @IBOutlet weak var mTotalMoney: UILabel!
     @IBOutlet weak var mCountImg: UIImageView!
     var countdownMsg:String = "30"
     public var cardMsg:String = ""
+    public var totalMoney:String = ""
     var count = 30
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +61,7 @@ class CatAnimationViewController: UIViewController {
     }
 
     public func CardViewInit() {
+        mMoneyStack.roundCorners(corners: [.allCorners], radius: 10)
         self.connectionTimeout?.invalidate()
         self.connectionTimeout = nil
         
@@ -67,17 +69,15 @@ class CatAnimationViewController: UIViewController {
         
         mbtnCancel.isHidden = false
         mbtnCancel.alpha = 1.0
-//        UISetting.setGradientBackground(_bar: mNavigationBar, colors: [
-//            UIColor.systemBlue.cgColor,
-//            UIColor.white.cgColor
-//        ])
+        
 
-//        countdownMsg = Setting.shared.mDgTmout
         countdownMsg = "30"
         count = Int(countdownMsg) ?? 30
+        
+        mTotalMoney.text = Utils.PrintMoney(Money: totalMoney) + " 원"
+        
         mTitleMsg.text = cardMsg
-//        mCountMsg.text = countdownMsg
-//        mCountMsg.text = " "
+
         connectionTimeout = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
         connectionTimeout?.tolerance = 0.1
         RunLoop.current.add(connectionTimeout!, forMode: .common)
@@ -86,12 +86,39 @@ class CatAnimationViewController: UIViewController {
 
     }
     
-//    func DisConnectServer() {
-//        if mTcpSocket != nil {
-//            mTcpSocket.disconnect()
-//        }
-//    }
-    
+    func cardChangeImage(카드 _card:String) {
+        var uiImage = ""
+        switch(_card) {
+        case "카드":
+            uiImage = "cat_ic"
+            break
+        case "마그네틱":
+            uiImage = "cat_cash"
+            break
+        case "MSR":
+            uiImage = "cat_ms"
+            break
+        default:
+            break
+        }
+        guard
+            let gifURL = Bundle.main.url(forResource: uiImage, withExtension: "gif"),
+            let gifData = try? Data(contentsOf: gifURL),
+            let source = CGImageSourceCreateWithData(gifData as CFData, nil)
+        else { return }
+        let frameCount = CGImageSourceGetCount(source)
+        var images = [UIImage]()
+
+        (0..<frameCount)
+            .compactMap { CGImageSourceCreateImageAtIndex(source, $0, nil) }
+            .forEach { images.append(UIImage(cgImage: $0)) }
+
+        mCardImg.animationImages = images
+        mCardImg.animationDuration = TimeInterval(frameCount) * 1 // 0.05는 임의의 값
+        mCardImg.animationRepeatCount = 0
+        mCardImg.startAnimating()
+    }
+
     @objc func fireTimer() {
         print(count)
         count -= 1
@@ -122,18 +149,19 @@ class CatAnimationViewController: UIViewController {
             mbtnCancel.alpha = 0.0
         } else if _msg.contains("마그네틱") {   //폴백거래
             mCardImg.image = #imageLiteral(resourceName: "cat_cash")
-//            mCardImg.heightAnchor.constraint(equalToConstant: mCardImg.frame.width).isActive = true
             mCardImg.contentMode = .scaleAspectFit
             mNavigationBar.topItem?.title = "폴백결제"
+            cardChangeImage(카드: "마그네틱")
         } else if _msg.contains("MSR") {    //msr거래
             mCardImg.image = #imageLiteral(resourceName: "cat_cash")
-//            mCardImg.heightAnchor.constraint(equalToConstant: mCardImg.frame.width).isActive = true
             mCardImg.contentMode = .scaleAspectFit
             mNavigationBar.topItem?.title = "MSR결제"
+            cardChangeImage(카드: "MSR")
         } else {    //일반신용
             mCardImg.image = #imageLiteral(resourceName: "cat_ic")
             mCardImg.contentMode = .scaleAspectFit
             mNavigationBar.topItem?.title = "카드결제"
+            cardChangeImage(카드: "카드")
         }
         
         if mCountImg.isAnimating {

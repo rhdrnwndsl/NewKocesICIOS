@@ -322,7 +322,8 @@ class CatSdk {
 
 
         DispatchQueue.main.async {
-            Utils.CatAnimationViewInit(Message: "단말기에서 카드를 읽어주세요", Listener: CatSdk.instance.catlistener!)
+            var _total =
+            Utils.CatAnimationViewInit(Message: "단말기에서 카드를 읽어주세요",TotalMoney: String(Int(Int(_money)! + Int(_tax)! + Int(_svc)! + Int(_txf)!)), Listener: CatSdk.instance.catlistener!)
         }
 
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1) { [self] in
@@ -400,13 +401,13 @@ class CatSdk {
             } else if recv[1] == 0x44 { //D
                 debugPrint("dcc trade")
                 LogFile.instance.InsertLog(LOG_RECEIVE_D + "IC 우선 거래", Tid: CatSdk.instance.Tid == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):CatSdk.instance.Tid)
-                Utils.CatAnimationViewInit(Message: "단말기에서 카드를 읽어주세요", Listener: CatSdk.instance.catlistener!)
+                Utils.CatAnimationViewInit(Message: "단말기에서 카드를 읽어주세요",TotalMoney: String(Int(Int(_money)! + Int(_tax)! + Int(_svc)! + Int(_txf)!)), Listener: CatSdk.instance.catlistener!)
                 CreditFallBack()
                 return
             } else if recv[1] == 0x46 { //F
                 debugPrint("fallback trade")
                 LogFile.instance.InsertLog(LOG_RECEIVE_F + "폴백 거래", Tid: CatSdk.instance.Tid == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):CatSdk.instance.Tid)
-                Utils.CatAnimationViewInit(Message: "단말기에서 MSR을 읽어주세요", Listener: CatSdk.instance.catlistener!)
+                Utils.CatAnimationViewInit(Message: "단말기에서 MSR을 읽어주세요",TotalMoney: String(Int(Int(_money)! + Int(_tax)! + Int(_svc)! + Int(_txf)!)), Listener: CatSdk.instance.catlistener!)
                 CreditFallBack()
                 return
             } else if recv[1] == 0x51 { //Q
@@ -859,7 +860,7 @@ class CatSdk {
         }
         
         DispatchQueue.main.async {
-            Utils.CatAnimationViewInit(Message: "단말기에서 카드를 읽어주세요", Listener: CatSdk.instance.catlistener!)
+            Utils.CatAnimationViewInit(Message: "단말기에서 카드를 읽어주세요",TotalMoney: String(Int(Int(_money)! + Int(_tax)! + Int(_svc)! + Int(_txf)!)), Listener: CatSdk.instance.catlistener!)
         }
 
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1) { [self] in
@@ -1175,7 +1176,7 @@ class CatSdk {
         }
 
         DispatchQueue.main.async {
-            Utils.CatAnimationViewInit(Message: "단말기에서 MSR을 읽어주세요", Listener: CatSdk.instance.catlistener!)
+            Utils.CatAnimationViewInit(Message: "단말기에서 MSR을 읽어주세요",TotalMoney: String(Int(Int(_money)! + Int(_tax)! + Int(_svc)! + Int(_txf)!)), Listener: CatSdk.instance.catlistener!)
         }
 
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1) { [self] in
@@ -1588,9 +1589,8 @@ class CatSdk {
             /** log : EasyRecipt */
             LogFile.instance.InsertLog("App -> CAT(간편결제)", Tid: CatSdk.instance.Tid == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):CatSdk.instance.Tid, TimeStamp: true)
 
-            
             DispatchQueue.main.async {
-                Utils.CatAnimationViewInit(Message: "CAT단말기에 거래 요청 중 입니다.", Listener: CatSdk.instance.catlistener!)
+                Utils.CatAnimationViewInit(Message: "CAT단말기에 거래 요청 중 입니다.",TotalMoney: String(Int(Int(CatSdk.instance.Money)! + Int(CatSdk.instance.Tax)! + Int(CatSdk.instance.Svc)! + Int(CatSdk.instance.Txf)!)), Listener: CatSdk.instance.catlistener!)
             }
             
             CatSdk.instance.QrBarcode = _scanner
