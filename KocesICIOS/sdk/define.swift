@@ -32,6 +32,8 @@ class define{
     
     public static let APPTOAPP_ADDR:String = "apptoapp://"
     
+    public static let PRIVACY_URL:String = "https://koces.co.kr/sub/privacy.php"
+    
     /**
      가맹점 등록 정보 TID
      */

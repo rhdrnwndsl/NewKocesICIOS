@@ -30,6 +30,9 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     private var selectedIndexPath: IndexPath? // 선택된 셀의 IndexPath
     private let separatorLine = UIView() // 구분 라인
     
+//    private var previousCell:[UITableViewCell?: IndexPath] = [:]   //이전에 선택한 셀
+//    private var nextCell:[UITableViewCell?: IndexPath] = [:]   //현재 선택한 셀
+    
     private var parentViewController = UIViewController()
 
     override init(frame: CGRect) {
@@ -195,6 +198,10 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         // Style the cell
         styleCell(cell, at: indexPath)
+        
+//        previousCell = nextCell
+//        
+//        nextCell = [cell:indexPath]
         
         return cell
     }
@@ -423,44 +430,103 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
             break
         }
         
-        remove(asChildViewController: networksettingVC)
-        remove(asChildViewController: devicesettingVC)
-        remove(asChildViewController: infoSettingVC)
-        remove(asChildViewController: printSettingVC)
-        remove(asChildViewController: storesettingVC)
-        remove(asChildViewController: TaxSettingVC)
-        remove(asChildViewController: ProductSettingVC)
         switch selectTab.title {
         case EnvironmentSplit.STORE.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: storesettingVC)
             break
         case EnvironmentSplit.TAX.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: TaxSettingVC)
             break
 //        case EnvironmentSplit.USB.rawValue:
 //            add(asChildViewController: devicesettingVC)
 //            break
         case EnvironmentSplit.BT.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: devicesettingVC)
             break
         case EnvironmentSplit.CAT.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: devicesettingVC)
             break
         case EnvironmentSplit.PRINT.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: printSettingVC)
             break
 //        case EnvironmentSplit.NETWORK.rawValue:
 //            add(asChildViewController: networksettingVC)
 //            break
         case EnvironmentSplit.PRODUCT.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: ProductSettingVC)
         case EnvironmentSplit.QNA.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: infoSettingVC)
             break
         case EnvironmentSplit.PRIVACY.rawValue:
-            add(asChildViewController: infoSettingVC)
-            break
+            Utils.openExternalLink(urlStr: define.PRIVACY_URL)
+//            selectedIndexPath = previousCell.values.first!
+//            styleCell(previousCell.keys.first!!, at: previousCell.values.first!)
+            return
         case EnvironmentSplit.APPINFO.rawValue:
+            remove(asChildViewController: networksettingVC)
+            remove(asChildViewController: devicesettingVC)
+            remove(asChildViewController: infoSettingVC)
+            remove(asChildViewController: printSettingVC)
+            remove(asChildViewController: storesettingVC)
+            remove(asChildViewController: TaxSettingVC)
+            remove(asChildViewController: ProductSettingVC)
+            
             add(asChildViewController: infoSettingVC)
             break
         default:
