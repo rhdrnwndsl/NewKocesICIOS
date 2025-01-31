@@ -10437,6 +10437,21 @@
             </objects>
             <point key="canvasLocation" x="5459" y="2813"/>
         </scene>
+        <!--QnaViewController-->
+        <scene sceneID="qqI-x1-DUd">
+            <objects>
+                <viewController storyboardIdentifier="QnaViewController" title="QnaViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pOX-NA-iBR" customClass="QnaViewController" customModule="KocesICIOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Urp-tl-fPp">
+                        <rect key="frame" x="0.0" y="0.0" width="1080" height="810"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="fv3-qY-2ta"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jbq-kE-CPx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6112" y="2831"/>
+        </scene>
         <!--Other Pay Controller-->
         <scene sceneID="bBT-9r-Uef">
             <objects>

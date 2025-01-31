@@ -378,6 +378,17 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
     
+    private lazy var qnaVC: QnaViewController = {
+        // Load Storyboard
+        let storyboard = getMainStoryBoard()
+        var viewController = storyboard.instantiateViewController(withIdentifier: "QnaViewController") as! QnaViewController
+         
+        // Add View Controller as Child View Controller
+        self.add(asChildViewController: viewController)
+
+        return viewController
+    }()
+    
     private func getMainStoryBoard() -> UIStoryboard {
         var storyboard:UIStoryboard?
         if UIDevice.current.userInterfaceIdiom == .phone {
@@ -420,6 +431,17 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         NotificationCenter.default.removeObserver(viewController)
     }
     
+    private func initController() {
+        remove(asChildViewController: networksettingVC)
+        remove(asChildViewController: devicesettingVC)
+        remove(asChildViewController: infoSettingVC)
+        remove(asChildViewController: printSettingVC)
+        remove(asChildViewController: storesettingVC)
+        remove(asChildViewController: TaxSettingVC)
+        remove(asChildViewController: ProductSettingVC)
+        remove(asChildViewController: qnaVC)
+    }
+    
     func changeViewController(selectTab:SettingItem) {
         //networksettingVC,devicesettingVC,infoSettingVC,printSettingVC,storesettingVC,TaxSettingVC
         switch selectTab.title {
@@ -432,24 +454,12 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         switch selectTab.title {
         case EnvironmentSplit.STORE.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: storesettingVC)
             break
         case EnvironmentSplit.TAX.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: TaxSettingVC)
             break
@@ -457,35 +467,17 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
 //            add(asChildViewController: devicesettingVC)
 //            break
         case EnvironmentSplit.BT.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: devicesettingVC)
             break
         case EnvironmentSplit.CAT.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: devicesettingVC)
             break
         case EnvironmentSplit.PRINT.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: printSettingVC)
             break
@@ -493,25 +485,13 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
 //            add(asChildViewController: networksettingVC)
 //            break
         case EnvironmentSplit.PRODUCT.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: ProductSettingVC)
         case EnvironmentSplit.QNA.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
-            add(asChildViewController: infoSettingVC)
+            add(asChildViewController: qnaVC)
             break
         case EnvironmentSplit.PRIVACY.rawValue:
             Utils.openExternalLink(urlStr: define.PRIVACY_URL)
@@ -519,13 +499,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
 //            styleCell(previousCell.keys.first!!, at: previousCell.values.first!)
             return
         case EnvironmentSplit.APPINFO.rawValue:
-            remove(asChildViewController: networksettingVC)
-            remove(asChildViewController: devicesettingVC)
-            remove(asChildViewController: infoSettingVC)
-            remove(asChildViewController: printSettingVC)
-            remove(asChildViewController: storesettingVC)
-            remove(asChildViewController: TaxSettingVC)
-            remove(asChildViewController: ProductSettingVC)
+            initController()
             
             add(asChildViewController: infoSettingVC)
             break
@@ -546,13 +520,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         let ok = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: { [self](ACTION) in
             let password = alert.textFields?[0].text
             if password?.isEmpty == false && password == "3415" {
-                remove(asChildViewController: networksettingVC)
-                remove(asChildViewController: devicesettingVC)
-                remove(asChildViewController: infoSettingVC)
-                remove(asChildViewController: printSettingVC)
-                remove(asChildViewController: storesettingVC)
-                remove(asChildViewController: TaxSettingVC)
-                remove(asChildViewController: ProductSettingVC)
+                initController()
                 add(asChildViewController: networksettingVC)
             } else {
                 let alert2 = UIAlertController(title: nil, message: "비밀번호를 잘못 입력하였습니다", preferredStyle: .alert)
