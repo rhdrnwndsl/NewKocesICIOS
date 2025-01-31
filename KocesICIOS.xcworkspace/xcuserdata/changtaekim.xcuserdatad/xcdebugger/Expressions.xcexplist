@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "closure #2 in CatSdk.Res_Scanner(Result:Message:Scanner:):CatSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "CatSdk.instance.TrdType">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.PrintPadBold(leftString:rightString:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "buffer.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Aes.decrypt(_key:encoded:):Aes.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(IV.data(using: .utf8)?.bytes)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:MacAddr:DirectData:CallbackListener:):KocesSdk.swift">
+      </ContextState>
+      <ContextState
+         contextName = "CashCancelController.clicked_btn_cancel(_:forEvent:):CashCancelController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mCashReciptTarget">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "firmwareController.TMS_Update_File_Send_loop(_b:):firmwareController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "updateSize">
+            </PersistentString>
+            <PersistentString
+               value = "recentSize">
+            </PersistentString>
+            <PersistentString
+               value = "defaultSize">
+            </PersistentString>
+            <PersistentString
+               value = "AllFile">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TcpSocket.send(data:):TcpSocket.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "outputStream">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BLEManager.write(data:name:):BLEManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "sendQue.count">
+            </PersistentString>
+            <PersistentString
+               value = "sendQue[0].chunks.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #4 in closure #2 in closure #1 in ReceiptSwiftUI.receiptView.getter:ReceiptSwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "money">
+            </PersistentString>
+            <PersistentString
+               value = "mTradeResult">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReceiptSwiftUI.MemberCancel():ReceiptSwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$isCheckCardOrQr">
+            </PersistentString>
+            <PersistentString
+               value = "isCheckCardOrQr">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PrintSettingController.initView():PrintSettingController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Setting.shared.getDefaultUserData(_key: define.PRINTDEVICE)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "sqlite.DBUpdate():sqlite.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Setting.shared.getDefaultUserData(_key: &quot;DB_VERSION&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.PrintReceiptInit(HashMap:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_hash[&quot;TrdType&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.onResult(CatState:Result:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tmpTrdType">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CatSdk.ParsingresCashIC(&#xc218;&#xc2e0;&#xb370;&#xc774;&#xd130;:):CatSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "String(data[&quot;CardNo&quot;])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.pixelValues(fromCGImage:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "newImage.cgImage">
+            </PersistentString>
+            <PersistentString
+               value = "newImage.ciImage!">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "StoreSettingController.setStoreInfo():StoreSettingController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "heightAnchor">
+            </PersistentString>
+            <PersistentString
+               value = "heightAnchor?.constant">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Command.TCPICReq(Command:Tid:Date:PosVer:Etc:ResonCancel:InputType:CardNumber:EncryptInfo:Money:Tax:ServiceCharge:TaxFree:Currency:InstallMent:PosCertificationNumber:TradeType:EmvData:ResonFallBack:ICreqData:WorkingKeyIndex:Password:OilSurpport:OilTaxFree:DccFlag:DccReqInfo:PointCardCode:PointCardNumber:PointCardEncprytInfo:SignInfo:SignPadSerial:SignData:Certification:PosData:KocesUid:UniqueCode:MacAddr:HardwareKey:):Command.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "StrToArr(String(format: &quot;%04d&quot;, _SignData.count))">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "firmwareController.TMS_Data_Down_Info(revDataType:multipadSerialNum:data:):firmwareController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Secu_Key.count">
+            </PersistentString>
+            <PersistentString
+               value = "Utils.utf8toHangul(str: _Secu_Key)">
+            </PersistentString>
+            <PersistentString
+               value = "Secu_Key">
+            </PersistentString>
+            <PersistentString
+               value = "Utils.UInt8ArrayToStr(UInt8Array: _Secu_Key)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "specialized closure #1 in CatSdk.Print(&#xd30c;&#xc2f1;&#xd560;&#xd504;&#xb9b0;&#xd2b8;&#xb0b4;&#xc6a9;:CompletionCallback:):CatSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_Contents">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.CheckLRC(bytes:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "bytes[bytes.count-1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "specialized closure #1 in PaySdk.Res_Tcp_Member(tcpStatus:ResData:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mTax">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in CreditController.onResult(CatState:Result:):CreditController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PaySdk.Res_Credit(_res:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tmpPaywaveFFIValue[0..._last]">
+            </PersistentString>
+            <PersistentString
+               value = "Array(tmpPaywaveFFIValue[0...4])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "EnvironmentTabController.menuButtonTapped(_:):EnvironmentTabController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "UIDevice.current.orientation.isPortrait">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CatSdk.ParsingEasyresData(&#xc218;&#xc2e0;&#xb370;&#xc774;&#xd130;:&#xac04;&#xd3b8;&#xacb0;&#xc81c;&#xccb4;&#xd06c;:):CatSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "data[&quot;CardNo&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "data[&quot;PcCard&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "data[&quot;PcCoupon&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "data[&quot;PcPoint&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "data[&quot;PcKind&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "String(split)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.UInt8ArrayToHexCode(_value:_option:):Utils.swift">
+      </ContextState>
+      <ContextState
+         contextName = "TermsViewController.viewDidLoad():TermsViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "titleDateParser()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "firmwareController.responseData(_resData:):firmwareController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "File_Path_Name">
+            </PersistentString>
+            <PersistentString
+               value = "updateSize">
+            </PersistentString>
+            <PersistentString
+               value = "mVersion">
+            </PersistentString>
+            <PersistentString
+               value = "recentSize">
+            </PersistentString>
+            <PersistentString
+               value = "mDeviceSN">
+            </PersistentString>
+            <PersistentString
+               value = "defaultSize">
+            </PersistentString>
+            <PersistentString
+               value = "multipadSerialNum">
+            </PersistentString>
+            <PersistentString
+               value = "mTmIcNo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.EasyParser(&#xbc14;&#xcf54;&#xb4dc;qr&#xbc88;&#xd638;:&#xb0a0;&#xc9dc;90&#xc77c;&#xacbd;&#xacfc;:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_cardNum.substring(&#xc2dc;&#xc791;: 12, &#xb05d;: 15)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Command.TCP_TMSDownInfo(_Command:_Tid:_swVer:_serialNum:_dataType:_secKey:):Command.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utils.UInt8ArrayToHex(_value: _serialNum)">
+            </PersistentString>
+            <PersistentString
+               value = "Utils.UInt8ArrayToHex(_value: _secKey)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CatSdk.ParsingresData(&#xc218;&#xc2e0;&#xb370;&#xc774;&#xd130;:&#xac04;&#xd3b8;&#xacb0;&#xc81c;&#xccb4;&#xd06c;:):CatSdk.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ReceiptEasyPaySwiftUI.setData(&#xc601;&#xc218;&#xc99d;&#xb370;&#xc774;&#xd130;:&#xbdf0;&#xcee8;&#xd2b8;&#xb864;&#xb7ec;:&#xc804;&#xd45c;&#xbc88;&#xd638;:):ReceiptEasyPaySwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_receipt.getStoreAddr()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in firmwareController.TMS_Data_Down_Info(revDataType:multipadSerialNum:data:):firmwareController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_Secu_Key">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CalendarViewController.getTradeListPeriod(Tid:From:To:):CalendarViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "queryresult[i].getMineTrade()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in AppToAppViewController.CommandPlay(_:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.PrintPad(leftString:rightString:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_right2.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BLEManager.centralManager(_:didConnect:):BLEManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "connectServiceUUID">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PrintSettingController.testPrint():PrintSettingController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utils.UInt8ArrayToStr(UInt8Array: _p)">
+            </PersistentString>
+            <PersistentString
+               value = "Bundle.main.url(forResource: &quot;sign1&quot;, withExtension: &quot;bmp&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "_p">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "firmwareController.connectFTP():firmwareController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_data.last">
+            </PersistentString>
+            <PersistentString
+               value = "mAesKey">
+            </PersistentString>
+            <PersistentString
+               value = "parseData">
+            </PersistentString>
+            <PersistentString
+               value = "File_Path_Name.substring(&#xc2dc;&#xc791;: 9)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashCancelController.TargetSelected(_:):CashCancelController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "sender.selectedSegmentIndex">
+            </PersistentString>
+            <PersistentString
+               value = "sender.numberOfSegments">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CatSdk.Cat_SendCancelCommandE(&#xba54;&#xc138;&#xc9c0;:):CatSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utils.UInt8ArrayToStr(UInt8Array: recv)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CatSdk.Scan_Data_Parser(Scan:):CatSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_scan.substring(&#xc2dc;&#xc791;: 16, &#xb05d;: 18)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "sqlite.UpdateTradeList(Tid:StoreName:StoreAddr:StoreNumber:StorePhone:StoreOwner:&#xc2e0;&#xc6a9;&#xd604;&#xae08;:&#xcde8;&#xc18c;&#xc5ec;&#xbd80;:&#xae08;&#xc561;:&#xc120;&#xbd88;&#xce74;&#xb4dc;&#xc794;&#xc561;:&#xc138;&#xae08;:&#xbd09;&#xc0ac;&#xb8cc;:&#xbe44;&#xacfc;&#xc138;:&#xd560;&#xbd80;:&#xd604;&#xae08;&#xc601;&#xc218;&#xc99d;&#xd0c0;&#xac9f;:&#xd604;&#xae08;&#xc601;&#xc218;&#xc99d;&#xbc1c;&#xae09;&#xd615;&#xd0dc;:&#xd604;&#xae08;&#xbc1c;&#xae09;&#xbc88;&#xd638;:&#xce74;&#xb4dc;&#xbc88;&#xd638;:&#xce74;&#xb4dc;&#xc885;&#xb958;:&#xce74;&#xb4dc;&#xb9e4;&#xc785;&#xc0ac;:&#xce74;&#xb4dc;&#xbc1c;&#xae09;&#xc0ac;:&#xac00;&#xb9f9;&#xc810;&#xbc88;&#xd638;:&#xc2b9;&#xc778;&#xb0a0;&#xc9dc;:&#xc6d0;&#xac70;&#xb798;&#xc77c;&#xc790;:&#xc2b9;&#xc778;&#xbc88;&#xd638;:&#xc6d0;&#xc2b9;&#xc778;&#xbc88;&#xd638;:&#xcf54;&#xc138;&#xc2a4;&#xace0;&#xc720;&#xac70;&#xb798;&#xd0a4;:&#xc751;&#xb2f5;&#xba54;&#xc2dc;&#xc9c0;:KakaoMessage:PayType:KakaoAuMoney:KakaoSaleMoney:KakaoMemberCd:KakaoMemberNo:Otc:Pem:Trid:CardBin:SearchNo:PrintBarcd:PrintUse:PrintNm:MchFee:MchRefund:PcKind:PcCoupon:PcPoint:PcCard:MineTrade:ProductNum:AudateTime:_ddc:_edc:_icInputType:_emvTradeType:_pointCode:_serviceName:_earnPoint:_usePoint:_totalPoint:_percent:_userName:_pointStoreNumber:_MemberCardTypeText:_MemberServiceTypeText:_MemberServiceNameText:_MemberTradeMoneyText:_MemberSaleMoneyText:_MemberAfterTradeMoneyText:_MemberAfterMemberPointText:_MemberOptionCodeText:_MemberStoreNoText:):sqlite.swift">
+      </ContextState>
+      <ContextState
+         contextName = "CreditController.CreditTextFieldDidChange2(_:):CreditController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mCreditTxtFieldTaxFree.text!.replacingOccurrences(of: &quot;,&quot;, with: &quot;&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "mSvcMoney">
+            </PersistentString>
+            <PersistentString
+               value = "mTaxFreeMoney">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.bleManagerReceive(data:):KocesSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mReceivedData.count">
+            </PersistentString>
+            <PersistentString
+               value = "mReceiveDataSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "EnvironmentSplitView.tableView(_:cellForRowAt:):EnvironmentSplitView.swift">
+      </ContextState>
+      <ContextState
+         contextName = "NumberPad.updateKeys():NumberPad.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "style">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.BleStatus(ble:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_keyDownloadResult">
+            </PersistentString>
+            <PersistentString
+               value = "keyUpdateCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in firmwareController.responseData(_resData:):firmwareController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.onResult(tcpStatus:Result:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Setting.shared.WebtoApp">
+            </PersistentString>
+            <PersistentString
+               value = "Setting.shared.ApptoApp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReceiptSwiftUI.setData(&#xc601;&#xc218;&#xc99d;&#xb370;&#xc774;&#xd130;:&#xbdf0;&#xcee8;&#xd2b8;&#xb864;&#xb7ec;:&#xc804;&#xd45c;&#xbc88;&#xd638;:):ReceiptSwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "isCheckCardOrQr">
+            </PersistentString>
+            <PersistentString
+               value = "_receipt.getCardNum()">
+            </PersistentString>
+            <PersistentString
+               value = "_receipt.getCashNum()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "sqlite.init():sqlite.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Setting.shared.getDefaultUserData(_key: &quot;DB_VERSION&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "EnvironmentTabController.updateLayoutForCurrentOrientation():EnvironmentTabController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "UIDevice.current.orientation.isPortrait">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.KeyDownload(KeyCheckData:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_keyDownloadResult">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReceiptEasyPaySwiftUI.PrintReceiptInit():ReceiptEasyPaySwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Tax">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

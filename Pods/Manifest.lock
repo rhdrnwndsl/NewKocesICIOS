@@ -1,0 +1,28 @@
+PODS:
+  - BlueSocket (2.0.4)
+  - CryptoSwift (1.8.0)
+  - Siren (5.8.1)
+  - SwiftSocket (2.0.2)
+
+DEPENDENCIES:
+  - BlueSocket
+  - CryptoSwift (~> 1.8.0)
+  - Siren
+  - SwiftSocket
+
+SPEC REPOS:
+  trunk:
+    - BlueSocket
+    - CryptoSwift
+    - Siren
+    - SwiftSocket
+
+SPEC CHECKSUMS:
+  BlueSocket: cc33e2bded4b680ff14200b4160ed459602b9205
+  CryptoSwift: 52aaf3fce7337552863b1d952e408085f0e65030
+  Siren: de768099aff1f1c9acda4247064788a4940b4bf3
+  SwiftSocket: 6f4c9c63fbc5c1d61188936bb3c599fd546f40ae
+
+PODFILE CHECKSUM: a8e1571a1f1fb7b93977c961f478c51357af5396
+
+COCOAPODS: 1.14.3

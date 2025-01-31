@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "static Utils.PrintPad(leftString:rightString:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_right.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.CommandPlay(_:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tmpBillNo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.onPaymentResult(payTitle:payResult:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tmpBillNo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppToAppViewController.DirectServerCheck(_:):AppToAppViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "trdType == Command.CMD_RECOMMAND_REQ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BLEManager.peripheral(_:didDiscoverCharacteristicsFor:error:):BLEManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "device.identifier.uuidString">
+            </PersistentString>
+            <PersistentString
+               value = "rxSerialName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.printMessage(rightString:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_right.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReceiptSwiftUI.setData(&#xc601;&#xc218;&#xc99d;&#xb370;&#xc774;&#xd130;:&#xbdf0;&#xcee8;&#xd2b8;&#xb864;&#xb7ec;:&#xc804;&#xd45c;&#xbc88;&#xd638;:):ReceiptSwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "&#xc751;&#xb2f5;&#xba54;&#xc138;&#xc9c0;">
+            </PersistentString>
+            <PersistentString
+               value = "StorePhone">
+            </PersistentString>
+            <PersistentString
+               value = "StoreName">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

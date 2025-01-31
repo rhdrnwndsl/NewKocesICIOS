@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="IPKeyBoard" customModule="KocesICIOS" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="768" height="250"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="MKf-He-ZA4">
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="250"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="pvR-bd-P9x">
+                            <rect key="frame" x="0.0" y="0.0" width="768" height="42"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="irz-fj-0sl">
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="42"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                    <state key="normal" title="취소"/>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pba-0D-ni6">
+                                    <rect key="frame" x="154" y="0.0" width="152" height="42"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pLB-Sp-17j">
+                                    <rect key="frame" x="308" y="0.0" width="152" height="42"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Wu-c1-QXE">
+                                    <rect key="frame" x="462" y="0.0" width="152" height="42"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kE5-mP-AEf">
+                                    <rect key="frame" x="616" y="0.0" width="152" height="42"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                    <state key="normal" title="확인"/>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Wg2-T0-Xkb">
+                            <rect key="frame" x="0.0" y="44" width="768" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kag-HW-e8O">
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IMJ-ai-dHx" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="154" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="dj3-zx-hAB"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="1"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u2T-Vs-iYH" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="308" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="2">
+                                        <color key="titleColor" systemColor="labelColor"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sWj-II-Le1" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="462" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="3"/>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WU1-xz-dYc">
+                                    <rect key="frame" x="616" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemGray4Color"/>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="wJV-Cp-4xU">
+                            <rect key="frame" x="0.0" y="96" width="768" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O3b-Rw-UmK">
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n2n-BL-KxL" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="154" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="h3p-ZQ-aCF"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="4"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhH-Hr-tlb" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="308" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="5"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mMZ-VR-wmP" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="462" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="6"/>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9mz-73-SgW">
+                                    <rect key="frame" x="616" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemGray4Color"/>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Wul-2x-W87">
+                            <rect key="frame" x="0.0" y="148" width="768" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L4R-K6-KkN">
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfY-oi-Ss8" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="154" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="WqL-nj-oVz"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="7"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kdp-zV-MhP" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="308" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="8"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFb-dt-juy" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="462" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="9"/>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KEt-Nb-3HE">
+                                    <rect key="frame" x="616" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemGray4Color"/>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="xYt-3W-cyQ">
+                            <rect key="frame" x="0.0" y="200" width="768" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Hi-Iq-9lv">
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vT2-Mx-bZa" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="154" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="re5-Ws-D1O"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="."/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sph-KP-U2s" customClass="KeyboardButton" customModule="KocesICIOS" customModuleProvider="target">
+                                    <rect key="frame" x="308" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <state key="normal" title="0"/>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ecR-Rs-ixv">
+                                    <rect key="frame" x="462" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="linkColor"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                    <state key="normal" title="입력">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eER-wX-dKo">
+                                    <rect key="frame" x="616" y="0.0" width="152" height="50"/>
+                                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemGray4Color"/>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemGray4Color"/>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="MKf-He-ZA4" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Alh-OQ-Tt6"/>
+                <constraint firstItem="MKf-He-ZA4" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="IeE-bk-Zxi"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="MKf-He-ZA4" secondAttribute="trailing" id="YVW-kB-5m4"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="MKf-He-ZA4" secondAttribute="bottom" id="qat-Kg-b0d"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="131.25" y="433.59375"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray4Color">
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

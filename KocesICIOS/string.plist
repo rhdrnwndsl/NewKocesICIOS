@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>err_msg_no_connected_device</key>
+	<string>장치가 연결 되어 있지 않습니다.</string>
+	<key>sqlite_create_tradetable</key>
+	<string>&quot;CREATE TABLE IF NOT EXISTS Trade (id INTEGER PRIMARY KEY AUTOINCREMENT,Trade TEXT,Cancel TEXT,Money TEXT,Tax TEXT,Svc TEXT,Txf TEXT,Inst TEXT,CashTarget TEXT,CashInputType TEXT,CardNum TEXT,CardType TEXT,CardInpNm TEXT,CardIssuer TEXT,AuDate TEXT,AuNum TEXT, TradeNo TEXT)</string>
+	<key>err_msg_no_regist_store</key>
+	<string>가맹점 등록이 되어 있지 않습니다</string>
+	<key>err_msg_no_setting_tax</key>
+	<string>세금 관련 설정이 되어 있지 않습니다 (환경설정 -&gt; 세금 페이지)</string>
+	<key>err_msg_empty_value</key>
+	<string>빈 값은 사용 할 수 없습니다</string>
+	<key>title_firmwareupdate</key>
+	<string>업데이트</string>
+	<key>err_firmwareprcessing</key>
+	<string>현재 펌웨어 업데이트 중입니다.</string>
+	<key>err_firmware_no_exist_filename</key>
+	<string>펌웨어 서버에 펌웨어가 존재 하지 않습니다.</string>
+	<key>err_firmware_no_fileSize</key>
+	<string>펌웨어 정보를 확인 할 수 없습니다</string>
+	<key>firmware_download_complete</key>
+	<string>서버로 부터 펌웨어 파일 다운로드 완료</string>
+	<key>err_firmware_ready</key>
+	<string>&quot;펌웨어 업데이는 아래 업데이트 버튼을 눌러주세요&quot;</string>
+	<key>txt_save_cat_ipAddr</key>
+	<string>CAT접속 정보가 저장 되었습니다</string>
+	<key>firmware_send_ready</key>
+	<string>장치에 펌웨어 업데이트 준비를 요청</string>
+	<key>err_firmware_send_ready</key>
+	<string>장치로부터 펌웨어 업데이트 준비 실패를 수신함</string>
+	<key>firmware_send_start</key>
+	<string>장치에 펌웨어 데이터 전송 시작을 요청</string>
+	<key>err_main_input_value_less_than_0</key>
+	<string>최소 결제 금액보다 적은 금액을 결제 할 수 없습니다(최소 결제 금액 10원)</string>
+</dict>
+</plist>

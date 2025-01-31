@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "DeviceSettingController.abc(_aa:):DeviceSettingController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_aa.utf8.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TcpSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:CallbackListener:AppToApp:):TcpSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "res.Data[23]">
+            </PersistentString>
+            <PersistentString
+               value = "resDataDic[&quot;pointCard&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "String(bytes: des, encoding: .utf8)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BLEManager.peripheral(_:didWriteValueFor:error:):BLEManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Array(value)">
+            </PersistentString>
+            <PersistentString
+               value = "String(error)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PaySdk.Res_Credit(_res:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "paylistener">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.PrintParser(&#xd30c;&#xc2f1;&#xd560;&#xd504;&#xb9b0;&#xd2b8;&#xb0b4;&#xc6a9;:):KocesSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "String(StrArr[0])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in PaySdk.Res_Tcp_Cash(tcpStatus:ResData:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "getCashTarget(&#xb300;&#xc0c1;&#xc785;&#xb825;: PaySdk.instance.mPrivateBusinessType)">
+            </PersistentString>
+            <PersistentString
+               value = "_resData[&quot;CardNo&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Command.FSspliter(Data:):Command.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Array(garbage)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:CallbackListener:):KocesSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Utils.utf8toHangul(str: des)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "sqlite.init():sqlite.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "fileURL.path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashController.TargetSelected(_:):CashController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "sender.selectedSegmentIndex">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.KeyDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:CallbackListener:):KocesSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "resDataDic[&quot;AnsCode&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "resDataDic[&quot;BsnNo&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PaySdk.Req_tcp_Credit(_Tid:_img:_CodeNversion:_cancelInfo:_kocesUnique:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "_status">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "bleSdk.bleManagerReceive(data:):bleSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mReceivedData">
+            </PersistentString>
+            <PersistentString
+               value = "mReceiveDataSize">
+            </PersistentString>
+            <PersistentString
+               value = "mReceiveDataSize == 0">
+            </PersistentString>
+            <PersistentString
+               value = "Utils.UInt8ArrayToInt(_value: Array(data[1...2]))">
+            </PersistentString>
+            <PersistentString
+               value = "data.count &gt; MinHeadSize">
+            </PersistentString>
+            <PersistentString
+               value = "data[0] == 0x02">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PaySdk.CreditIC(Tid:Money:Tax:ServiceCharge:TaxFree:InstallMent:CancenInfo:mchData:KocesTreadeCode:CompCode:payLinstener:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "paylistener">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashController.init(coder:):CashController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Target.Person.rawValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CashController.CashBtn_Clicked(_:):CashController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mCancelReason">
+            </PersistentString>
+            <PersistentString
+               value = "paylistener">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TaxController.TaxSave_Clicked(_:):TaxController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Txt_VatValue.text!">
+            </PersistentString>
+            <PersistentString
+               value = "Txt_SvcValue.text!">
+            </PersistentString>
+            <PersistentString
+               value = "Txt_VatValue.text!.isEmpty">
+            </PersistentString>
+            <PersistentString
+               value = "Txt_SvcValue.text!.isEmpty">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "StoreSettingController.onResult(tcpStatus:Result:):StoreSettingController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PaySdk.Res_Tcp_Credit(tcpStatus:ResData:):PaySdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "paylistener">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CreditController.IntstallMentStepper(_:):CreditController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "sender.stepValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.ChecklistBeforeTrading():KocesSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "str">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "bleSdk.setDefault():bleSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mSetting.getDefaultUserData(_key: define.HOST_SERVER_IP)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TcpSdk.SendTcpTran(requstData:):TcpSdk.swift">
+      </ContextState>
+      <ContextState
+         contextName = "sqlite.InsertTrade(&#xc2e0;&#xc6a9;&#xd604;&#xae08;:&#xcde8;&#xc18c;&#xc5ec;&#xbd80;:&#xae08;&#xc561;:&#xc138;&#xae08;:&#xbd09;&#xc0ac;&#xb8cc;:&#xbe44;&#xacfc;&#xc138;:&#xd560;&#xbd80;:&#xd604;&#xae08;&#xc601;&#xc218;&#xc99d;&#xd0c0;&#xac9f;:&#xd604;&#xae08;&#xc601;&#xc218;&#xc99d;&#xbc1c;&#xae09;&#xd615;&#xd0dc;:&#xce74;&#xb4dc;&#xbc88;&#xd638;:&#xce74;&#xb4dc;&#xc885;&#xb958;:&#xce74;&#xb4dc;&#xb9e4;&#xc785;&#xc0ac;:&#xce74;&#xb4dc;&#xbc1c;&#xae09;&#xc0ac;:&#xc2b9;&#xc778;&#xb0a0;&#xc9dc;:&#xc2b9;&#xc778;&#xbc88;&#xd638;:&#xcf54;&#xc138;&#xc2a4;&#xace0;&#xc720;&#xac70;&#xb798;&#xd0a4;:):sqlite.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MainViewController.initRes():MainViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mKocesSdk.bleState">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "specialized closure #1 in PaySdk.Req_tcp_Credit(_Tid:_img:_CodeNversion:_cancelInfo:_kocesUnique:):PaySdk.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MainViewController.DeviceInfoRes(ResData:):MainViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "receive">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Command.TcpResDataParser(ResData:):Command.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Array(Data[1])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "CreditController.SelectedInstallMentMenu(_:):CreditController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mTotalMoney">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "initProc.hasJailbreak():initProc.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/usr/bin/ssh&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/bin/bash&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/private/var/lib/apt&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/etc/apt&quot;)">
+            </PersistentString>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/Library/MobileSubstrate/MobileSubstrate.dylib&quot;) ">
+            </PersistentString>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/usr/sbin/sshd&quot;) ">
+            </PersistentString>
+            <PersistentString
+               value = "fileManager.fileExists(atPath: &quot;/Applications/Cydia.app&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.resbleDataPaser(resData:):KocesSdk.swift">
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.instance.unsafeMutableAddressor:KocesSdk.swift">
+      </ContextState>
+      <ContextState
+         contextName = "TradelistController.tableView(_:cellForRowAt:):TradelistController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "mDBTradeTableResult">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "KocesSdk.Cash(Command:Tid:Date:PosVer:Etc:CancelInfo:InputMethod:Id:Idencrypt:Money:Tax:ServiceCharge:TaxFree:PrivateOrCorp:CancelReason:pointCardCode:pointAceeptNum:businessData:bangi:kocesNumber:):KocesSdk.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "resDataDic[&quot;CardNo&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DeviceSettingController.Print(_:):DeviceSettingController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Array(temp.utf8).count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.getStringPlist():Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "nsDictionary?.object(forKey: &quot;err_msg_no_regist_store&quot;) as! String">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
