@@ -28,6 +28,7 @@ class CatAnimationViewController: UIViewController {
     var countdownMsg:String = "30"
     public var cardMsg:String = ""
     public var totalMoney:String = ""
+    public var iscancel = false
     var count = 30
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,7 +75,12 @@ class CatAnimationViewController: UIViewController {
         countdownMsg = "30"
         count = Int(countdownMsg) ?? 30
         
-        mTotalMoney.text = Utils.PrintMoney(Money: totalMoney) + " 원"
+        if iscancel {
+            mTotalMoney.text = "-" + Utils.PrintMoney(Money: totalMoney) + " 원"
+        } else {
+            mTotalMoney.text = Utils.PrintMoney(Money: totalMoney) + " 원"
+        }
+ 
         
         mTitleMsg.text = cardMsg
 

@@ -29,6 +29,7 @@ class CardAnimationViewController: UIViewController {
     var countdownMsg:String = "20"
     public var cardMsg:String = ""
     public var totalMoney:String = ""
+    public var iscancel = false
     
     let trackShape = CAShapeLayer()
     let shape = CAShapeLayer()
@@ -82,7 +83,11 @@ class CardAnimationViewController: UIViewController {
         countdownMsg = Setting.shared.mDgTmout
         count = Int(countdownMsg) ?? 20
         
-        mTotalMoney.text = Utils.PrintMoney(Money: totalMoney) + " 원"
+        if iscancel {
+            mTotalMoney.text = "-" + Utils.PrintMoney(Money: totalMoney) + " 원"
+        } else {
+            mTotalMoney.text = Utils.PrintMoney(Money: totalMoney) + " 원"
+        }
         
         if (!cardMsg.contains("서버")) {
             countdownMsg = "20"

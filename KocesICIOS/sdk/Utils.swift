@@ -1046,7 +1046,7 @@ class Utils{
     }
     
     /** 결제 할 때 새로운 뷰컨트롤러를 띄워서 카드읽기를 한다 */
-    static func CardAnimationViewControllerInit(Message _message:String, isButton _isBtn:Bool, CountDown _countDown:String, TotalMoney _money:String, Listener _listener:PayResultDelegate) {
+    static func CardAnimationViewControllerInit(Message _message:String, isButton _isBtn:Bool, CountDown _countDown:String, TotalMoney _money:String, IsCancel _iscancel:Bool, Listener _listener:PayResultDelegate) {
         let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController
         /** 기존의 메세지박스가 있다면 제거한다 */
         if presented is UIAlertController
@@ -1058,6 +1058,7 @@ class Utils{
                 cardAni.modalPresentationStyle = .fullScreen
                 cardAni.cardMsg = _message
                 cardAni.totalMoney = _money
+                cardAni.iscancel = _iscancel
                 cardAni.paylistener = _listener
 //                if _isBtn {
 //                    cardAni.mCardBtn.isHidden = false
@@ -1089,6 +1090,7 @@ class Utils{
                             cardAni.modalPresentationStyle = .fullScreen
                             cardAni.cardMsg = _message
                             cardAni.totalMoney = _money
+                            cardAni.iscancel = _iscancel
                             cardAni.paylistener = _listener
           
                             Utils.topMostViewController()?.present(cardAni, animated: true, completion: nil)
@@ -1107,6 +1109,7 @@ class Utils{
                         cardAni.modalPresentationStyle = .fullScreen
                         cardAni.cardMsg = _message
                         cardAni.totalMoney = _money
+                        cardAni.iscancel = _iscancel
                         cardAni.paylistener = _listener
       
                         Utils.topMostViewController()?.present(cardAni, animated: true, completion: nil)
@@ -1124,6 +1127,7 @@ class Utils{
                 cardAni.modalPresentationStyle = .fullScreen
                 cardAni.cardMsg = _message
                 cardAni.totalMoney = _money
+                cardAni.iscancel = _iscancel
                 cardAni.paylistener = _listener
 
                 cardAni.CardViewInit()
@@ -1145,6 +1149,7 @@ class Utils{
                         cardAni.modalPresentationStyle = .fullScreen
                         cardAni.cardMsg = _message
                         cardAni.totalMoney = _money
+                        cardAni.iscancel = _iscancel
                         cardAni.paylistener = _listener
                         
                         Utils.topMostViewController()?.present(cardAni, animated: true, completion: nil)
@@ -1164,6 +1169,7 @@ class Utils{
                 cardAni.modalPresentationStyle = .fullScreen
                 cardAni.cardMsg = _message
                 cardAni.totalMoney = _money
+                cardAni.iscancel = _iscancel
                 cardAni.paylistener = _listener
                 DispatchQueue.main.async {
                     topMostViewController()?.present(cardAni, animated: true, completion: nil)
@@ -1193,7 +1199,7 @@ class Utils{
     }
     
     //cat결제 시 화면
-    static func CatAnimationViewInit(Message _message:String,TotalMoney _money:String, Listener _listener:CatResultDelegate) {
+    static func CatAnimationViewInit(Message _message:String,TotalMoney _money:String,IsCancel _iscancel:Bool, Listener _listener:CatResultDelegate) {
         let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController
         var storyboard:UIStoryboard?
         if UIDevice.current.userInterfaceIdiom == .phone {
@@ -1210,6 +1216,7 @@ class Utils{
                 catAni.modalPresentationStyle = .fullScreen
                 catAni.cardMsg = _message
                 catAni.totalMoney = _money
+                catAni.iscancel = _iscancel
                 catAni.catlistener = _listener
                 catAni.CardViewInit()
                 return
@@ -1226,6 +1233,7 @@ class Utils{
                             catAni.modalPresentationStyle = .fullScreen
                             catAni.cardMsg = _message
                             catAni.totalMoney = _money
+                            catAni.iscancel = _iscancel
                             catAni.catlistener = _listener
                             Utils.topMostViewController()?.present(catAni, animated: true, completion: nil)
                         }
@@ -1238,6 +1246,7 @@ class Utils{
                         catAni.modalPresentationStyle = .fullScreen
                         catAni.cardMsg = _message
                         catAni.totalMoney = _money
+                        catAni.iscancel = _iscancel
                         catAni.catlistener = _listener
                         Utils.topMostViewController()?.present(catAni, animated: true, completion: nil)
                     }
@@ -1253,6 +1262,7 @@ class Utils{
                 catAni.modalPresentationStyle = .fullScreen
                 catAni.cardMsg = _message
                 catAni.totalMoney = _money
+                catAni.iscancel = _iscancel
                 catAni.catlistener = _listener
                 catAni.CardViewInit()
                 return
@@ -1267,6 +1277,7 @@ class Utils{
                         catAni.modalPresentationStyle = .fullScreen
                         catAni.cardMsg = _message
                         catAni.totalMoney = _money
+                        catAni.iscancel = _iscancel
                         catAni.catlistener = _listener
                         Utils.topMostViewController()?.present(catAni, animated: true, completion: nil)
                     }
@@ -1279,6 +1290,7 @@ class Utils{
                 catAni.modalPresentationStyle = .fullScreen
                 catAni.cardMsg = _message
                 catAni.totalMoney = _money
+                catAni.iscancel = _iscancel
                 catAni.catlistener = _listener
                 Utils.topMostViewController()?.present(catAni, animated: true, completion: nil)
             }

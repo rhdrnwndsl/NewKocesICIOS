@@ -9,18 +9,16 @@ import UIKit
 import MobileCoreServices
 
 class Canvas:UIView {
-    
-//    var line = [CGPoint]()
 
-    
     fileprivate var lines = [[CGPoint]]()
     var touchScreen:Bool = false
     var touchEnd:Bool = false
     var endCheck:Int = 0
-    func undo() {
-        lines.popLast()
-        setNeedsDisplay()
-    }
+    
+//    func undo() {
+//        lines.popLast()
+//        setNeedsDisplay()
+//    }
     
     func clear() {
         lines.removeAll()
@@ -36,37 +34,24 @@ class Canvas:UIView {
         UIGraphicsEndImageContext()
         
         var imageData = [UInt8]()
-        
         if touchScreen {
             //사이즈 리사이즈
             let resize = resizeImage(with: image!, scaledTo: CGSize(width: 128.0, height: 64.0))
-//            let resize = reSizeImaged(img: image!, imgSize: CGSize(width: 128.0, height: 64.0))
             //이미지바이트변환
             imageData = pixelValues(fromCGImage: resize.cgImage)!
-            
-//            let _data = NSData(bytes: test, length: test.count)
-//            let _uiimage = UIImage(data: _data as Data)
-//            print("fdfd")
         }
-        
         return imageData
     }
     
     func resizeImage(with image: UIImage, scaledTo newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(newSize,true,1.0)
-//        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
         image.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage ?? UIImage()
     }
 
-
-    
-    func pixelValues(fromCGImage imageRef: CGImage?) -> [UInt8]?
-    {
-
-        /** 혹시 몰라서 만들어 놓음 */
+    func pixelValues(fromCGImage imageRef: CGImage?) -> [UInt8]?{
         let bitmap:BMImage = BMImage(cgImage: imageRef!)
         let IamgeByteData = bitmap.getPixelBytes()
         var bmpByteData:[UInt8] = [0x42,0x4D]   //'BM'
@@ -80,20 +65,12 @@ class Canvas:UIView {
         bmpByteData += [0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0x00]
                 bmpByteData += IamgeByteData
         return bmpByteData
-        /** 혹시 몰라서 만들어 놓음 */
- 
     }
     
     override func draw(_ rect: CGRect) {
         //그림을 글는 곳
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        // test
-//        let startPoint = CGPoint(x: 0, y: 0)
-//        let endPoint = CGPoint(x: 100, y: 100)
-//        context.move(to: startPoint)
-//        context.addLine(to: endPoint)
         
         // 라인의 색, 라인의 굵기, 라인의 끝나는 부분처리
         context.setStrokeColor(UIColor.black.cgColor)
@@ -110,8 +87,6 @@ class Canvas:UIView {
                 }
             }
         }
-        
-        
         context.strokePath()
     }
     
@@ -132,18 +107,12 @@ class Canvas:UIView {
         guard let point = touches.first?.location(in: nil) else {
             return
         }
-//        print(point)
-        
+
         guard var lastLine = lines.popLast() else { return }
         lastLine.append(point)
         
         lines.append(lastLine)
-        
-//        var lastLine = lines.last
-//        lastLine?.append(point)
-        
-//        line.append(point)
-        
+
         setNeedsDisplay()
     }
 }
@@ -155,32 +124,8 @@ class SignatureController: UIViewController {
     let canvas = Canvas()
     var canvasImage = [UInt8]()
     public var sdk = ""
-    
-//    let undoButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Undo", for: .normal)
-//        button.titleLabel?.font = .boldSystemFont(ofSize: 14)
-//        button.addTarget(self, action: #selector(handleUndo), for: .touchUpInside)
-//        return button
-//    }()
-//
-//    @objc fileprivate func handleUndo() {
-//        print("undo draw")
-//        canvas.undo()
-//    }
-//
-//    let clearButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Clear", for: .normal)
-//        button.titleLabel?.font = .boldSystemFont(ofSize: 14)
-//        button.addTarget(self, action: #selector(handleClear), for: .touchUpInside)
-//        return button
-//    }()
-//
-//    @objc fileprivate func handleClear() {
-//        print("clear draw")
-//        canvas.clear()
-//    }
+    public var money = ""
+    public var iscancel = false
     
     var titleLabel: UILabel = {
         var label = UILabel()
@@ -196,15 +141,25 @@ class SignatureController: UIViewController {
         label.text = "30"
         label.textAlignment = .center
         label.baselineAdjustment = .alignBaselines
-        label.font = .boldSystemFont(ofSize: 36)
+        label.font = .boldSystemFont(ofSize: 24)
+        return label
+    }()
+    
+    var moneyLabel: JLabel = {
+        var label = JLabel()
+        label.text = "30"
+        label.textColor = define.txt_title_orange
+        label.textAlignment = .center
+        label.baselineAdjustment = .alignBaselines
+        label.font = .boldSystemFont(ofSize: 24)
         return label
     }()
     
     let saveButton: JButton = {
         let button = JButton(type: .system)
         button.setTitle("취소", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 36)
-        button.addTarget(self, action: #selector(handleSave(_:event:)), for: .touchUpInside)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        button.addTarget(SignatureController.self, action: #selector(handleSave(_:event:)), for: .touchUpInside)
         return button
     }()
     
@@ -215,6 +170,7 @@ class SignatureController: UIViewController {
             return
         }
         print("save draw")
+        moneyLabel.text = ""
         countLabel.text = ""
         titleLabel.text = ""
         self.connectionTimeout?.invalidate()
@@ -224,7 +180,6 @@ class SignatureController: UIViewController {
             if canvas.touchScreen {
                 if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
                 else {   mpaySdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
-             
             }
             else {
                 if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
@@ -234,18 +189,13 @@ class SignatureController: UIViewController {
         }
     }
 
-//    @IBOutlet weak var signatureView: SignatureView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        view.addSubview(canvas)
-                canvas.backgroundColor = .white
-        //        canvas.frame = view.frame
-        
+        canvas.backgroundColor = .white
         setupLayout()
     }
     
     fileprivate func setupLayout() {
-        
         let stackView_label = UIStackView(arrangedSubviews: [
             titleLabel
         ])
@@ -258,16 +208,17 @@ class SignatureController: UIViewController {
         stackView_Countlabel.distribution = .fillEqually
         view.addSubview(stackView_Countlabel)
         
+        let stackView_Moneylabel = UIStackView(arrangedSubviews: [
+            moneyLabel
+        ])
+        stackView_Moneylabel.distribution = .fillEqually
+        view.addSubview(stackView_Moneylabel)
+        
         let stackView_btn = UIStackView(arrangedSubviews: [
             saveButton
         ])
         stackView_btn.distribution = .fillEqually
         view.addSubview(stackView_btn)
-        
-//        saveButton.setTitleColor(UIColor(displayP3Red: 0/255, green:113/255, blue: 188/255, alpha: 100.0), for: .normal)
-//        saveButton.layer.cornerRadius = 10
-//        saveButton.layer.borderColor = UIColor(displayP3Red: 0/255, green:113/255, blue: 188/255, alpha: 100.0).cgColor
-//        saveButton.layer.borderWidth = 3
         
         //최상단에 만든다. leadingAnchor = left. trailingAnchor = right. bottomAnchor = bottom. topAnchor = top.
         stackView_label.translatesAutoresizingMaskIntoConstraints = false
@@ -279,14 +230,18 @@ class SignatureController: UIViewController {
         stackView_Countlabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         stackView_Countlabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         stackView_Countlabel.topAnchor.constraint(equalTo: stackView_label.topAnchor, constant: 30).isActive = true
-        
-//        stackView_label.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+
         //하단에 만든다
         stackView_btn.translatesAutoresizingMaskIntoConstraints = false
         stackView_btn.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         stackView_btn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         stackView_btn.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         stackView_btn.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        stackView_Moneylabel.translatesAutoresizingMaskIntoConstraints = false
+        stackView_Moneylabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        stackView_Moneylabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        stackView_Moneylabel.bottomAnchor.constraint(equalTo: stackView_btn.topAnchor, constant: -50).isActive = true
     }
     
     override func loadView() {
@@ -295,6 +250,12 @@ class SignatureController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        if iscancel {
+            moneyLabel.text = "결제금액 : -" + Utils.PrintMoney(Money: money) + "원"
+        } else {
+            moneyLabel.text = "결제금액 : " + Utils.PrintMoney(Money: money) + "원"
+        }
 
         var countDown:Int = 30
         var _interv:Int = 0
@@ -317,12 +278,10 @@ class SignatureController: UIViewController {
                         if canvas.touchScreen {
                             if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
                             else {   mpaySdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
-                            
                         }
                         else {
                             if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
                             else {   mpaySdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
-                            
                         }
                     }
                 }
@@ -333,12 +292,10 @@ class SignatureController: UIViewController {
                         if canvas.touchScreen {
                             if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
                             else {   mpaySdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
-                            
                         }
                         else {
                             if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
                             else {   mpaySdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
-                            
                         }
                     }
                 }
@@ -350,20 +307,14 @@ class SignatureController: UIViewController {
                         if canvas.touchScreen {
                             if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
                             else {   mpaySdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
-                            
                         }
                         else {
                             if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
                             else {   mpaySdk.Result_SignPad(signCheck: false, signImage: canvasImage)}
-                            
                         }
                     }
                 }
             }
         })
     }
-    
 }
-
-
-
