@@ -229,7 +229,7 @@ class SignatureController: UIViewController {
         stackView_Countlabel.translatesAutoresizingMaskIntoConstraints = false
         stackView_Countlabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         stackView_Countlabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        stackView_Countlabel.topAnchor.constraint(equalTo: stackView_label.topAnchor, constant: 30).isActive = true
+        stackView_Countlabel.topAnchor.constraint(equalTo: stackView_label.bottomAnchor, constant: 30).isActive = true
 
         //하단에 만든다
         stackView_btn.translatesAutoresizingMaskIntoConstraints = false
@@ -241,7 +241,7 @@ class SignatureController: UIViewController {
         stackView_Moneylabel.translatesAutoresizingMaskIntoConstraints = false
         stackView_Moneylabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         stackView_Moneylabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        stackView_Moneylabel.bottomAnchor.constraint(equalTo: stackView_btn.topAnchor, constant: -50).isActive = true
+        stackView_Moneylabel.bottomAnchor.constraint(equalTo: stackView_btn.topAnchor, constant: -30).isActive = true
     }
     
     override func loadView() {
