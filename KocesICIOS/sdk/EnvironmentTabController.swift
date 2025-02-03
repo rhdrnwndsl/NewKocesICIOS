@@ -68,9 +68,9 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -95,13 +95,10 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
         let backNav = UIBarButtonItem(customView: backButton)
 
         navigationItem.leftBarButtonItem = backNav
-        
-//        if let tabBarController = self.tabBarController as? TabBarController {
-//            tabBarController.hideItems(at: [2,3] ) // 1번과 2번 탭 숨기기
-//        }
+
         if let tabBarController = self.tabBarController as? TabBarController {
-                  tabBarController.hideTabs(at: [2, 3]) // 1번과 2번 탭 숨기기
-              }
+            tabBarController.hideTabs(at: [2, 3]) // 1번과 2번 탭 숨기기
+        }
     }
     
     @objc func BackMainView() {
@@ -110,17 +107,12 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        if let tabBarController = self.tabBarController as? TabBarController {
-//            tabBarController.showCommonItems(item: productItem)
-//        }
         if let tabBarController = self.tabBarController as? TabBarController {
-                   tabBarController.showAllTabs() // 원래 탭 복원
-               }
+            tabBarController.showAllTabs() // 원래 탭 복원
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
 }

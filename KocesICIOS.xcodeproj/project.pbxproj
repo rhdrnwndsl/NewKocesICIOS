@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		284C9A69801F666230D9E8E2 /* Pods_KocesICIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CDAA9E86E7097A803CC963 /* Pods_KocesICIOS.framework */; };
 		390B7B622B980A900010662C /* StoreRegistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B7B612B980A8F0010662C /* StoreRegistController.swift */; };
+		393FC7342D4CB6D30045269B /* QnaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7332D4CB6D30045269B /* QnaViewController.swift */; };
 		3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */; };
 		3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486E2D22847C00B2BB5C /* SettingItem.swift */; };
 		3972C63D2D4C4C9300F989AB /* cat_cash.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3972C63A2D4C4C9300F989AB /* cat_cash.gif */; };
@@ -131,6 +132,7 @@
 /* Begin PBXFileReference section */
 		08BE15A5550AE7EF0AB50A6D /* Pods-KocesICIOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KocesICIOS.release.xcconfig"; path = "Target Support Files/Pods-KocesICIOS/Pods-KocesICIOS.release.xcconfig"; sourceTree = "<group>"; };
 		390B7B612B980A8F0010662C /* StoreRegistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreRegistController.swift; sourceTree = "<group>"; };
+		393FC7332D4CB6D30045269B /* QnaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QnaViewController.swift; sourceTree = "<group>"; };
 		3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentSplitView.swift; sourceTree = "<group>"; };
 		3970486E2D22847C00B2BB5C /* SettingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItem.swift; sourceTree = "<group>"; };
 		3972C63A2D4C4C9300F989AB /* cat_cash.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = cat_cash.gif; sourceTree = "<group>"; };
@@ -413,6 +415,7 @@
 				398C70802D192C3300630612 /* PointController.swift */,
 				398C70822D192C4000630612 /* MemberController.swift */,
 				39FCC1632D43303000412E66 /* ProductController.swift */,
+				393FC7332D4CB6D30045269B /* QnaViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -815,6 +818,7 @@
 				5E59D0B9261EEBA2008FFA53 /* SwiftUIButton.swift in Sources */,
 				5ED74D11266B76FB0087F652 /* LogFile.swift in Sources */,
 				3BA07E9F25A8B79E0095B0C3 /* initProc.swift in Sources */,
+				393FC7342D4CB6D30045269B /* QnaViewController.swift in Sources */,
 				5EF60E06263D5397007DD0CC /* ScannerViewController.swift in Sources */,
 				3B35AC9625AA2AFA0049651D /* Command.swift in Sources */,
 				5EF60DF1263D2EEC007DD0CC /* EasyPayController.swift in Sources */,

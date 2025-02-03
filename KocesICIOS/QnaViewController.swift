@@ -32,38 +32,32 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
         Section(title: "5. 펌웨어 업데이트 했는데 장치연결이 안되요", items: [
             "- 펌웨어 업데이트 후 BT리더기가 종료됩니다. 전원을 다시 켠 후 'BT연결' 버튼을 눌러 다시 설정할 수 있습니다."
         ], isExpanded: false),
-        Section(title: "6. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "6. 애플페이 지원이 되나요?", items: [
+            "- BT 리더기 중 애플페이를 지원하는 제품 연결 시 애플페이가 지원됩니다."
         ], isExpanded: false),
-        Section(title: "7. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "7. 거래중에 통신실패가 발생해요", items: [
+            "- 휴대폰/테블릿의 통신상태를 확인해 주세요."
         ], isExpanded: false),
-        Section(title: "8. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "8. 일반거래와 상품거래는 무슨 차이 인가요?", items: [
+            "- 일반거래 : 거래시 금액을 수동으로 입력하여 거래 \n - 상품거래 : 상품을 등록 후 상품을 선택하여 거래"
         ], isExpanded: false),
-        Section(title: "9. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "9. AppToApp 연동거래를 해야하는데 다른거래를 선택해서 바꾸고 싶어요", items: [
+            "- 가맹점설정 – 결제설정 – 거래방식설정 에서 변경하실 수 있습니다."
         ], isExpanded: false),
-        Section(title: "10. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "10. 상품데이터는 어떻게 백업하나요?", items: [
+            "- 상품설정 – 상품관리 – 상품정보백업 – 내보내기 버튼을 통해 상품데이터를 저장, 공유하실 수 있습니다."
         ], isExpanded: false),
-        Section(title: "11. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "11. 상품등록이 안되요", items: [
+            "- 상품등록은 가맹점설정 후 사용이 가능합니다."
         ], isExpanded: false),
-        Section(title: "12. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "12. 상품등록은 몇 개까지 등록 되나요?", items: [
+            "- 상품은 최대 1,000개까지 등록이 가능합니다."
         ], isExpanded: false),
-        Section(title: "13. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "13. 앱 삭제 시 결제내역 및 상품정보가 삭제되나요?", items: [
+            "- 앱 삭제 시 결제내역 및 상품정보, 가맹점정보 등 모든 데이터가 삭제됩니다."
         ], isExpanded: false),
-        Section(title: "14. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
-        ], isExpanded: false),
-        Section(title: "15. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
-        ], isExpanded: false),
-        Section(title: "16. CAT단말기 연결이 안되요", items: [
-            "- CAT단말기가 휴대폰/태블릿과 동일한 네트워크 인지 확인해 주세요, 휴대폰은 WIFI로 통신설정해야 합니다. (LTE/5G 불가) \n - CAT단말기의 IP주소가 맞는지 확인해주세요.\n(설정방법은 사용자매뉴얼 참조)"
+        Section(title: "14. 결재내역이나 상품정보 백업 방법이 있나요?", items: [
+            "- 상품정보는 상품설정 – 상품관리 – 상품정보백업 – 내보내기 버튼으로 백업이 가능합니다. \n - 결재내역, 가맹점정보는 현재 백업이 불가합니다."
         ], isExpanded: false),
     ]
     
