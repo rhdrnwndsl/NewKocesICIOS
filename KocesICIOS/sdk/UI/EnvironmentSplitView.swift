@@ -135,12 +135,31 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     func backToMainView() {
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width { // Portrait mode
             if isContentViewVisible {
+                let storyboard = getMainStoryBoard()
+                var viewController = storyboard.instantiateViewController(withIdentifier: "StoreViewController") as! StoreViewController
+                if parentViewController == viewController {
+                    if viewController.contentStackView.isHidden {
+                        //만일 이게 숨겨져 있다면 현재 등록다운로드뷰인경우
+                        viewController.backStoreDownload()
+                        return
+                    }
+                }
+                
                 isContentViewVisible = false
                 updateLayoutForCurrentOrientation()
             } else {
                 backToMain()
             }
         } else {
+            let storyboard = getMainStoryBoard()
+            var viewController = storyboard.instantiateViewController(withIdentifier: "StoreViewController") as! StoreViewController
+            if parentViewController == viewController {
+                if viewController.contentStackView.isHidden {
+                    //만일 이게 숨겨져 있다면 현재 등록다운로드뷰인경우
+                    viewController.backStoreDownload()
+                    return
+                }
+            }
             backToMain()
         }
     }
