@@ -40,6 +40,7 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
     
     @IBOutlet weak var mTermsStackView: UIStackView!
     @IBOutlet weak var mPermissionsStackView: UIStackView!
+    @IBOutlet weak var mSelectUIStackView: UIStackView!
     
     var mTermAgree:Bool = false //약관 동의 여부
     @IBOutlet weak var mTermsText: UITextView!  //약관설명문
@@ -49,8 +50,14 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
     @IBOutlet weak var mbtnPerAgree: UIButton!     //동의 버튼
     
     var centralManager: CBCentralManager!
-
     @IBOutlet weak var mTermsAgreeStack: UIStackView!   //약관동의체크버튼이 있는 스택
+
+    @IBOutlet weak var mBtnAppToApp: UIButton!
+    
+    @IBOutlet weak var mBtnCommon: UIButton!
+    
+    @IBOutlet weak var mBtnProduct: UIButton!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +66,8 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
         if APP_TERMS_CHECK.isEmpty {
             mPermissionsStackView.isHidden = true
             mPermissionsStackView.alpha = 0.0
+            mSelectUIStackView.isHidden = true
+            mSelectUIStackView.alpha = 0.0
             initTerms()
         } else {
             //권한설정을 완료하지 않았다면 권한설정으로 이동
@@ -66,7 +75,18 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             if APP_PERMISSION_CHECK.isEmpty {
                 mTermsStackView.isHidden = true
                 mTermsStackView.alpha = 0.0
+                mSelectUIStackView.isHidden = true
+                mSelectUIStackView.alpha = 0.0
                 initPermissions()
+            } else {
+                let APP_UI_CHECK:String = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                if APP_UI_CHECK.isEmpty || APP_UI_CHECK == define.UIMethod.None.rawValue {
+                    mPermissionsStackView.isHidden = true
+                    mPermissionsStackView.alpha = 0.0
+                    mTermsStackView.isHidden = true
+                    mTermsStackView.alpha = 0.0
+                    initPermissions()
+                }
             }
 
         }
@@ -106,19 +126,9 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             mTermsAgreeStack.isHidden = true
             mTermsAgreeStack.alpha = 0.0
         }
-
-//        mTermsText.text = TermsText()
     }
-    
-    //약관 동의 스위치
 
-    
     @IBAction func mBtnAgree_Clicked(_ sender: UIButton, forEvent event: UIEvent) {
-//        let touch: UITouch = (event.allTouches?.first)!
-//        if (touch.tapCount != 1) {
-//            // do action.
-//            return
-//        }
         let ImageAgree:UIImage = mbtnAgree.currentImage!
         
         if ImageAgree == UIImage(systemName: "square") {
@@ -145,6 +155,8 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
                 mTermsStackView.isHidden = true
                 mTermsStackView.alpha = 0.0
+                mSelectUIStackView.isHidden = true
+                mSelectUIStackView.alpha = 0.0
                 mPermissionsStackView.isHidden = false
                 mPermissionsStackView.alpha = 1.0
                 initPermissions()
@@ -171,7 +183,7 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
         mPermissionsText.font?.withSize(20)
     }
     
-    //확인버튼 누르고 가맹점등록페이지로 이동한다
+    //확인버튼 누르고 UI선택창을 표시하러 이동한다
     @IBAction func click_btn_per(_ sender: UIButton, forEvent event: UIEvent) {
         let touch: UITouch = (event.allTouches?.first)!
         if (touch.tapCount != 1) {
@@ -208,18 +220,15 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             switch status{
             case .authorized:
                 print("Album: 권한 허용")
-//                checkBlePermission()
                 Setting.shared.setDefaultUserData(_data: define.APP_PERMISSION_CHECK, _key: define.APP_PERMISSION_CHECK)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
-                    var storyboard:UIStoryboard?
-                    if UIDevice.current.userInterfaceIdiom == .phone {
-                        storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-                    } else {
-                        storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-                    }
-                    let mainTabBarController = storyboard!.instantiateViewController(identifier: "TabBar")
-                    mainTabBarController.modalPresentationStyle = .fullScreen
-                    self.present(mainTabBarController, animated: true, completion: nil)
+                    mTermsStackView.isHidden = true
+                    mTermsStackView.alpha = 0.0
+                    mPermissionsStackView.isHidden = true
+                    mPermissionsStackView.alpha = 0.0
+                    mSelectUIStackView.isHidden = false
+                    mSelectUIStackView.alpha = 1.0
+                    initUISelect()
                 }
             case .denied:
                 print("Album: 권한 거부")
@@ -236,7 +245,78 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             }
         })
     }
- 
+    
+    func initUISelect() {
+        mBtnAppToApp.setImage(UIImage(named: "apptoapp_up"), for: .normal)
+        mBtnAppToApp.setImage(UIImage(named: "apptoapp_dn"), for: .highlighted)
+        mBtnCommon.setImage( UIImage(named: "common_up"), for: .normal)
+        mBtnCommon.setImage( UIImage(named: "common_dn"), for: .highlighted)
+        mBtnProduct.setImage(UIImage(named: "product_up") , for: .normal)
+        mBtnProduct.setImage(UIImage(named: "product_dn") , for: .highlighted)
+    }
+    
+    @IBAction func clicked_apptoapp(_ sender: Any, forEvent event: UIEvent) {
+        let touch: UITouch = (event.allTouches?.first)!
+        if (touch.tapCount != 1) {
+            // do action.
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
+            Setting.shared.setDefaultUserData(_data: define.APP_UI_CHECK, _key: define.UIMethod.AppToApp.rawValue)
+            var storyboard:UIStoryboard?
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+            } else {
+                storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
+            }
+            let mainTabBarController = storyboard!.instantiateViewController(identifier: "TabBar")
+            mainTabBarController.modalPresentationStyle = .fullScreen
+            self.present(mainTabBarController, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func clicked_common(_ sender: Any, forEvent event: UIEvent) {
+        let touch: UITouch = (event.allTouches?.first)!
+        if (touch.tapCount != 1) {
+            // do action.
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
+            Setting.shared.setDefaultUserData(_data: define.APP_UI_CHECK, _key: define.UIMethod.Common.rawValue)
+            var storyboard:UIStoryboard?
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+            } else {
+                storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
+            }
+            let mainTabBarController = storyboard!.instantiateViewController(identifier: "TabBar")
+            mainTabBarController.modalPresentationStyle = .fullScreen
+            self.present(mainTabBarController, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func clicked_product(_ sender: Any, forEvent event: UIEvent) {
+        let touch: UITouch = (event.allTouches?.first)!
+        if (touch.tapCount != 1) {
+            // do action.
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
+            Setting.shared.setDefaultUserData(_data: define.APP_UI_CHECK, _key: define.UIMethod.Product.rawValue)
+            var storyboard:UIStoryboard?
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+            } else {
+                storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
+            }
+            let mainTabBarController = storyboard!.instantiateViewController(identifier: "TabBar")
+            mainTabBarController.modalPresentationStyle = .fullScreen
+            self.present(mainTabBarController, animated: true, completion: nil)
+        }
+    
+    }
+    
+    
     ///경고 박스
     func AlertBox(title : String, message : String, text : String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)

@@ -208,6 +208,15 @@ class define{
     
     /** 권한설정 페이지  */
     public static let APP_PERMISSION_CHECK: String = "APP_PERMISSION_CHECK"
+    /** UI선택 페이지 */
+    public static let APP_UI_CHECK: String = "APP_UI_CHECK"
+    /** UI 선택시 설정할 데이터 */
+    public enum UIMethod: String {
+        case AppToApp = "앱투앱"
+        case Common = "일반"
+        case Product = "상품"
+        case None = ""
+    }
     
     public enum TradeMethod: String{
         case Credit = "신용"

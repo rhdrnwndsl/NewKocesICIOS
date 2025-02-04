@@ -23,7 +23,7 @@ class KeyboardButton : UIButton {
     }
     
     //버튼 테두리 굵기
-    @IBInspectable var borderWidth: CGFloat {
+    @IBInspectable override var borderWidth: CGFloat {
         set {
             layer.borderWidth = newValue
         }
@@ -33,7 +33,7 @@ class KeyboardButton : UIButton {
     }
     
     //버튼 모서리를 둥글게
-    @IBInspectable var cornerRadius: CGFloat {
+    @IBInspectable override var cornerRadius: CGFloat {
         set {
             layer.cornerRadius = newValue
         }
@@ -43,7 +43,7 @@ class KeyboardButton : UIButton {
     }
     
     //버튼 테두리 색깔
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable override var borderColor: UIColor? {
         set {
             guard let uiColor = newValue else { return }
             layer.borderColor = uiColor.cgColor

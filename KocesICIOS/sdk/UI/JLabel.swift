@@ -17,7 +17,7 @@ class JLabel: UILabel {
     private override init(frame: CGRect) {
         super.init(frame: frame) 
     }
-    @IBInspectable var borderColor:UIColor? {
+    @IBInspectable override var borderColor:UIColor? {
         set {
             layer.borderColor = newValue!.cgColor
         }
@@ -29,7 +29,7 @@ class JLabel: UILabel {
         }
     }
     
-    @IBInspectable var borderWidth:CGFloat {
+    @IBInspectable override var borderWidth:CGFloat {
         set {
             layer.borderWidth = newValue
         }
@@ -38,7 +38,7 @@ class JLabel: UILabel {
         }
     }
     
-    @IBInspectable var cornerRadius:CGFloat {
+    @IBInspectable override var cornerRadius:CGFloat {
         set {
             layer.cornerRadius = newValue
             clipsToBounds = newValue > 0

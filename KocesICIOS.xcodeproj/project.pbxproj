@@ -10,6 +10,7 @@
 		284C9A69801F666230D9E8E2 /* Pods_KocesICIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CDAA9E86E7097A803CC963 /* Pods_KocesICIOS.framework */; };
 		390B7B622B980A900010662C /* StoreRegistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B7B612B980A8F0010662C /* StoreRegistController.swift */; };
 		393FC7342D4CB6D30045269B /* QnaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7332D4CB6D30045269B /* QnaViewController.swift */; };
+		393FC73C2D5199B80045269B /* ExtensionUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC73B2D5199B80045269B /* ExtensionUIView.swift */; };
 		3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */; };
 		3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486E2D22847C00B2BB5C /* SettingItem.swift */; };
 		3972C63D2D4C4C9300F989AB /* cat_cash.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3972C63A2D4C4C9300F989AB /* cat_cash.gif */; };
@@ -133,6 +134,7 @@
 		08BE15A5550AE7EF0AB50A6D /* Pods-KocesICIOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KocesICIOS.release.xcconfig"; path = "Target Support Files/Pods-KocesICIOS/Pods-KocesICIOS.release.xcconfig"; sourceTree = "<group>"; };
 		390B7B612B980A8F0010662C /* StoreRegistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreRegistController.swift; sourceTree = "<group>"; };
 		393FC7332D4CB6D30045269B /* QnaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QnaViewController.swift; sourceTree = "<group>"; };
+		393FC73B2D5199B80045269B /* ExtensionUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUIView.swift; sourceTree = "<group>"; };
 		3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentSplitView.swift; sourceTree = "<group>"; };
 		3970486E2D22847C00B2BB5C /* SettingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItem.swift; sourceTree = "<group>"; };
 		3972C63A2D4C4C9300F989AB /* cat_cash.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = cat_cash.gif; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 				3FC953C52652C59D00F3508D /* IPKeyBoard.swift */,
 				3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */,
 				3970486E2D22847C00B2BB5C /* SettingItem.swift */,
+				393FC73B2D5199B80045269B /* ExtensionUIView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -849,6 +852,7 @@
 				3BAE898025C2F8E700EF12BB /* VerityController.swift in Sources */,
 				398C70882D1A759A00630612 /* NumberKeyButton.swift in Sources */,
 				3B9547AD259D0F8A00B24185 /* Setting.swift in Sources */,
+				393FC73C2D5199B80045269B /* ExtensionUIView.swift in Sources */,
 				5E4EE6A625F09F580020A5E5 /* TermsViewController.swift in Sources */,
 				3F44597726452D2A00BE16CE /* CatSdk.swift in Sources */,
 				3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */,
