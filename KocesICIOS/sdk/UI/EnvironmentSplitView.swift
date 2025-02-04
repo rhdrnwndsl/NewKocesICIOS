@@ -166,6 +166,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let item = sections[indexPath.section].items[indexPath.row]
         cell.textLabel?.text = item.title
+        cell.textLabel?.font = .systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
         cell.accessoryType = item.hasSwitch ? .none : .disclosureIndicator
 
         if item.hasSwitch {
@@ -182,8 +183,8 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     private func styleCell(_ cell: UITableViewCell, at indexPath: IndexPath) {
-        let cornerRadius: CGFloat = 10.0
-        let padding: CGFloat = 10.0
+//        let cornerRadius: CGFloat = 10.0
+//        let padding: CGFloat = 10.0
 
         // 배경색 처리
         if indexPath == selectedIndexPath {
@@ -216,13 +217,13 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60 // 원하는 높이로 조정
+        return Utils.getRowHeight() // 원하는 높이로 조정
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         
-        header.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        header.textLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
         header.textLabel?.textColor = .darkGray
         header.textLabel?.textAlignment = .left
         
@@ -231,7 +232,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 60
+        return Utils.getRowHeight()
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -306,13 +307,14 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
    
-    private lazy var storesettingVC: StoreSettingController = {
+    private lazy var storesettingVC: StoreViewController = {
         // Load Storyboard
         let storyboard = getMainStoryBoard()
         
         // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "StoreSettingController") as! StoreSettingController
-
+//        var viewController = storyboard.instantiateViewController(withIdentifier: "StoreSettingController") as! StoreSettingController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "StoreViewController") as! StoreViewController
+        
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
 
