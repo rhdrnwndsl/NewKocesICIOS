@@ -838,6 +838,9 @@ class StoreViewController: UIViewController {
         buttonStack.alignment = .center
         buttonStack.spacing = 8
         registrationStack.addArrangedSubview(buttonStack)
+        // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
+        // 필요 시 아래처럼 고정 폭 설정 가능:
+        regRequestButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
         
         return registrationStack
     }
@@ -861,6 +864,10 @@ class StoreViewController: UIViewController {
         } else {
             rowStack.addArrangedSubview(bisNumberTextField)
         }
+        
+        // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
+        // 필요 시 아래처럼 고정 폭 설정 가능:
+        label.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
       
         rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
         
@@ -891,6 +898,12 @@ class StoreViewController: UIViewController {
         rowStack.addArrangedSubview(label)
         rowStack.addArrangedSubview(serialNumberTextField)
         rowStack.addArrangedSubview(deviceButton)
+        
+        // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
+        // 필요 시 아래처럼 고정 폭 설정 가능:
+        label.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
+        deviceButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
+        
         rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
         
         return rowStack
@@ -914,6 +927,11 @@ class StoreViewController: UIViewController {
         
         rowStack.addArrangedSubview(label)
         rowStack.addArrangedSubview(segmentedControl)
+        
+        // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
+        // 필요 시 아래처럼 고정 폭 설정 가능:
+        label.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
+        
         rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
         
         return rowStack
@@ -1101,10 +1119,14 @@ class StoreViewController: UIViewController {
     
     // MARK: - 가맹점다운로드 완료
     public func backStoreDownload() {
-        contentStackView.isHidden = true
-        titleStackView.isHidden = false
-        // UI 갱신
+        // --- 데이터 셋업
+        setupStoreInfoData()
+        setupRepresentativeInfoView()
         refreshSubMerchantViews()
+        
+        contentStackView.isHidden = false
+        titleStackView.isHidden = false
+        registrationView?.isHidden = true
     }
     
     // MARK: - 정보수정 팝업 표시
@@ -1334,66 +1356,7 @@ extension StoreViewController: TcpResultDelegate, UITextFieldDelegate, CustomAle
         listener = TcpResult()
         listener?.delegate = self
 
-        //기존 정보들을 일단 다 제거 한다.
-//        for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
-//            if key.contains(define.STORE_TID) {
-//                if key.contains(define.CAT_STORE_TID) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    KeychainWrapper.standard.removeObject(forKey: keyChainTarget.KocesICIOSPay.rawValue + (value as! String))
-//                }
-//          
-//            }
-//            if key.contains(define.STORE_BSN) {
-//                if key.contains(define.CAT_STORE_BSN) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                }
-//              
-//            }
-//            if key.contains(define.STORE_SERIAL) {
-//                if key.contains(define.CAT_STORE_SERIAL) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                }
-//             
-//            }
-//            if key.contains(define.STORE_NAME) {
-//                if key.contains(define.CAT_STORE_NAME) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                }
-//           
-//            }
-//            if key.contains(define.STORE_PHONE) {
-//                if key.contains(define.CAT_STORE_PHONE) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                }
-//             
-//            }
-//            if key.contains(define.STORE_OWNER) {
-//                if key.contains(define.CAT_STORE_OWNER) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                }
-//      
-//            }
-//            if key.contains(define.STORE_ADDR) {
-//                if key.contains(define.CAT_STORE_ADDR) {
-//                    
-//                } else {
-//                    Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                }
-//            
-//            }
-//        }
+       
         
 //        if segmentedControl.selectedSegmentIndex == 1 {
 //            Setting.shared.setDefaultUserData(_data: String(segmentedControl.selectedSegmentIndex), _key: define.MULTI_STORE)
@@ -1413,11 +1376,72 @@ extension StoreViewController: TcpResultDelegate, UITextFieldDelegate, CustomAle
     func onResult(tcpStatus _status: tcpStatus, Result _result: Dictionary<String, String>) {
 
         if _result["AnsCode"] == "0000" {
+            //기존 정보들을 일단 다 제거 한다.
+            for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
+                if key.contains(define.STORE_TID) {
+                    if key.contains(define.CAT_STORE_TID) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                        KeychainWrapper.standard.removeObject(forKey: keyChainTarget.KocesICIOSPay.rawValue + (value as! String))
+                    }
+              
+                }
+                if key.contains(define.STORE_BSN) {
+                    if key.contains(define.CAT_STORE_BSN) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                    }
+                  
+                }
+                if key.contains(define.STORE_SERIAL) {
+                    if key.contains(define.CAT_STORE_SERIAL) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                    }
+                 
+                }
+                if key.contains(define.STORE_NAME) {
+                    if key.contains(define.CAT_STORE_NAME) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                    }
+               
+                }
+                if key.contains(define.STORE_PHONE) {
+                    if key.contains(define.CAT_STORE_PHONE) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                    }
+                 
+                }
+                if key.contains(define.STORE_OWNER) {
+                    if key.contains(define.CAT_STORE_OWNER) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                    }
+          
+                }
+                if key.contains(define.STORE_ADDR) {
+                    if key.contains(define.CAT_STORE_ADDR) {
+                        
+                    } else {
+                        Setting.shared.setDefaultUserData(_data: "", _key: key)
+                    }
+                
+                }
+            }
             if segmentedControl.selectedSegmentIndex == 1 {
                 Setting.shared.setDefaultUserData(_data: String(segmentedControl.selectedSegmentIndex), _key: define.MULTI_STORE)
             } else {
                 Setting.shared.setDefaultUserData(_data: "", _key: define.MULTI_STORE)
             }
+            
             //복수가맹점응답일경우
             if _result["TrdType"]! == "D16" || _result["TrdType"]! == "D17" {
                 var _msg:String = ""
