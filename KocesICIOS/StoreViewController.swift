@@ -799,7 +799,7 @@ class StoreViewController: UIViewController {
         let downloadLabel = UILabel()
         downloadLabel.text = "가맹점 다운로드"
         downloadLabel.font = UIFont.boldSystemFont(ofSize: Utils.getHeadingFontSize())
-        downloadLabel.textAlignment = .left
+//        downloadLabel.textAlignment = .left
         registrationStack.addArrangedSubview(downloadLabel)
         
         // 구분선
@@ -841,6 +841,8 @@ class StoreViewController: UIViewController {
         // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
         // 필요 시 아래처럼 고정 폭 설정 가능:
         regRequestButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
+        regRequestButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
+        downloadLabel.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         
         return registrationStack
     }
@@ -861,15 +863,18 @@ class StoreViewController: UIViewController {
         rowStack.addArrangedSubview(label)
         if labelText == "TID" {
             rowStack.addArrangedSubview(tidNumberTextField)
+            tidNumberTextField.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         } else {
             rowStack.addArrangedSubview(bisNumberTextField)
+            bisNumberTextField.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         }
         
         // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
         // 필요 시 아래처럼 고정 폭 설정 가능:
         label.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
+        label.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
       
-        rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
+        rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         
         return rowStack
     }
@@ -902,9 +907,11 @@ class StoreViewController: UIViewController {
         // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
         // 필요 시 아래처럼 고정 폭 설정 가능:
         label.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
+        serialNumberTextField.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
+        label.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         deviceButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
-        
-        rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
+        deviceButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
+        rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         
         return rowStack
     }
@@ -931,8 +938,9 @@ class StoreViewController: UIViewController {
         // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
         // 필요 시 아래처럼 고정 폭 설정 가능:
         label.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
-        
-        rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
+        label.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
+        segmentedControl.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
+        rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()).isActive = true
         
         return rowStack
     }
