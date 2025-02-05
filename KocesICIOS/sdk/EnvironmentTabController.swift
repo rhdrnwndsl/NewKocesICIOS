@@ -8,20 +8,19 @@
 import UIKit
 
 class EnvironmentTabController: UISplitViewController, UISplitViewControllerDelegate {
-    
-    var productItem:[UITabBarItem] = [
+
+    var productItem: [UITabBarItem] = [
         UITabBarItem(title: "메인화면", image: UIImage(systemName: "house"), tag: 0),
         UITabBarItem(title: "환경설정", image: UIImage(systemName: "gearshape"), tag: 1),
         UITabBarItem(title: "거래내역", image: UIImage(systemName: "text.book.closed"), tag: 2),
         UITabBarItem(title: "매출정보", image: UIImage(systemName: "calendar"), tag: 3)
     ]
-    
-    var commonItem:[UITabBarItem] = [
+        
+    var commonItem: [UITabBarItem] = [
         UITabBarItem(title: "메인화면", image: UIImage(systemName: "house"), tag: 0),
-        UITabBarItem(title: "환경설정", image: UIImage(systemName: "gearshape"), tag: 1),
-//        UITabBarItem(title: "거래내역", image: UIImage(systemName: "text.book.closed"), tag: 2),
-//        UITabBarItem(title: "매출정보", image: UIImage(systemName: "calendar"), tag: 3)
+        UITabBarItem(title: "환경설정", image: UIImage(systemName: "gearshape"), tag: 1)
     ]
+    
 
     private var rootView = EnvironmentSplitView()
     private func createSections() -> [SettingSection] {
@@ -80,6 +79,7 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
 
         rootView = EnvironmentSplitView()
         rootView.configure(with: createSections())
+        // 부모 컨트롤러로 self를 등록하여, EnvironmentSplitView 내에서 자식 ProductSetViewController의 delegate로 할당되도록 함
         rootView.setViewController(viewController: self)
         self.view = rootView
         
@@ -90,7 +90,6 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
         backButton.setTitleColor(define.txt_title_blue, for: .normal)
         backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
         backButton.addTarget(self, action: #selector(BackMainView), for: .touchUpInside)
-
         
         let backNav = UIBarButtonItem(customView: backButton)
 
@@ -114,5 +113,24 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+}
+
+// MARK: - ProductSetViewControllerDelegate Implementation
+
+extension EnvironmentTabController: ProductSetViewControllerDelegate {
+    
+    func productSetViewControllerDidTapRegister(_ controller: ProductSetViewController) {
+        // ProductRegisterViewController 전환: 네비게이션 스택에 push
+        let registerVC = ProductRegisterViewController()
+        print("EnvironmentTabController: 상품등록 전환")
+        navigationController?.pushViewController(registerVC, animated: true)
+    }
+    
+    func productSetViewControllerDidTapModify(_ controller: ProductSetViewController) {
+        // 상품수정 화면 전환 (예시: ProductModifyViewController, 별도로 구현)
+        let modifyVC = ProductModifyViewController()
+        print("EnvironmentTabController: 상품수정 전환")
+        navigationController?.pushViewController(modifyVC, animated: true)
     }
 }

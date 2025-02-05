@@ -8,7 +8,14 @@
 import Foundation
 import UIKit
 
+protocol ProductSetViewControllerDelegate: AnyObject {
+    func productSetViewControllerDidTapRegister(_ controller: ProductSetViewController)
+    func productSetViewControllerDidTapModify(_ controller: ProductSetViewController)
+}
+
 class ProductSetViewController: UIViewController, UITextFieldDelegate {
+    
+    weak var delegate: ProductSetViewControllerDelegate?
     
     // MARK: - UI Components
     
@@ -344,12 +351,14 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func productRegisterTapped() {
         print("상품등록 버튼 클릭 - 다른 화면으로 이동 (뒤로가기 시 이 화면으로 복귀)")
-        // 실제 화면 이동 로직 (예: pushViewController) 구현 시, 뒤로가기를 허용하는 방식으로 전환
+        // 직접 전환하는 대신 delegate 호출
+        delegate?.productSetViewControllerDidTapRegister(self)
     }
     
     @objc private func productModifyTapped() {
         print("상품수정 버튼 클릭 - 다른 화면으로 이동 (뒤로가기 시 이 화면으로 복귀)")
-        // 실제 화면 이동 로직 구현
+        // 직접 전환하는 대신 delegate 호출
+        delegate?.productSetViewControllerDidTapModify(self)
     }
     
     @objc private func exportDataTapped() {

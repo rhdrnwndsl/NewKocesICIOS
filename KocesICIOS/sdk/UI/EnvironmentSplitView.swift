@@ -352,15 +352,14 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
     
-    private lazy var ProductSettingVC: ProductController = {
+    private lazy var ProductSettingVC: ProductSetViewController = {
         let storyboard = getMainStoryBoard()
-
-        // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "ProductController") as! ProductController
-
-        // Add View Controller as Child View Controller
+        let viewController = storyboard.instantiateViewController(withIdentifier: "ProductSetViewController") as! ProductSetViewController
+        // 부모 컨트롤러가 delegate 역할을 할 수 있으면 할당합니다.
+        if let parentVC = self.parentViewController as? ProductSetViewControllerDelegate {
+            viewController.delegate = parentVC
+        }
         self.add(asChildViewController: viewController)
-
         return viewController
     }()
     

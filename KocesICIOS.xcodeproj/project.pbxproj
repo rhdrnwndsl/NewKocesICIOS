@@ -82,6 +82,8 @@
 		5E11D17525A73A7D00178305 /* StoreSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E11D17425A73A7D00178305 /* StoreSettingController.swift */; };
 		5E11D17D25A74F3600178305 /* EnvironmentTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E11D17C25A74F3600178305 /* EnvironmentTabController.swift */; };
 		5E3883982D539A3900E14D49 /* ProductSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883972D539A3500E14D49 /* ProductSetViewController.swift */; };
+		5E38839A2D53A29D00E14D49 /* ProductRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883992D53A29D00E14D49 /* ProductRegisterViewController.swift */; };
+		5E38839C2D53A2B700E14D49 /* ProductModifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */; };
 		5E4C092F2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C092E2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift */; };
 		5E4EE6A625F09F580020A5E5 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4EE6A525F09F580020A5E5 /* TermsViewController.swift */; };
 		5E59D0B9261EEBA2008FFA53 /* SwiftUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E59D0B8261EEBA2008FFA53 /* SwiftUIButton.swift */; };
@@ -218,6 +220,8 @@
 		5E11D17425A73A7D00178305 /* StoreSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSettingController.swift; sourceTree = "<group>"; };
 		5E11D17C25A74F3600178305 /* EnvironmentTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentTabController.swift; sourceTree = "<group>"; };
 		5E3883972D539A3500E14D49 /* ProductSetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSetViewController.swift; sourceTree = "<group>"; };
+		5E3883992D53A29D00E14D49 /* ProductRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRegisterViewController.swift; sourceTree = "<group>"; };
+		5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModifyViewController.swift; sourceTree = "<group>"; };
 		5E4C092E2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptEasyPaySwiftUI.swift; sourceTree = "<group>"; };
 		5E4EE6A525F09F580020A5E5 /* TermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsViewController.swift; sourceTree = "<group>"; };
 		5E59D0B8261EEBA2008FFA53 /* SwiftUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIButton.swift; sourceTree = "<group>"; };
@@ -377,7 +381,6 @@
 		3BD895232595A4DE00083682 /* KocesICIOS */ = {
 			isa = PBXGroup;
 			children = (
-				5E3883972D539A3500E14D49 /* ProductSetViewController.swift */,
 				5E5F2DFC25B43DED00D88B88 /* KocesICIOSDebug.entitlements */,
 				5E93379D25A8AAD80078179B /* sdk */,
 				5E7BFED4259C41E4005CA118 /* resources */,
@@ -425,6 +428,9 @@
 				39FCC1632D43303000412E66 /* ProductController.swift */,
 				393FC7332D4CB6D30045269B /* QnaViewController.swift */,
 				393FC73D2D51D5180045269B /* StoreViewController.swift */,
+				5E3883972D539A3500E14D49 /* ProductSetViewController.swift */,
+				5E3883992D53A29D00E14D49 /* ProductRegisterViewController.swift */,
+				5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -820,6 +826,7 @@
 				393FC73E2D51D5180045269B /* StoreViewController.swift in Sources */,
 				3B923BBA259A444200CA6889 /* CashController.swift in Sources */,
 				398C70832D192C4000630612 /* MemberController.swift in Sources */,
+				5E38839C2D53A2B700E14D49 /* ProductModifyViewController.swift in Sources */,
 				3BECE3F925AD57AB0082254C /* Utils.swift in Sources */,
 				3B630C0425FA2FB7006ADD7A /* JButton.swift in Sources */,
 				5EFE184D25D0DD2B007813DE /* CardAnimationViewController.swift in Sources */,
@@ -848,6 +855,7 @@
 				3B9FAEA325D0016400E736D0 /* TradelistController.swift in Sources */,
 				5EAF5C1E25ED324200EDAC0D /* ImageSaveAlbum.swift in Sources */,
 				5ED5B16826148EF500EFF7A2 /* CustomAlertController.swift in Sources */,
+				5E38839A2D53A29D00E14D49 /* ProductRegisterViewController.swift in Sources */,
 				3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */,
 				3B085D5925DFDB63000FE047 /* TaxController.swift in Sources */,
 				5E01D85B25B1665800DB32B7 /* ListenerDelegatePattern.swift in Sources */,
