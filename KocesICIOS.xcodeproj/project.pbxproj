@@ -81,6 +81,7 @@
 		5E11D17025A73A6100178305 /* DeviceSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E11D16F25A73A6100178305 /* DeviceSettingController.swift */; };
 		5E11D17525A73A7D00178305 /* StoreSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E11D17425A73A7D00178305 /* StoreSettingController.swift */; };
 		5E11D17D25A74F3600178305 /* EnvironmentTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E11D17C25A74F3600178305 /* EnvironmentTabController.swift */; };
+		5E3883982D539A3900E14D49 /* ProductSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883972D539A3500E14D49 /* ProductSetViewController.swift */; };
 		5E4C092F2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C092E2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift */; };
 		5E4EE6A625F09F580020A5E5 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4EE6A525F09F580020A5E5 /* TermsViewController.swift */; };
 		5E59D0B9261EEBA2008FFA53 /* SwiftUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E59D0B8261EEBA2008FFA53 /* SwiftUIButton.swift */; };
@@ -216,6 +217,7 @@
 		5E11D16F25A73A6100178305 /* DeviceSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingController.swift; sourceTree = "<group>"; };
 		5E11D17425A73A7D00178305 /* StoreSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSettingController.swift; sourceTree = "<group>"; };
 		5E11D17C25A74F3600178305 /* EnvironmentTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentTabController.swift; sourceTree = "<group>"; };
+		5E3883972D539A3500E14D49 /* ProductSetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSetViewController.swift; sourceTree = "<group>"; };
 		5E4C092E2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptEasyPaySwiftUI.swift; sourceTree = "<group>"; };
 		5E4EE6A525F09F580020A5E5 /* TermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsViewController.swift; sourceTree = "<group>"; };
 		5E59D0B8261EEBA2008FFA53 /* SwiftUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIButton.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 		3BD895232595A4DE00083682 /* KocesICIOS */ = {
 			isa = PBXGroup;
 			children = (
+				5E3883972D539A3500E14D49 /* ProductSetViewController.swift */,
 				5E5F2DFC25B43DED00D88B88 /* KocesICIOSDebug.entitlements */,
 				5E93379D25A8AAD80078179B /* sdk */,
 				5E7BFED4259C41E4005CA118 /* resources */,
@@ -855,6 +858,7 @@
 				5E01D86825B228B900DB32B7 /* BLEManager.swift in Sources */,
 				3BAE898025C2F8E700EF12BB /* VerityController.swift in Sources */,
 				398C70882D1A759A00630612 /* NumberKeyButton.swift in Sources */,
+				5E3883982D539A3900E14D49 /* ProductSetViewController.swift in Sources */,
 				3B9547AD259D0F8A00B24185 /* Setting.swift in Sources */,
 				393FC73C2D5199B80045269B /* ExtensionUIView.swift in Sources */,
 				5E4EE6A625F09F580020A5E5 /* TermsViewController.swift in Sources */,
