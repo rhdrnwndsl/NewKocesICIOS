@@ -69,7 +69,7 @@ class StoreViewController: UIViewController {
     private lazy var posLabel: UILabel = {
         let label = UILabel()
         label.text = "POS"
-        label.font = UIFont.boldSystemFont(ofSize: Utils.getHeadingFontSize())
+        label.font = Utils.getTitleFont()
         label.textAlignment = .left
         return label
     }()
@@ -79,7 +79,7 @@ class StoreViewController: UIViewController {
     private lazy var representativeTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "대표사업자정보"
-        label.font = UIFont.boldSystemFont(ofSize: Utils.getHeadingFontSize())
+        label.font = Utils.getSubTitleFont()
         return label
     }()
     private let arrowButton: UIButton = {
@@ -96,7 +96,7 @@ class StoreViewController: UIViewController {
     // 대표사업자 구분선
     private let representativeDivider: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = define.underline_grey
         return view
     }()
        
@@ -110,7 +110,7 @@ class StoreViewController: UIViewController {
         button.setTitle("가맹점등록", for: .normal)
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: Utils.getHeadingFontSize(), weight: .medium)
+        button.titleLabel?.font = Utils.getSubTitleFont()
         button.layer.cornerRadius = 8
         return button
     }()
@@ -119,7 +119,7 @@ class StoreViewController: UIViewController {
         button.setTitle("정보수정", for: .normal)
         button.backgroundColor = .systemGreen
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: Utils.getHeadingFontSize(), weight: .medium)
+        button.titleLabel?.font = Utils.getSubTitleFont()
         button.layer.cornerRadius = 8
         return button
     }()
@@ -129,11 +129,14 @@ class StoreViewController: UIViewController {
     
     private lazy var segmentedControl: UISegmentedControl = {
         let segmented = UISegmentedControl(items: ["일반", "복수"])
-//        button.setTitle("정보수정", for: .normal)
-//        button.backgroundColor = .systemGreen
-//        button.setTitleColor(.white, for: .normal)
-//        button.titleLabel?.font = .systemFont(ofSize: Utils.getHeadingFontSize(), weight: .medium)
-//        button.layer.cornerRadius = 8
+        segmented.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0),
+            NSAttributedString.Key.font: Utils.getTextFont()
+        ], for: .normal)
+        segmented.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: define.txt_blue,
+            NSAttributedString.Key.font: Utils.getTextFont()
+        ], for: .selected)
         return segmented
     }()
   
@@ -141,21 +144,21 @@ class StoreViewController: UIViewController {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "시리얼번호 입력"
-        textField.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        textField.font = Utils.getTextFont()
         return textField
     }()
     private lazy var bisNumberTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "사업자번호 입력"
-        textField.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        textField.font = Utils.getTextFont()
         return textField
     }()
     private lazy var tidNumberTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "TID 입력"
-        textField.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        textField.font = Utils.getTextFont()
         return textField
     }()
 
@@ -435,7 +438,7 @@ class StoreViewController: UIViewController {
         
         // titleStackView에 구분선 추가
         let divider = UIView()
-        divider.backgroundColor = .lightGray
+        divider.backgroundColor = define.underline_grey
         divider.heightAnchor.constraint(equalToConstant: 1).isActive = true
         titleStackView.addArrangedSubview(divider)
         
@@ -559,7 +562,7 @@ class StoreViewController: UIViewController {
         let verticalStack = UIStackView()
         verticalStack.axis = .vertical
         verticalStack.alignment = .fill
-        verticalStack.spacing = 8
+        verticalStack.spacing = 5
         verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         verticalStack.layer.cornerRadius = 8
         
@@ -571,10 +574,10 @@ class StoreViewController: UIViewController {
         representativeInfoView.addSubview(verticalStack)
         verticalStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            verticalStack.topAnchor.constraint(equalTo: representativeInfoView.topAnchor, constant: 16),
-            verticalStack.leadingAnchor.constraint(equalTo: representativeInfoView.leadingAnchor, constant: 16),
-            verticalStack.trailingAnchor.constraint(equalTo: representativeInfoView.trailingAnchor, constant: -16),
-            verticalStack.bottomAnchor.constraint(equalTo: representativeInfoView.bottomAnchor, constant: -16)
+            verticalStack.topAnchor.constraint(equalTo: representativeInfoView.topAnchor, constant: 10),
+            verticalStack.leadingAnchor.constraint(equalTo: representativeInfoView.leadingAnchor, constant: 10),
+            verticalStack.trailingAnchor.constraint(equalTo: representativeInfoView.trailingAnchor, constant: -10),
+            verticalStack.bottomAnchor.constraint(equalTo: representativeInfoView.bottomAnchor, constant: -10)
         ])
     }
     
@@ -590,7 +593,7 @@ class StoreViewController: UIViewController {
         let buttonStack = UIStackView(arrangedSubviews: [spacerView, registerButton, repEditButton])
         buttonStack.axis = .horizontal
         buttonStack.alignment = .center
-        buttonStack.spacing = 8
+        buttonStack.spacing = 5
         
         representativeButtonView.addSubview(buttonStack)
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
@@ -601,7 +604,7 @@ class StoreViewController: UIViewController {
             registerButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
                      
             repEditButton.topAnchor.constraint(equalTo: representativeButtonView.topAnchor, constant: 0),
-            repEditButton.leadingAnchor.constraint(equalTo: registerButton.trailingAnchor, constant: 16),
+            repEditButton.leadingAnchor.constraint(equalTo: registerButton.trailingAnchor, constant: 10),
             repEditButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
             repEditButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
             
@@ -627,7 +630,7 @@ class StoreViewController: UIViewController {
             
             // 구분선
             let divider = UIView()
-            divider.backgroundColor = .lightGray
+            divider.backgroundColor = define.underline_grey
             divider.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             // 서브사업자 정보뷰(라운드 박스)
@@ -651,7 +654,7 @@ class StoreViewController: UIViewController {
 
         let label = UILabel()
         label.text = "서브사업자정보"
-        label.font = UIFont.boldSystemFont(ofSize: Utils.getHeadingFontSize())
+        label.font = Utils.getSubTitleFont()
         
         let stack = UIStackView(arrangedSubviews: [label])
         stack.axis = .vertical
@@ -688,7 +691,7 @@ class StoreViewController: UIViewController {
         let verticalStack = UIStackView()
         verticalStack.axis = .vertical
         verticalStack.alignment = .fill
-        verticalStack.spacing = 8
+        verticalStack.spacing = 5
         verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         verticalStack.layer.cornerRadius = 8
         
@@ -700,10 +703,10 @@ class StoreViewController: UIViewController {
         container.addSubview(verticalStack)
         verticalStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            verticalStack.topAnchor.constraint(equalTo: container.topAnchor, constant: 16),
-            verticalStack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            verticalStack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
-            verticalStack.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -16)
+            verticalStack.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
+            verticalStack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
+            verticalStack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
+            verticalStack.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -10)
         ])
         
         return container
@@ -717,7 +720,7 @@ class StoreViewController: UIViewController {
         
         let removeButton = UIButton(type: .system)
         removeButton.setTitle("가맹점제거", for: .normal)
-        removeButton.titleLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
+        removeButton.titleLabel?.font = Utils.getSubTitleFont()
         removeButton.backgroundColor = .systemRed
         removeButton.setTitleColor(.white, for: .normal)
         removeButton.layer.cornerRadius = 8
@@ -725,7 +728,7 @@ class StoreViewController: UIViewController {
         
         let editButton = UIButton(type: .system)
         editButton.setTitle("정보수정", for: .normal)
-        editButton.titleLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
+        editButton.titleLabel?.font = Utils.getSubTitleFont()
         editButton.backgroundColor = .systemGreen
         editButton.setTitleColor(.white, for: .normal)
         editButton.layer.cornerRadius = 8
@@ -745,7 +748,7 @@ class StoreViewController: UIViewController {
         let buttonStack = UIStackView(arrangedSubviews: arrayView)
         buttonStack.axis = .horizontal
         buttonStack.alignment = .center
-        buttonStack.spacing = 8
+        buttonStack.spacing = 5
         
         container.addSubview(buttonStack)
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
@@ -756,7 +759,7 @@ class StoreViewController: UIViewController {
                 removeButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
                          
                 editButton.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
-                editButton.leadingAnchor.constraint(equalTo: removeButton.trailingAnchor, constant: 16),
+                editButton.leadingAnchor.constraint(equalTo: removeButton.trailingAnchor, constant: 10),
                 editButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
                 editButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
      
@@ -776,7 +779,7 @@ class StoreViewController: UIViewController {
                 spacerView2.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
                          
                 editButton.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
-                editButton.leadingAnchor.constraint(equalTo: spacerView2.trailingAnchor, constant: 16),
+                editButton.leadingAnchor.constraint(equalTo: spacerView2.trailingAnchor, constant: 10),
                 editButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
                 editButton.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
      
@@ -799,50 +802,80 @@ class StoreViewController: UIViewController {
         registrationStack.axis = .vertical
         registrationStack.alignment = .fill
         registrationStack.distribution = .fill
-        registrationStack.spacing = 16
+        registrationStack.spacing = 10
+        
+        // 가맹점다운로드 + 구분선
+        let labelStack = UIStackView()
+        labelStack.axis = .vertical
+        labelStack.alignment = .fill
+        labelStack.distribution = .fill
+        labelStack.spacing = 0
         
         // "가맹점 다운로드" 라벨
         let downloadLabel = UILabel()
         downloadLabel.text = "가맹점 다운로드"
-        downloadLabel.font = UIFont.boldSystemFont(ofSize: Utils.getHeadingFontSize())
-//        downloadLabel.textAlignment = .left
-        registrationStack.addArrangedSubview(downloadLabel)
+        downloadLabel.font = Utils.getSubTitleFont()
+        labelStack.addArrangedSubview(downloadLabel)
         
         // 구분선
         let regDivider = UIView()
-        regDivider.backgroundColor = .lightGray
+        regDivider.backgroundColor = define.underline_grey
         regDivider.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        registrationStack.addArrangedSubview(regDivider)
+        labelStack.addArrangedSubview(regDivider)
+        
+        let contentStack = UIStackView()
+        contentStack.axis = .vertical
+        contentStack.alignment = .fill
+        contentStack.distribution = .fill
+        contentStack.spacing = 10
         
         // TID row
         let tidRow = createRegistrationRow(labelText: "TID")
-        registrationStack.addArrangedSubview(tidRow)
+        contentStack.addArrangedSubview(tidRow)
         
         // 사업자번호 row
         let bizRow = createRegistrationRow(labelText: "사업자번호")
-        registrationStack.addArrangedSubview(bizRow)
+        contentStack.addArrangedSubview(bizRow)
         
         // SN row (label, 텍스트필드, '장치' 버튼)
         let snRow = createRegistrationSNRow()
-        registrationStack.addArrangedSubview(snRow)
+        contentStack.addArrangedSubview(snRow)
         
         // 복수가맹점 row (label + segmented control)
         let multiRow = createRegistrationMultiRow()
-        registrationStack.addArrangedSubview(multiRow)
+        contentStack.addArrangedSubview(multiRow)
+        
+        tidNumberTextField.delegate = self
+        bisNumberTextField.delegate = self
+        serialNumberTextField.delegate = self
+        
+        //새로운 버튼을 만든다 키보드 닫기 버튼을 만든다.
+        let bar = UIToolbar()
+        let doneBtn = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(dismissMyKeyboard))
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        bar.items = [flexSpace, flexSpace, doneBtn]
+        bar.sizeToFit()
+                
+        tidNumberTextField.inputAccessoryView = bar
+        bisNumberTextField.inputAccessoryView = bar
+        serialNumberTextField.inputAccessoryView = bar
         
         // 등록요청 버튼 (우측정렬)
         let regRequestButton = UIButton(type: .system)
         regRequestButton.setTitle("등록요청", for: .normal)
         regRequestButton.setTitleColor(.white, for: .normal)
         regRequestButton.backgroundColor = .systemBlue
-        regRequestButton.titleLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .medium)
+        regRequestButton.titleLabel?.font = Utils.getSubTitleFont()
         regRequestButton.layer.cornerRadius = 8
         regRequestButton.addTarget(self, action: #selector(didTapRegistrationRequest), for: .touchUpInside)
         
         let buttonStack = UIStackView(arrangedSubviews: [UIView(), regRequestButton])
         buttonStack.axis = .horizontal
         buttonStack.alignment = .center
-        buttonStack.spacing = 8
+        buttonStack.spacing = 5
+        
+        registrationStack.addArrangedSubview(labelStack)
+        registrationStack.addArrangedSubview(contentStack)
         registrationStack.addArrangedSubview(buttonStack)
         // 타이틀의 폭(예: 150 정도)을 고정해도 되지만, 이미 setContentHuggingPriority를 줬다면
         // 필요 시 아래처럼 고정 폭 설정 가능:
@@ -853,16 +886,21 @@ class StoreViewController: UIViewController {
         return registrationStack
     }
     
+    // 키보드를 숨긴다
+    @objc func dismissMyKeyboard(){
+        view.endEditing(true)
+    }
+    
     // Helper: 일반 행 (label + 텍스트필드)
     private func createRegistrationRow(labelText: String) -> UIView {
         let rowStack = UIStackView()
         rowStack.axis = .horizontal
         rowStack.alignment = .center
-        rowStack.spacing = 8
+        rowStack.spacing = 5
         
         let label = UILabel()
         label.text = labelText
-        label.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        label.font = Utils.getTextFont()
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -890,11 +928,11 @@ class StoreViewController: UIViewController {
         let rowStack = UIStackView()
         rowStack.axis = .horizontal
         rowStack.alignment = .center
-        rowStack.spacing = 8
+        rowStack.spacing = 5
         
         let label = UILabel()
         label.text = "SN"
-        label.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        label.font = Utils.getTextFont()
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -902,7 +940,7 @@ class StoreViewController: UIViewController {
         deviceButton.setTitle("장치", for: .normal)
         deviceButton.setTitleColor(.white, for: .normal)
         deviceButton.backgroundColor = .systemBlue
-        deviceButton.titleLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
+        deviceButton.titleLabel?.font = Utils.getSubTitleFont()
         deviceButton.layer.cornerRadius = 8
         deviceButton.addTarget(self, action: #selector(didTapDeviceButton), for: .touchUpInside)
         
@@ -927,11 +965,11 @@ class StoreViewController: UIViewController {
         let rowStack = UIStackView()
         rowStack.axis = .horizontal
         rowStack.alignment = .center
-        rowStack.spacing = 8
+        rowStack.spacing = 5
         
         let label = UILabel()
         label.text = "복수가맹점"
-        label.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        label.font = Utils.getTextFont()
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -972,20 +1010,20 @@ class StoreViewController: UIViewController {
             
             // titleStackView
             titleStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 0),
-            titleStackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 16),
-            titleStackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -16),
+            titleStackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
+            titleStackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -10),
 //            titleStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: 0),
             // 스크롤뷰 폭에 맞추기
-            titleStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -32),
+            titleStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -20),
             
             // contentStackView
             contentStackView.topAnchor.constraint(greaterThanOrEqualTo: titleStackView.bottomAnchor, constant: 0),
 //            contentStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 0),
-            contentStackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 16),
-            contentStackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -16),
+            contentStackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
+            contentStackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -10),
             contentStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: 0),
             // 스크롤뷰 폭에 맞추기
-            contentStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -32)
+            contentStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -20)
         ])
         
         NSLayoutConstraint.activate([
@@ -1319,20 +1357,20 @@ extension StoreViewController {
     private func createTwoLabelRow(title: String, value: String) -> UIStackView {
         let titleLabel = UILabel()
         titleLabel.text = "  " + title
-        titleLabel.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        titleLabel.font = Utils.getTextFont()
         titleLabel.textAlignment = .left
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         let valueLabel = UILabel()
         valueLabel.text = value
-        valueLabel.font = UIFont.systemFont(ofSize: Utils.getDetailFontSize(), weight: .regular)
+        valueLabel.font = Utils.getTextFont()
         valueLabel.textAlignment = .left
         // 필요하면 여러 줄 표시도 가능 (numberOfLines = 0)
         
         let rowStack = UIStackView(arrangedSubviews: [titleLabel, valueLabel])
         rowStack.axis = .horizontal
         rowStack.alignment = .fill
-        rowStack.spacing = 8
+        rowStack.spacing = 5
         
         // 행 높이 60
         rowStack.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()).isActive = true
@@ -1342,7 +1380,7 @@ extension StoreViewController {
          titleLabel.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()).isActive = true
 //        NSLayoutConstraint.activate([
 //            titleLabel.widthAnchor.constraint(equalToConstant: 150),
-//            valueLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 16),
+//            valueLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 10),
 //        ])
         
         return rowStack
@@ -1368,24 +1406,12 @@ extension StoreViewController: TcpResultDelegate, UITextFieldDelegate, CustomAle
             mKocesSdk.manager.scan()
         }
     }
-    
-   
-    
-    func StoreDownload()
-    {
+
+    func StoreDownload(){
         listener = TcpResult()
         listener?.delegate = self
 
-       
-        
-//        if segmentedControl.selectedSegmentIndex == 1 {
-//            Setting.shared.setDefaultUserData(_data: String(segmentedControl.selectedSegmentIndex), _key: define.MULTI_STORE)
-//        } else {
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.MULTI_STORE)
-//        }
-
         mKocesSdk.StoreDownload(Command: segmentedControl.selectedSegmentIndex == 1 ? "D12":"D10", Tid: tidNumberTextField.text!, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", Length: "0003", PosCheckData: "MDO", BSN: bisNumberTextField.text!, Serial: serialNumberTextField.text!, PosData: "", MacAddr: Utils.getKeyChainUUID(), CallbackListener: listener?.delegate as! TcpResultDelegate)
-
     }
     
     /** 키갱신시 사용 */
@@ -1563,82 +1589,6 @@ extension StoreViewController: TcpResultDelegate, UITextFieldDelegate, CustomAle
             }
             backStoreDownload()
         } else {
-            
-//            //기존의 정보를 다 지운다.
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_TID)
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_BSN)
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_SERIAL)
-//            
-//            //가맹점 정보 삭제
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_NAME) //업체명
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_PHONE) //업체 전화번호
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_OWNER) //업체 대표자명
-//            Setting.shared.setDefaultUserData(_data: "", _key: define.STORE_ADDR) //업체 주소
-//            
-//            for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
-//                if key.contains(define.STORE_TID) {
-//                    if key.contains(define.CAT_STORE_TID) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                        KeychainWrapper.standard.removeObject(forKey: keyChainTarget.KocesICIOSPay.rawValue + (value as! String))
-//                    }
-//              
-//                }
-//                if key.contains(define.STORE_BSN) {
-//                    if key.contains(define.CAT_STORE_BSN) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    }
-//                  
-//                }
-//                if key.contains(define.STORE_SERIAL) {
-//                    if key.contains(define.CAT_STORE_SERIAL) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    }
-//                 
-//                }
-//                if key.contains(define.STORE_NAME) {
-//                    if key.contains(define.CAT_STORE_NAME) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    }
-//               
-//                }
-//                if key.contains(define.STORE_PHONE) {
-//                    if key.contains(define.CAT_STORE_PHONE) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    }
-//                 
-//                }
-//                if key.contains(define.STORE_OWNER) {
-//                    if key.contains(define.CAT_STORE_OWNER) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    }
-//          
-//                }
-//                if key.contains(define.STORE_ADDR) {
-//                    if key.contains(define.CAT_STORE_ADDR) {
-//                        
-//                    } else {
-//                        Setting.shared.setDefaultUserData(_data: "", _key: key)
-//                    }
-//                
-//                }
-//            }
-//            
-//            bisNumberTextField.text = ""
-//            serialNumberTextField.text = ""
-            
-//            setStoreInfo()
             alertLoading.dismiss(animated: true){ [self] in
                 AlertBox(title: "결과", message: "가맹점 등록 다운로드를 실패 하였습니다.", text: "확인")
             }

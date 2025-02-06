@@ -56,9 +56,6 @@ class CustomAlertController:UIViewController {
         mAlertView.backgroundColor = .white
         mAlertView.layer.masksToBounds = true
         mAlertView.layer.cornerRadius = 12
-        
-//        mAlertView.layer.borderWidth = 0.5
-//        mAlertView.layer.borderColor = UIColor.lightGray.cgColor
 
         mTitleLabel.text = _title
         mTitleLabel.textAlignment = .center
@@ -72,7 +69,7 @@ class CustomAlertController:UIViewController {
         mCancelButton.setTitleColor(.systemBlue, for: .normal)
         mCancelButton.setTitleColor(.systemBlue, for: .selected)
         mCancelButton.layer.borderWidth = 0.5
-        mCancelButton.layer.borderColor = UIColor.lightGray.cgColor
+        mCancelButton.layer.borderColor = define.layout_border_lightgrey.cgColor
 
 //        mOkButton.frame = CGRect(x: mAlertView.frame.size.width/2,y: mAlertView.frame.size.height-40,width: mAlertView.frame.size.width/2,height: 40)
         mOkButton.setTitle("확인", for: .normal)

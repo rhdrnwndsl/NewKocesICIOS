@@ -381,51 +381,50 @@ class define{
     public static let LOGIN_POS_NO: String = "LOGIN_POS_NO"
 
  
+    //MARK: 색, 폰트사이즈, 폰트 정하기
+    public static let pad_text_font = UIFont.systemFont(ofSize: 15, weight: .light)   //일반 텍스트
+    public static let pad_sub_title_font = UIFont.systemFont(ofSize: 15, weight: .medium)  //중단 서브 타이틀
+    public static let pad_title_font = UIFont.systemFont(ofSize: 20, weight: .semibold)  //상단타이틀
+    public static let phone_text_font = UIFont.systemFont(ofSize: 15, weight: .light)   //일반 텍스트
+    public static let phone_sub_title_font = UIFont.systemFont(ofSize: 15, weight: .medium)  //중단 서브 타이틀
+    public static let phone_title_font = UIFont.systemFont(ofSize: 20, weight: .semibold)  //상단타이틀
+    
+    public static let pad_title_height:CGFloat = 45 //칸 높이
+    public static let phone_title_height:CGFloat = 40 //칸 높이
+    public static let pad_sub_height:CGFloat = 40 //서브칸 높이
+    public static let phone_sub_height:CGFloat = 35 //서브칸 높이
+    
+    public static let pad_btn_wight:CGFloat = 200 //버튼 너비
+    public static let phone_btn_wight:CGFloat = 150 //버튼 너비
+    
+    public static let pading_wight:CGFloat = 10  //간격 너비
+    
     //#0089CF
-    public static let message_blue = UIColor(red: 0/255, green: 137/255, blue: 207/255, alpha: 1.0)
-    //#0089CF
-    public static let message_btn_green = UIColor(red: 0/255, green: 137/255, blue: 207/255, alpha: 1.0)
-    //#0089CF
-    public static let txt_title_blue = UIColor(red: 0/255, green: 137/255, blue: 207/255, alpha: 1.0)
-    //#0089CF
-    public static let layout_round_blue = UIColor(red: 0/255, green: 137/255, blue: 207/255, alpha: 1.0)
-    //#EEF7E9
-    public static let layout_round_green = UIColor(red: 238/255, green: 247/255, blue: 233/255, alpha: 1.0)
-    //#EEF7E9
-    public static let layout_bg_green = UIColor(red: 238/255, green: 247/255, blue: 233/255, alpha: 1.0)
+    public static let txt_blue = UIColor(red: 0/255, green: 137/255, blue: 207/255, alpha: 1.0)   //글자 색상 파랑
     //#E95117
-    public static let txt_title_orange = UIColor(red: 233/255, green: 81/255, blue: 23/255, alpha: 1.0)
-    //#E1F0FF
-    public static let layout_round_lite_blue = UIColor(red: 225/255, green: 240/255, blue: 255/255, alpha: 1.0)
-    
-    //#C8FF64
-    public static let trackcolor = UIColor(red: 200/255, green: 255/255, blue: 100/255, alpha: 1.0)
-    //#70AD47
-    public static let thumbcolor = UIColor(red: 112/255, green: 173/255, blue: 71/255, alpha: 1.0)
-    //#f2f2f2
-    public static let lightgrey = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1.0)
-    //#f2f2f2
-    public static let trackgrey = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1.0)
-    //#bfbfbf
-    public static let grey = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1.0)
-    //#526684
-    public static let bottom_background = UIColor(red: 82/255, green: 102/255, blue: 132/255, alpha: 1.0)
-    //#C35732
-    public static let bottom_select = UIColor(red: 195/255, green: 87/255, blue: 50/255, alpha: 1.0)
-    
-    //#6D828F
-    public static let nk_color_ok_strike = UIColor(red: 109/255, green: 130/255, blue: 143/255, alpha: 1.0)
-    //#70AD47
-    public static let nk_color_ok = UIColor(red: 112/255, green: 173/255, blue: 71/255, alpha: 1.0)
-    //#B40000
-    public static let nk_color_deleted = UIColor(red: 180/255, green: 0/255, blue: 0/255, alpha: 1.0)
-    //#B46400
-    public static let nk_color_cleared = UIColor(red: 180/255, green: 100/255, blue: 0/255, alpha: 1.0)
+    public static let txt_orange = UIColor(red: 233/255, green: 81/255, blue: 23/255, alpha: 1.0) // 글자 색상 주황
     //#C54C4C
-    public static let nk_color_clear_strike = UIColor(red: 197/255, green: 76/255, blue: 76/255, alpha: 1.0)
-    //#4cc552
-    public static let nk_color_pressed = UIColor(red: 76/255, green: 197/255, blue: 82/255, alpha: 1.0)
-    //#2E7D32
-    public static let nk_color_strike = UIColor(red: 46/255, green: 125/255, blue: 50/255, alpha: 1.0)
+    public static let txt_lightred = UIColor(red: 197/255, green: 76/255, blue: 76/255, alpha: 1.0)   //글자 색상 밝은빨강
+    //#bfbfbf
+    public static let underline_grey = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1.0) //밑줄 색상 회색
+    //#f2f2f2
+    public static let layout_border_lightgrey = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1.0)  //보더라인 색상 밝은회색
+    //#0089CF
+    public static let layout_border_blue = UIColor(red: 0/255, green: 137/255, blue: 207/255, alpha: 1.0)    //보더라인 색상 파랑
+    //#E1F0FF
+    public static let layout_border_lightblue = UIColor(red: 225/255, green: 240/255, blue: 255/255, alpha: 1.0) //보더라인 색상 밝은파랑
+    //#EEF7E9
+    public static let layout_border_green = UIColor(red: 238/255, green: 247/255, blue: 233/255, alpha: 1.0) //보더라인 색상 녹색
+    //#EEF7E9
+    public static let layout_bg_green = UIColor(red: 238/255, green: 247/255, blue: 233/255, alpha: 1.0)    //배경 색상 녹색
+    //#70AD47
+    public static let switch_lightgreen = UIColor(red: 112/255, green: 173/255, blue: 71/255, alpha: 1.0)   //스위치 색상 밝은녹색
+    //#70AD47
+    public static let keypad_ok_lightgreen = UIColor(red: 112/255, green: 173/255, blue: 71/255, alpha: 1.0) //키패드 입력버튼 색상 밝은녹색
+    //#B46400
+    public static let keypad_clear_darkorange = UIColor(red: 180/255, green: 100/255, blue: 0/255, alpha: 1.0) //키패드 지움버튼 색상 짙은주황
+    //#B40000
+    public static let keypad_delete_red = UIColor(red: 180/255, green: 0/255, blue: 0/255, alpha: 1.0) //키패드 삭제버튼 색상 빨강
+    
 
 }

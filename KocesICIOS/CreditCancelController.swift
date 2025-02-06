@@ -67,7 +67,7 @@ class CreditCancelController: UIViewController {
         
         isTouch = "Money"
         mMoney.backgroundColor = .white
-        mAuNumber.backgroundColor = define.grey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
         
     }
     
@@ -77,7 +77,7 @@ class CreditCancelController: UIViewController {
     
     @IBAction func clicked_money(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Money"
-        mAuNumber.backgroundColor = define.grey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
         mMoney.backgroundColor = .white
         sender.resignFirstResponder()
     }
@@ -85,7 +85,7 @@ class CreditCancelController: UIViewController {
     @IBAction func clicked_txf(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "AuNumber"
         mAuNumber.backgroundColor = .white
-        mMoney.backgroundColor = define.grey
+        mMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
@@ -231,7 +231,7 @@ extension CreditCancelController : UITabBarControllerDelegate, PayResultDelegate
             if (mMoney.text!.isEmpty) {
                 //만일 텍스트가 비어있다면?
                 isTouch = "Money"
-                mAuNumber.backgroundColor = define.grey
+                mAuNumber.backgroundColor = define.layout_border_lightgrey
                 mMoney.backgroundColor = .white
                 return
             }
@@ -241,7 +241,7 @@ extension CreditCancelController : UITabBarControllerDelegate, PayResultDelegate
                 //만일 텍스트가 비어있다면?
                 isTouch = "AuNumber"
                 mAuNumber.backgroundColor = .white
-                mMoney.backgroundColor = define.grey
+                mMoney.backgroundColor = define.layout_border_lightgrey
                 return
             }
             
@@ -251,7 +251,7 @@ extension CreditCancelController : UITabBarControllerDelegate, PayResultDelegate
 //            if (mMoney.text!.isEmpty) {
 //                //만일 텍스트가 비어있다면?
 //                isTouch = "Money"
-//                mAuNumber.backgroundColor = define.grey
+//                mAuNumber.backgroundColor = define.layout_border_lightgrey
 //                mMoney.backgroundColor = .white
 //                return
 //            }
@@ -262,7 +262,7 @@ extension CreditCancelController : UITabBarControllerDelegate, PayResultDelegate
                 //금액입력을 사용
                 if (isTouch == "AuNumber") {
                     isTouch = "Money"
-                    mAuNumber.backgroundColor = define.grey
+                    mAuNumber.backgroundColor = define.layout_border_lightgrey
                     mMoney.backgroundColor = .white
                     return
                 }

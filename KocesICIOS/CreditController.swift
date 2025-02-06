@@ -121,8 +121,8 @@ class CreditController: UIViewController {
                 mCreditTxtSvc.alpha = 0.0
                 isTouch = "Svc"
                 mCreditTxtFieldSvc.backgroundColor = .white
-                mCreditTxtFieldTaxFree.backgroundColor = define.grey
-                mCreditTxtFieldMoney.backgroundColor = define.grey
+                mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
             }
         }
         
@@ -136,8 +136,8 @@ class CreditController: UIViewController {
             mStackView_Txf.alpha = 1.0
             isTouch = "Txf"
             mCreditTxtFieldTaxFree.backgroundColor = .white
-            mCreditTxtFieldSvc.backgroundColor = define.grey
-            mCreditTxtFieldMoney.backgroundColor = define.grey
+            mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         }
         
         //부가세 미설정시 금액 입력이 보이지 않게 처리 한다. 비과세만 입력가능 2021-07-21 kim.jy
@@ -149,33 +149,33 @@ class CreditController: UIViewController {
             mStackView_Money.alpha = 1.0
             isTouch = "Money"
             mCreditTxtFieldMoney.backgroundColor = .white
-            mCreditTxtFieldSvc.backgroundColor = define.grey
-            mCreditTxtFieldTaxFree.backgroundColor = define.grey
+            mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         }
     }
    
 
     @IBAction func clicked_money(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Money"
-        mCreditTxtFieldSvc.backgroundColor = define.grey
-        mCreditTxtFieldTaxFree.backgroundColor = define.grey
+        mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+        mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         mCreditTxtFieldMoney.backgroundColor = .white
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_txf(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Txf"
-        mCreditTxtFieldSvc.backgroundColor = define.grey
+        mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
         mCreditTxtFieldTaxFree.backgroundColor = .white
-        mCreditTxtFieldMoney.backgroundColor = define.grey
+        mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_svc(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Svc"
         mCreditTxtFieldSvc.backgroundColor = .white
-        mCreditTxtFieldTaxFree.backgroundColor = define.grey
-        mCreditTxtFieldMoney.backgroundColor = define.grey
+        mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+        mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
@@ -446,8 +446,8 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                 if (mCreditTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mCreditTxtFieldSvc.backgroundColor = define.grey
-                    mCreditTxtFieldTaxFree.backgroundColor = define.grey
+                    mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCreditTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -459,9 +459,9 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                 if (mCreditTxtFieldTaxFree.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mCreditTxtFieldSvc.backgroundColor = define.grey
+                    mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCreditTxtFieldTaxFree.backgroundColor = .white
-                    mCreditTxtFieldMoney.backgroundColor = define.grey
+                    mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -475,8 +475,8 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Svc"
                         mCreditTxtFieldSvc.backgroundColor = .white
-                        mCreditTxtFieldTaxFree.backgroundColor = define.grey
-                        mCreditTxtFieldMoney.backgroundColor = define.grey
+                        mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }
@@ -490,8 +490,8 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                 if (mCreditTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mCreditTxtFieldSvc.backgroundColor = define.grey
-                    mCreditTxtFieldTaxFree.backgroundColor = define.grey
+                    mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCreditTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -503,16 +503,16 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                 if (mCreditTxtFieldTaxFree.text!.isEmpty) {
                     if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                         isTouch = "Money"
-                        mCreditTxtFieldSvc.backgroundColor = define.grey
-                        mCreditTxtFieldTaxFree.backgroundColor = define.grey
+                        mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                        mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                         mCreditTxtFieldMoney.backgroundColor = .white
                         return
                     }
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mCreditTxtFieldSvc.backgroundColor = define.grey
+                    mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCreditTxtFieldTaxFree.backgroundColor = .white
-                    mCreditTxtFieldMoney.backgroundColor = define.grey
+                    mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -526,16 +526,16 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use || mTaxCalc.mVatMethod != TaxCalculator.TAXParameter.Auto {
                             //만일 텍스트가 비어있다면?
                             isTouch = "Txf"
-                            mCreditTxtFieldSvc.backgroundColor = define.grey
+                            mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                             mCreditTxtFieldTaxFree.backgroundColor = .white
-                            mCreditTxtFieldMoney.backgroundColor = define.grey
+                            mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                             return
                         }
                         
                         if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                             isTouch = "Money"
-                            mCreditTxtFieldSvc.backgroundColor = define.grey
-                            mCreditTxtFieldTaxFree.backgroundColor = define.grey
+                            mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                            mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                             mCreditTxtFieldMoney.backgroundColor = .white
                             return
                         }
@@ -543,8 +543,8 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Svc"
                         mCreditTxtFieldSvc.backgroundColor = .white
-                        mCreditTxtFieldTaxFree.backgroundColor = define.grey
-                        mCreditTxtFieldMoney.backgroundColor = define.grey
+                        mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCreditTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }

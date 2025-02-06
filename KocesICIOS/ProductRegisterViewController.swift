@@ -51,7 +51,7 @@ class ProductRegisterViewController: UIViewController {
         regRequestButton.setTitle("나가기", for: .normal)
         regRequestButton.setTitleColor(.white, for: .normal)
         regRequestButton.backgroundColor = .systemBlue
-        regRequestButton.titleLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .medium)
+        regRequestButton.titleLabel?.font = Utils.getSubTitleFont()
         regRequestButton.layer.cornerRadius = 8
         regRequestButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
         

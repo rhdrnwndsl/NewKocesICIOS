@@ -180,8 +180,8 @@ class CashICCatController: UIViewController {
                 
                 isTouch = "Svc"
                 mCashTxtFieldSvc.backgroundColor = .white
-                mCashTxtFieldTaxFree.backgroundColor = define.grey
-                mCashTxtFieldMoney.backgroundColor = define.grey
+                mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
             }
         }
         
@@ -195,8 +195,8 @@ class CashICCatController: UIViewController {
             mStackView_Txf.alpha = 1.0
             isTouch = "Txf"
             mCashTxtFieldTaxFree.backgroundColor = .white
-            mCashTxtFieldSvc.backgroundColor = define.grey
-            mCashTxtFieldMoney.backgroundColor = define.grey
+            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         }
         //부가세 미설정시 금액 입력이 보이지 않게 처리 한다. 비과세만 입력가능 2021-07-21 kim.jy
         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use {
@@ -207,43 +207,43 @@ class CashICCatController: UIViewController {
             mStackView_Money.alpha = 1.0
             isTouch = "Money"
             mCashTxtFieldMoney.backgroundColor = .white
-            mCashTxtFieldSvc.backgroundColor = define.grey
-            mCashTxtFieldTaxFree.backgroundColor = define.grey
+            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         }
         
         
-        mCancelMoney.backgroundColor = define.grey
-        mAuNumber.backgroundColor = define.grey
+        mCancelMoney.backgroundColor = define.layout_border_lightgrey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
         
     }
     
     @IBAction func clicked_money(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Money"
-        mCashTxtFieldSvc.backgroundColor = define.grey
-        mCashTxtFieldTaxFree.backgroundColor = define.grey
+        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         mCashTxtFieldMoney.backgroundColor = .white
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_txf(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Txf"
-        mCashTxtFieldSvc.backgroundColor = define.grey
+        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
         mCashTxtFieldTaxFree.backgroundColor = .white
-        mCashTxtFieldMoney.backgroundColor = define.grey
+        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_svc(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Svc"
         mCashTxtFieldSvc.backgroundColor = .white
-        mCashTxtFieldTaxFree.backgroundColor = define.grey
-        mCashTxtFieldMoney.backgroundColor = define.grey
+        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_cancelmoney(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "CancelMoney"
-        mAuNumber.backgroundColor = define.grey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
         mCancelMoney.backgroundColor = .white
         sender.resignFirstResponder()
     }
@@ -251,7 +251,7 @@ class CashICCatController: UIViewController {
     @IBAction func clicked_aunum(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "AuNumber"
         mAuNumber.backgroundColor = .white
-        mCancelMoney.backgroundColor = define.grey
+        mCancelMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
@@ -331,8 +331,8 @@ class CashICCatController: UIViewController {
             
             if isTouch == "CancelMoney" || isTouch == "AuNumber" {
                 isTouch = "Money"
-                mCashTxtFieldSvc.backgroundColor = define.grey
-                mCashTxtFieldTaxFree.backgroundColor = define.grey
+                mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                 mCashTxtFieldMoney.backgroundColor = .white
             }
             
@@ -373,7 +373,7 @@ class CashICCatController: UIViewController {
             
             if isTouch == "Money" || isTouch == "Txf" || isTouch == "Svc" {
                 isTouch = "CancelMoney"
-                mAuNumber.backgroundColor = define.grey
+                mAuNumber.backgroundColor = define.layout_border_lightgrey
                 mCancelMoney.backgroundColor = .white
             }
             break
@@ -389,7 +389,7 @@ class CashICCatController: UIViewController {
             
             if isTouch == "Money" || isTouch == "Txf" || isTouch == "Svc" {
                 isTouch = "CancelMoney"
-                mAuNumber.backgroundColor = define.grey
+                mAuNumber.backgroundColor = define.layout_border_lightgrey
                 mCancelMoney.backgroundColor = .white
             }
             break
@@ -1204,8 +1204,8 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                 if (mCashTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mCashTxtFieldSvc.backgroundColor = define.grey
-                    mCashTxtFieldTaxFree.backgroundColor = define.grey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -1217,9 +1217,9 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                 if (mCashTxtFieldTaxFree.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mCashTxtFieldSvc.backgroundColor = define.grey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldTaxFree.backgroundColor = .white
-                    mCashTxtFieldMoney.backgroundColor = define.grey
+                    mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -1233,8 +1233,8 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Svc"
                         mCashTxtFieldSvc.backgroundColor = .white
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
-                        mCashTxtFieldMoney.backgroundColor = define.grey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }
@@ -1248,8 +1248,8 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                 if (mCashTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mCashTxtFieldSvc.backgroundColor = define.grey
-                    mCashTxtFieldTaxFree.backgroundColor = define.grey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -1261,16 +1261,16 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                 if (mCashTxtFieldTaxFree.text!.isEmpty) {
                     if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                         isTouch = "Money"
-                        mCashTxtFieldSvc.backgroundColor = define.grey
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
+                        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                         mCashTxtFieldMoney.backgroundColor = .white
                         return
                     }
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mCashTxtFieldSvc.backgroundColor = define.grey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldTaxFree.backgroundColor = .white
-                    mCashTxtFieldMoney.backgroundColor = define.grey
+                    mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -1284,16 +1284,16 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use || mTaxCalc.mVatMethod != TaxCalculator.TAXParameter.Auto {
                             //만일 텍스트가 비어있다면?
                             isTouch = "Txf"
-                            mCashTxtFieldSvc.backgroundColor = define.grey
+                            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                             mCashTxtFieldTaxFree.backgroundColor = .white
-                            mCashTxtFieldMoney.backgroundColor = define.grey
+                            mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                             return
                         }
                         
                         if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                             isTouch = "Money"
-                            mCashTxtFieldSvc.backgroundColor = define.grey
-                            mCashTxtFieldTaxFree.backgroundColor = define.grey
+                            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                            mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                             mCashTxtFieldMoney.backgroundColor = .white
                             return
                         }
@@ -1301,8 +1301,8 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Svc"
                         mCashTxtFieldSvc.backgroundColor = .white
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
-                        mCashTxtFieldMoney.backgroundColor = define.grey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }
@@ -1321,7 +1321,7 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
             if (mCancelMoney.text!.isEmpty) {
                 //만일 텍스트가 비어있다면?
                 isTouch = "CancelMoney"
-                mAuNumber.backgroundColor = define.grey
+                mAuNumber.backgroundColor = define.layout_border_lightgrey
                 mCancelMoney.backgroundColor = .white
                 return
             }
@@ -1331,7 +1331,7 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                 //만일 텍스트가 비어있다면?
                 isTouch = "AuNumber"
                 mAuNumber.backgroundColor = .white
-                mCancelMoney.backgroundColor = define.grey
+                mCancelMoney.backgroundColor = define.layout_border_lightgrey
                 return
             }
 
@@ -1340,7 +1340,7 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
 //            if (mMoney.text!.isEmpty) {
 //                //만일 텍스트가 비어있다면?
 //                isTouch = "Money"
-//                mAuNumber.backgroundColor = define.grey
+//                mAuNumber.backgroundColor = define.layout_border_lightgrey
 //                mMoney.backgroundColor = .white
 //                return
 //            }
@@ -1351,7 +1351,7 @@ extension CashICCatController : UITabBarControllerDelegate, CatResultDelegate {
                 //금액입력을 사용
                 if (isTouch != "CancelMoney") {
                     isTouch = "CancelMoney"
-                    mAuNumber.backgroundColor = define.grey
+                    mAuNumber.backgroundColor = define.layout_border_lightgrey
                     mCancelMoney.backgroundColor = .white
                     return
                 }

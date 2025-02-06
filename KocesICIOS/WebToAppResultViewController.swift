@@ -96,7 +96,7 @@ class WebToAppResultViewController: UIViewController {
         transparentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         
         mBox.layer.borderWidth = 1.0  //테두리그리기
-        mBox.layer.borderColor = UIColor.lightGray.cgColor //테두리선색깔은 일반글자색깔과 동일하게
+        mBox.layer.borderColor = define.layout_border_lightgrey.cgColor //테두리선색깔은 일반글자색깔과 동일하게
         mBox.layer.cornerRadius = 10  //모서리 둥글게
         
 //        transparentView.alpha = 0.5

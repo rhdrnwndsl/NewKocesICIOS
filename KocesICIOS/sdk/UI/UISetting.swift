@@ -110,7 +110,7 @@ class UISetting{
         _bar.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
         
         //기본버튼 이미지
-        _bar.setBackgroundImage(imageWithColor(color: UIColor.lightGray), for: .normal, barMetrics: .default)
+        _bar.setBackgroundImage(imageWithColor(color: define.layout_border_lightgrey), for: .normal, barMetrics: .default)
         //선택버튼 이미지
         _bar.setBackgroundImage(imageWithColor(color: UIColor(displayP3Red: 87/255, green: 88/255, blue: 90/255, alpha: 1)), for: .selected, barMetrics: .default)
         //버튼 사이의 구분자
@@ -139,7 +139,7 @@ class UISetting{
         
         let border = CALayer()
         let width = CGFloat(1.0)
-        border.borderColor = UIColor.lightGray.cgColor  //텍스트 뷰 라인 색
+        border.borderColor = define.underline_grey.cgColor  //텍스트 뷰 라인 색
         border.frame = CGRect(x: 0, y: _textView.frame.size.height - width, width:  _textView.frame.size.width, height: _textView.frame.size.height)
         border.borderWidth = width
         _textView.layer.addSublayer(border)

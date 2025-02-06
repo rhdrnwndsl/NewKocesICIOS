@@ -135,8 +135,8 @@ class EasyPayController: UIViewController {
                 mEasyPayTxtSvc.alpha = 0.0
                 isTouch = "Svc"
                 mEasyPayTxtFieldSvc.backgroundColor = .white
-                mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
-                mEasyPayTxtFieldMoney.backgroundColor = define.grey
+                mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
             }
         }
         //만약에 부가세 방법이 자동인 경우에는 비과세 입력 필드를 표시 하지 않는다.
@@ -149,8 +149,8 @@ class EasyPayController: UIViewController {
             mStackView_Txf.alpha = 1.0
             isTouch = "Txf"
             mEasyPayTxtFieldTaxFree.backgroundColor = .white
-            mEasyPayTxtFieldSvc.backgroundColor = define.grey
-            mEasyPayTxtFieldMoney.backgroundColor = define.grey
+            mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         }
         //부가세 미설정시 금액 입력이 보이지 않게 처리 한다. 비과세만 입력가능 2021-07-21 kim.jy
         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use {
@@ -161,32 +161,32 @@ class EasyPayController: UIViewController {
             mStackView_Money.alpha = 1.0
             isTouch = "Money"
             mEasyPayTxtFieldMoney.backgroundColor = .white
-            mEasyPayTxtFieldSvc.backgroundColor = define.grey
-            mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
+            mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         }
     }
     
     @IBAction func clicked_money(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Money"
-        mEasyPayTxtFieldSvc.backgroundColor = define.grey
-        mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
+        mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+        mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         mEasyPayTxtFieldMoney.backgroundColor = .white
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_txf(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Txf"
-        mEasyPayTxtFieldSvc.backgroundColor = define.grey
+        mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
         mEasyPayTxtFieldTaxFree.backgroundColor = .white
-        mEasyPayTxtFieldMoney.backgroundColor = define.grey
+        mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_svc(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Svc"
         mEasyPayTxtFieldSvc.backgroundColor = .white
-        mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
-        mEasyPayTxtFieldMoney.backgroundColor = define.grey
+        mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+        mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
@@ -517,8 +517,8 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
                 if (mEasyPayTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mEasyPayTxtFieldSvc.backgroundColor = define.grey
-                    mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
+                    mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mEasyPayTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -530,9 +530,9 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
                 if (mEasyPayTxtFieldTaxFree.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mEasyPayTxtFieldSvc.backgroundColor = define.grey
+                    mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mEasyPayTxtFieldTaxFree.backgroundColor = .white
-                    mEasyPayTxtFieldMoney.backgroundColor = define.grey
+                    mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -546,8 +546,8 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Svc"
                         mEasyPayTxtFieldSvc.backgroundColor = .white
-                        mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
-                        mEasyPayTxtFieldMoney.backgroundColor = define.grey
+                        mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }
@@ -561,8 +561,8 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
                 if (mEasyPayTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mEasyPayTxtFieldSvc.backgroundColor = define.grey
-                    mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
+                    mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mEasyPayTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -575,16 +575,16 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
                     if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Money"
-                        mEasyPayTxtFieldSvc.backgroundColor = define.grey
-                        mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
+                        mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                        mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                         mEasyPayTxtFieldMoney.backgroundColor = .white
                         return
                     }
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mEasyPayTxtFieldSvc.backgroundColor = define.grey
+                    mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mEasyPayTxtFieldTaxFree.backgroundColor = .white
-                    mEasyPayTxtFieldMoney.backgroundColor = define.grey
+                    mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -600,25 +600,25 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
                         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use || mTaxCalc.mVatMethod != TaxCalculator.TAXParameter.Auto {
                             //비과세을 사용
                             isTouch = "Txf"
-                            mEasyPayTxtFieldSvc.backgroundColor = define.grey
+                            mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                             mEasyPayTxtFieldTaxFree.backgroundColor = .white
-                            mEasyPayTxtFieldMoney.backgroundColor = define.grey
+                            mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                             return
                         }
                         
                         if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                             //금액입력을 사용
                             isTouch = "Money"
-                            mEasyPayTxtFieldSvc.backgroundColor = define.grey
-                            mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
+                            mEasyPayTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                            mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                             mEasyPayTxtFieldMoney.backgroundColor = .white
                             return
                         }
                         
                         isTouch = "Svc"
                         mEasyPayTxtFieldSvc.backgroundColor = .white
-                        mEasyPayTxtFieldTaxFree.backgroundColor = define.grey
-                        mEasyPayTxtFieldMoney.backgroundColor = define.grey
+                        mEasyPayTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mEasyPayTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }

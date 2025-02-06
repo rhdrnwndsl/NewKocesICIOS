@@ -74,7 +74,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     private func setupSeparatorLine() {
-        separatorLine.backgroundColor = .lightGray
+        separatorLine.backgroundColor = define.underline_grey
         separatorLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(separatorLine)
     }
@@ -188,7 +188,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let item = sections[indexPath.section].items[indexPath.row]
         cell.textLabel?.text = item.title
-        cell.textLabel?.font = .systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
+        cell.textLabel?.font = Utils.getSubTitleFont()
         cell.accessoryType = item.hasSwitch ? .none : .disclosureIndicator
 
         if item.hasSwitch {
@@ -221,13 +221,13 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         //셀 레이아웃에 패딩 적용
 
         // 셀 내용에 패딩 적용
-        cell.contentView.layoutMargins = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
+        cell.contentView.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
         cell.contentView.layer.masksToBounds = true
 
     }
     
     func tableView(_ tableView: UITableView, layoutMarginsForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -245,7 +245,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         
-        header.textLabel?.font = UIFont.systemFont(ofSize: Utils.getHeadingFontSize(), weight: .regular)
+        header.textLabel?.font = Utils.getSubTitleFont()
         header.textLabel?.textColor = .darkGray
         header.textLabel?.textAlignment = .left
         

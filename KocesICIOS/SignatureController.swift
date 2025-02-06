@@ -148,7 +148,7 @@ class SignatureController: UIViewController {
     var moneyLabel: JLabel = {
         var label = JLabel()
         label.text = "30"
-        label.textColor = define.txt_title_orange
+        label.textColor = define.txt_orange
         label.textAlignment = .center
         label.baselineAdjustment = .alignBaselines
         label.font = .boldSystemFont(ofSize: 24)

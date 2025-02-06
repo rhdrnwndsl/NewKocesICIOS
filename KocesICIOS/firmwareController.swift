@@ -109,7 +109,7 @@ class firmwareController: UIViewController {
         mFileSize = 0
         mFirmwareUpdateStat = firmwareUpdateProcesStep.none //버튼이 눌렸기 때문에 초기 ble 업데이트 상태를 초기화 한다.
         mFirmWareData.removeAll()   //펌웨어 데이터를 받을 변수를 초기화 한다.
-        self.mProgressview.trackTintColor = .lightGray
+        self.mProgressview.trackTintColor = define.layout_border_lightgrey
         self.mProgressview.progressTintColor = .systemBlue
 
     }

@@ -76,7 +76,7 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
         let backButton = UIButton()
         backButton.setImage(backImage, for: .normal)
         backButton.setTitle("Back", for: .normal)
-        backButton.setTitleColor(define.txt_title_blue, for: .normal)
+        backButton.setTitleColor(define.txt_blue, for: .normal)
         backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
         backButton.addTarget(self, action: #selector(BackMainView), for: .touchUpInside)
         

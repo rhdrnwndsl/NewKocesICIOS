@@ -23,21 +23,21 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private let merchantTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "상품관리가맹점 설정"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.font = Utils.getSubTitleFont()
         return label
     }()
     
     private let merchantUnderline: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = define.underline_grey
         return view
     }()
     
     // 그룹 컨테이너 (밝은 회색 배경, 라운드)
     private let merchantContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.systemGray5
-        view.layer.cornerRadius = 8
+        view.backgroundColor = define.layout_border_lightgrey
+        view.layer.cornerRadius = 10
         view.clipsToBounds = true
         return view
     }()
@@ -47,12 +47,14 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "TID"
         label.textAlignment = .left
+        label.font = Utils.getTextFont()
         return label
     }()
     
     private let tidValueLabel: UILabel = {
         let label = UILabel()
         label.text = "" // viewDidLoad에서 외부 값 세팅
+        label.font = Utils.getTextFont()
         label.textColor = .darkGray
         return label
     }()
@@ -61,6 +63,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private let posLabel: UILabel = {
         let label = UILabel()
         label.text = "POS번호"
+        label.font = Utils.getTextFont()
         label.textAlignment = .left
         return label
     }()
@@ -70,12 +73,14 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         textField.placeholder = "숫자 2자리 입력"
         textField.borderStyle = .roundedRect
         textField.keyboardType = .numberPad
+        textField.font = Utils.getTextFont()
         return textField
     }()
     
     private let posConfirmButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("확인", for: .normal)
+        button.titleLabel?.font = Utils.getSubTitleFont()
         return button
     }()
     
@@ -83,20 +88,20 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private let productTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "상품관리 설정"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.font = Utils.getSubTitleFont()
         return label
     }()
     
     private let productUnderline: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = define.underline_grey
         return view
     }()
     
     private let productContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.systemGray5
-        view.layer.cornerRadius = 8
+        view.backgroundColor = define.layout_border_lightgrey
+        view.layer.cornerRadius = define.pading_wight
         view.clipsToBounds = true
         return view
     }()
@@ -105,6 +110,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private let productManageLabel: UILabel = {
         let label = UILabel()
         label.text = "상품관리"
+        label.font = Utils.getTextFont()
         label.textAlignment = .left
         return label
     }()
@@ -112,12 +118,14 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private let productRegisterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("상품등록", for: .normal)
+        button.titleLabel?.font = Utils.getSubTitleFont()
         return button
     }()
     
     private let productModifyButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("상품수정", for: .normal)
+        button.titleLabel?.font = Utils.getSubTitleFont()
         return button
     }()
     
@@ -126,18 +134,21 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "상품정보백업"
         label.textAlignment = .left
+        label.font = Utils.getTextFont()
         return label
     }()
     
     private let exportButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("내보내기", for: .normal)
+        button.titleLabel?.font = Utils.getTextFont()
         return button
     }()
     
     private let importButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("가져오기", for: .normal)
+        button.titleLabel?.font = Utils.getTextFont()
         return button
     }()
     
@@ -208,7 +219,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         
         // MARK: - Constraints
         
-        let margin: CGFloat = 20
+        let margin: CGFloat = 10
         
         NSLayoutConstraint.activate([
             // merchantTitleLabel 제약조건
@@ -216,99 +227,99 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
             merchantTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
             
             // merchantUnderline (제목 밑 언더라인)
-            merchantUnderline.topAnchor.constraint(equalTo: merchantTitleLabel.bottomAnchor, constant: 4),
+            merchantUnderline.topAnchor.constraint(equalTo: merchantTitleLabel.bottomAnchor, constant: define.pading_wight),
             merchantUnderline.leadingAnchor.constraint(equalTo: merchantTitleLabel.leadingAnchor),
             merchantUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             merchantUnderline.heightAnchor.constraint(equalToConstant: 1),
             
             // merchantContainerView
-            merchantContainerView.topAnchor.constraint(equalTo: merchantUnderline.bottomAnchor, constant: 8),
+            merchantContainerView.topAnchor.constraint(equalTo: merchantUnderline.bottomAnchor, constant: define.pading_wight),
             merchantContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
             merchantContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             
             // tidRowView (상단 행) - merchantContainerView 내부
-            tidRowView.topAnchor.constraint(equalTo: merchantContainerView.topAnchor, constant: 8),
-            tidRowView.leadingAnchor.constraint(equalTo: merchantContainerView.leadingAnchor, constant: 8),
-            tidRowView.trailingAnchor.constraint(equalTo: merchantContainerView.trailingAnchor, constant: -8),
-            tidRowView.heightAnchor.constraint(equalToConstant: 40),
+            tidRowView.topAnchor.constraint(equalTo: merchantContainerView.topAnchor, constant: define.pading_wight),
+            tidRowView.leadingAnchor.constraint(equalTo: merchantContainerView.leadingAnchor, constant: define.pading_wight),
+            tidRowView.trailingAnchor.constraint(equalTo: merchantContainerView.trailingAnchor, constant: -define.pading_wight),
+            tidRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
             
             // posRowView (하단 행)
-            posRowView.topAnchor.constraint(equalTo: tidRowView.bottomAnchor, constant: 8),
-            posRowView.leadingAnchor.constraint(equalTo: merchantContainerView.leadingAnchor, constant: 8),
-            posRowView.trailingAnchor.constraint(equalTo: merchantContainerView.trailingAnchor, constant: -8),
-            posRowView.heightAnchor.constraint(equalToConstant: 40),
-            posRowView.bottomAnchor.constraint(equalTo: merchantContainerView.bottomAnchor, constant: -8),
+            posRowView.topAnchor.constraint(equalTo: tidRowView.bottomAnchor, constant: define.pading_wight),
+            posRowView.leadingAnchor.constraint(equalTo: merchantContainerView.leadingAnchor, constant: define.pading_wight),
+            posRowView.trailingAnchor.constraint(equalTo: merchantContainerView.trailingAnchor, constant: -define.pading_wight),
+            posRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
+            posRowView.bottomAnchor.constraint(equalTo: merchantContainerView.bottomAnchor, constant: -define.pading_wight),
             
             // TID row 내부 제약조건
             tidLabel.leadingAnchor.constraint(equalTo: tidRowView.leadingAnchor),
             tidLabel.centerYAnchor.constraint(equalTo: tidRowView.centerYAnchor),
-            tidLabel.widthAnchor.constraint(equalToConstant: 150),
+            tidLabel.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
             
-            tidValueLabel.leadingAnchor.constraint(equalTo: tidLabel.trailingAnchor, constant: 8),
+            tidValueLabel.leadingAnchor.constraint(equalTo: tidLabel.trailingAnchor, constant: define.pading_wight),
             tidValueLabel.trailingAnchor.constraint(equalTo: tidRowView.trailingAnchor),
             tidValueLabel.centerYAnchor.constraint(equalTo: tidRowView.centerYAnchor),
             
             // POS row 내부 제약조건
             posLabel.leadingAnchor.constraint(equalTo: posRowView.leadingAnchor),
             posLabel.centerYAnchor.constraint(equalTo: posRowView.centerYAnchor),
-            posLabel.widthAnchor.constraint(equalToConstant: 150),
+            posLabel.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
             
-            posNumberTextField.leadingAnchor.constraint(equalTo: posLabel.trailingAnchor, constant: 8),
+            posNumberTextField.leadingAnchor.constraint(equalTo: posLabel.trailingAnchor, constant: define.pading_wight),
             posNumberTextField.centerYAnchor.constraint(equalTo: posRowView.centerYAnchor),
             // posNumberTextField 오른쪽은 확인버튼과 간격
-            posNumberTextField.trailingAnchor.constraint(equalTo: posConfirmButton.leadingAnchor, constant: -8),
+            posNumberTextField.trailingAnchor.constraint(equalTo: posConfirmButton.leadingAnchor, constant: -define.pading_wight),
             
             posConfirmButton.trailingAnchor.constraint(equalTo: posRowView.trailingAnchor),
             posConfirmButton.centerYAnchor.constraint(equalTo: posRowView.centerYAnchor),
-            posConfirmButton.widthAnchor.constraint(equalToConstant: 150),
+            posConfirmButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
             
             // 두번째 섹션: 상품관리 설정 제목 및 언더라인
-            productTitleLabel.topAnchor.constraint(equalTo: merchantContainerView.bottomAnchor, constant: 30),
+            productTitleLabel.topAnchor.constraint(equalTo: merchantContainerView.bottomAnchor, constant: Utils.getRowSubHeight()),
             productTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
             
-            productUnderline.topAnchor.constraint(equalTo: productTitleLabel.bottomAnchor, constant: 4),
+            productUnderline.topAnchor.constraint(equalTo: productTitleLabel.bottomAnchor, constant: define.pading_wight),
             productUnderline.leadingAnchor.constraint(equalTo: productTitleLabel.leadingAnchor),
             productUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             productUnderline.heightAnchor.constraint(equalToConstant: 1),
             
             // productContainerView
-            productContainerView.topAnchor.constraint(equalTo: productUnderline.bottomAnchor, constant: 8),
+            productContainerView.topAnchor.constraint(equalTo: productUnderline.bottomAnchor, constant: define.pading_wight),
             productContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
             productContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             
             // productManageRowView 제약조건 (상품관리 행)
-            productManageRowView.topAnchor.constraint(equalTo: productContainerView.topAnchor, constant: 8),
-            productManageRowView.leadingAnchor.constraint(equalTo: productContainerView.leadingAnchor, constant: 8),
-            productManageRowView.trailingAnchor.constraint(equalTo: productContainerView.trailingAnchor, constant: -8),
-            productManageRowView.heightAnchor.constraint(equalToConstant: 40),
+            productManageRowView.topAnchor.constraint(equalTo: productContainerView.topAnchor, constant: define.pading_wight),
+            productManageRowView.leadingAnchor.constraint(equalTo: productContainerView.leadingAnchor, constant: define.pading_wight),
+            productManageRowView.trailingAnchor.constraint(equalTo: productContainerView.trailingAnchor, constant: -define.pading_wight),
+            productManageRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
             
             // productBackupRowView 제약조건 (상품정보백업 행)
-            productBackupRowView.topAnchor.constraint(equalTo: productManageRowView.bottomAnchor, constant: 8),
-            productBackupRowView.leadingAnchor.constraint(equalTo: productContainerView.leadingAnchor, constant: 8),
-            productBackupRowView.trailingAnchor.constraint(equalTo: productContainerView.trailingAnchor, constant: -8),
-            productBackupRowView.heightAnchor.constraint(equalToConstant: 40),
-            productBackupRowView.bottomAnchor.constraint(equalTo: productContainerView.bottomAnchor, constant: -8),
+            productBackupRowView.topAnchor.constraint(equalTo: productManageRowView.bottomAnchor, constant: define.pading_wight),
+            productBackupRowView.leadingAnchor.constraint(equalTo: productContainerView.leadingAnchor, constant: define.pading_wight),
+            productBackupRowView.trailingAnchor.constraint(equalTo: productContainerView.trailingAnchor, constant: -define.pading_wight),
+            productBackupRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
+            productBackupRowView.bottomAnchor.constraint(equalTo: productContainerView.bottomAnchor, constant: -define.pading_wight),
             
             // 상품관리 행 내부 제약조건
             productManageLabel.leadingAnchor.constraint(equalTo: productManageRowView.leadingAnchor),
             productManageLabel.centerYAnchor.constraint(equalTo: productManageRowView.centerYAnchor),
-            productManageLabel.widthAnchor.constraint(equalToConstant: 150),
+            productManageLabel.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
             
-            productRegisterButton.leadingAnchor.constraint(equalTo: productManageLabel.trailingAnchor, constant: 8),
+            productRegisterButton.leadingAnchor.constraint(equalTo: productManageLabel.trailingAnchor, constant: define.pading_wight),
             productRegisterButton.centerYAnchor.constraint(equalTo: productManageRowView.centerYAnchor),
             
-            productModifyButton.leadingAnchor.constraint(equalTo: productRegisterButton.trailingAnchor, constant: 8),
+            productModifyButton.leadingAnchor.constraint(equalTo: productRegisterButton.trailingAnchor, constant: define.pading_wight),
             productModifyButton.centerYAnchor.constraint(equalTo: productManageRowView.centerYAnchor),
             
             // 상품정보백업 행 내부 제약조건
             productBackupLabel.leadingAnchor.constraint(equalTo: productBackupRowView.leadingAnchor),
             productBackupLabel.centerYAnchor.constraint(equalTo: productBackupRowView.centerYAnchor),
-            productBackupLabel.widthAnchor.constraint(equalToConstant: 150),
+            productBackupLabel.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
             
-            exportButton.leadingAnchor.constraint(equalTo: productBackupLabel.trailingAnchor, constant: 8),
+            exportButton.leadingAnchor.constraint(equalTo: productBackupLabel.trailingAnchor, constant: define.pading_wight),
             exportButton.centerYAnchor.constraint(equalTo: productBackupRowView.centerYAnchor),
             
-            importButton.leadingAnchor.constraint(equalTo: exportButton.trailingAnchor, constant: 8),
+            importButton.leadingAnchor.constraint(equalTo: exportButton.trailingAnchor, constant: define.pading_wight),
             importButton.centerYAnchor.constraint(equalTo: productBackupRowView.centerYAnchor)
         ])
     }

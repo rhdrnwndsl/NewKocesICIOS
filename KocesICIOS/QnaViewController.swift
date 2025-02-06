@@ -113,7 +113,7 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
             // 헤더
             cell.textLabel?.text = sections[indexPath.section].title
             cell.textLabel?.textColor = .label
-            cell.backgroundColor = define.trackgrey
+            cell.backgroundColor = define.layout_border_lightgrey
         } else {
             // 아이템
             cell.textLabel?.text = sections[indexPath.section].items[indexPath.row - 1]

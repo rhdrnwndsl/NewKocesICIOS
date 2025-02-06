@@ -31,11 +31,11 @@ public protocol NumberPadDelegate {
         didSet { updateKeys() }
     }
     
-    @IBInspectable open var keyOkTitleColor: UIColor = define.nk_color_ok {
+    @IBInspectable open var keyOkTitleColor: UIColor = define.keypad_ok_lightgreen {
         didSet { updateKeys() }
     }
     
-    @IBInspectable open var keyClearTitleColor: UIColor = define.nk_color_cleared {
+    @IBInspectable open var keyClearTitleColor: UIColor = define.keypad_clear_darkorange {
         didSet { updateKeys() }
     }
     
@@ -43,7 +43,7 @@ public protocol NumberPadDelegate {
         didSet { updateKeys() }
     }
     
-    @IBInspectable open var keyBorderColor: UIColor = define.lightgrey {
+    @IBInspectable open var keyBorderColor: UIColor = define.layout_border_lightgrey {
         didSet { updateKeys() }
     }
     
@@ -71,7 +71,7 @@ public protocol NumberPadDelegate {
         didSet { updateKeys() }
     }
     
-    open var deleteKeyIcon: UIImage? = UIImage(systemName: "delete.backward.fill")?.withTintColor(define.nk_color_deleted, renderingMode: .alwaysOriginal) {
+    open var deleteKeyIcon: UIImage? = UIImage(systemName: "delete.backward.fill")?.withTintColor(define.keypad_delete_red, renderingMode: .alwaysOriginal) {
         didSet { updateKeys() }
     }
     
@@ -79,7 +79,7 @@ public protocol NumberPadDelegate {
         didSet { updateKeys() }
     }
     
-    open var deleteKeyHighlightColor: UIColor = define.nk_color_deleted {
+    open var deleteKeyHighlightColor: UIColor = define.keypad_delete_red {
         didSet { updateKeys() }
     }
     
@@ -91,7 +91,7 @@ public protocol NumberPadDelegate {
         didSet { updateKeys() }
     }
     
-    open var clearKeyHighlightColor: UIColor = define.nk_color_cleared {
+    open var clearKeyHighlightColor: UIColor = define.keypad_clear_darkorange {
         didSet { updateKeys() }
     }
     
@@ -103,7 +103,7 @@ public protocol NumberPadDelegate {
         didSet { updateKeys() }
     }
     
-    open var okKeyHighlightColor: UIColor = define.nk_color_ok {
+    open var okKeyHighlightColor: UIColor = define.keypad_ok_lightgreen {
         didSet { updateKeys() }
     }
     
@@ -302,25 +302,25 @@ public protocol NumberPadDelegate {
             switch button.key {
             case .some(.delete):
                 button.setScale(scale: clearScale)
-                button.setIcon(image: deleteKeyIcon, color: define.nk_color_deleted)
+                button.setIcon(image: deleteKeyIcon, color: define.keypad_delete_red)
                 button.setBackgroundColor(color: deleteKeyBackgroundColor, forState: .normal)
                 button.setBackgroundColor(color: deleteKeyHighlightColor, forState: .highlighted)
                 button.layer.borderWidth = keyBorderWidth
-                button.layer.borderColor = define.nk_color_deleted.cgColor
+                button.layer.borderColor = define.keypad_delete_red.cgColor
             case .some(.clear):
                 button.setScale(scale: keyScale)
                 button.setBackgroundColor(color: clearKeyBackgroundColor, forState: .normal)
                 button.setBackgroundColor(color: clearKeyHighlightColor, forState: .highlighted)
                 button.setTitleColor(keyClearTitleColor, for: .normal)
                 button.layer.borderWidth = keyBorderWidth
-                button.layer.borderColor = define.nk_color_cleared.cgColor
+                button.layer.borderColor = define.keypad_clear_darkorange.cgColor
             case .some(.keyok):
                 button.setScale(scale: keyScale)
                 button.setBackgroundColor(color: okKeyBackgroundColor, forState: .normal)
                 button.setBackgroundColor(color: okKeyHighlightColor, forState: .highlighted)
                 button.setTitleColor(keyOkTitleColor, for: .normal)
                 button.layer.borderWidth = keyBorderWidth
-                button.layer.borderColor = define.nk_color_ok.cgColor
+                button.layer.borderColor = define.keypad_ok_lightgreen.cgColor
             case .some(.empty):
                 button.setScale(scale: keyScale)
                 button.setBackgroundColor(color: emptyKeyBackgroundColor, forState: .normal)

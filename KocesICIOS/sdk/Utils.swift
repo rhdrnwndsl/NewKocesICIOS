@@ -1960,27 +1960,30 @@ class Utils{
     static func getIsPad() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .pad
     }
-    // 큰 폰트 (기존 24였던 부분: POS, 대표사업자정보, 서브사업자정보 제목, 버튼 등)
-    static func getHeadingFontSize() -> CGFloat {
-        return getIsPad() ? 24 : 20
+    
+    static func getTitleFont() -> UIFont {
+        return getIsPad() ? define.pad_title_font : define.phone_title_font
     }
-    // 작은 폰트 (기존 20이었던 부분: 상세내용)
-    static func getDetailFontSize() -> CGFloat {
-        return getIsPad() ? 20 : 15
+    static func getSubTitleFont() -> UIFont {
+        return getIsPad() ? define.pad_sub_title_font : define.phone_sub_title_font
     }
+    static func getTextFont() -> UIFont {
+        return getIsPad() ? define.pad_text_font : define.phone_text_font
+    }
+
     // 타이틀 높이
     static func getRowHeight() -> CGFloat {
-        return getIsPad() ? 60 : 50
+        return getIsPad() ? define.pad_title_height : define.phone_title_height
     }
     
     // 각 행(Row) 높이
     static func getRowSubHeight() -> CGFloat {
-        return getIsPad() ? 40 : 35
+        return getIsPad() ? define.pad_sub_height : define.phone_sub_height
     }
     
     // 각 버튼(Row) 및 타이틀 너비
     static func getRowWidth() -> CGFloat {
-        return getIsPad() ? 200 : 150
+        return getIsPad() ? define.pad_btn_wight : define.phone_btn_wight
     }
     
 }

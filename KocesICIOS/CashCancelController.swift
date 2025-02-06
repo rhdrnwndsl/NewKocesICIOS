@@ -79,8 +79,8 @@ class CashCancelController: UIViewController {
         
         isTouch = "Money"
         mMoney.backgroundColor = .white
-        mAuNumber.backgroundColor = define.grey
-        mCashTextFieldNumber.backgroundColor = define.grey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
+        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         mCashTextFieldNumber.text = ""  //항상 번호 입력란은 초기화 한다.
     }
     
@@ -90,24 +90,24 @@ class CashCancelController: UIViewController {
     
     @IBAction func clicked_money(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Money"
-        mAuNumber.backgroundColor = define.grey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
         mMoney.backgroundColor = .white
-        mCashTextFieldNumber.backgroundColor = define.grey
+        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_aunum(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "AuNumber"
         mAuNumber.backgroundColor = .white
-        mMoney.backgroundColor = define.grey
-        mCashTextFieldNumber.backgroundColor = define.grey
+        mMoney.backgroundColor = define.layout_border_lightgrey
+        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_cashnum(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "CashNumber"
-        mAuNumber.backgroundColor = define.grey
-        mMoney.backgroundColor = define.grey
+        mAuNumber.backgroundColor = define.layout_border_lightgrey
+        mMoney.backgroundColor = define.layout_border_lightgrey
         mCashTextFieldNumber.backgroundColor = .white
         sender.resignFirstResponder()
     }
@@ -363,9 +363,9 @@ extension CashCancelController : UITabBarControllerDelegate, CatResultDelegate, 
             if (mMoney.text!.isEmpty) {
                 //만일 텍스트가 비어있다면?
                 isTouch = "Money"
-                mAuNumber.backgroundColor = define.grey
+                mAuNumber.backgroundColor = define.layout_border_lightgrey
                 mMoney.backgroundColor = .white
-                mCashTextFieldNumber.backgroundColor = define.grey
+                mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                 return
             }
             
@@ -374,16 +374,16 @@ extension CashCancelController : UITabBarControllerDelegate, CatResultDelegate, 
                 //만일 텍스트가 비어있다면?
                 isTouch = "AuNumber"
                 mAuNumber.backgroundColor = .white
-                mMoney.backgroundColor = define.grey
-                mCashTextFieldNumber.backgroundColor = define.grey
+                mMoney.backgroundColor = define.layout_border_lightgrey
+                mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                 return
             }
             
             if !InputNumberGroup.isHidden {
                 isTouch = "CashNumber"
                 mCashTextFieldNumber.backgroundColor = .white
-                mAuNumber.backgroundColor = define.grey
-                mMoney.backgroundColor = define.grey
+                mAuNumber.backgroundColor = define.layout_border_lightgrey
+                mMoney.backgroundColor = define.layout_border_lightgrey
                 return
             }
             
@@ -393,7 +393,7 @@ extension CashCancelController : UITabBarControllerDelegate, CatResultDelegate, 
 //            if (mMoney.text!.isEmpty) {
 //                //만일 텍스트가 비어있다면?
 //                isTouch = "Money"
-//                mAuNumber.backgroundColor = define.grey
+//                mAuNumber.backgroundColor = define.layout_border_lightgrey
 //                mMoney.backgroundColor = .white
 //                return
 //            }
@@ -404,9 +404,9 @@ extension CashCancelController : UITabBarControllerDelegate, CatResultDelegate, 
                 //금액입력을 사용
                 if (isTouch == "AuNumber") {
                     isTouch = "Money"
-                    mAuNumber.backgroundColor = define.grey
+                    mAuNumber.backgroundColor = define.layout_border_lightgrey
                     mMoney.backgroundColor = .white
-                    mCashTextFieldNumber.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                     return
                 }
                 return
@@ -416,8 +416,8 @@ extension CashCancelController : UITabBarControllerDelegate, CatResultDelegate, 
                 if mCashTextFieldNumber.text!.isEmpty {
                     isTouch = "AuNumber"
                     mAuNumber.backgroundColor = .white
-                    mMoney.backgroundColor = define.grey
-                    mCashTextFieldNumber.backgroundColor = define.grey
+                    mMoney.backgroundColor = define.layout_border_lightgrey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                 }
              
                 return

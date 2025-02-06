@@ -180,7 +180,7 @@ class PrintSettingController:UIViewController {
             mPrintUseCheckView.alpha = 1.0
         }
         
-        mTxtPrintLowLavel.layer.borderColor = UIColor.lightGray.cgColor
+        mTxtPrintLowLavel.layer.borderColor = define.layout_border_lightgrey.cgColor
         mTxtPrintLowLavel.layer.borderWidth = 1
         if Setting.shared.getDefaultUserData(_key: define.PRINT_LOWLAVEL).isEmpty || Setting.shared.getDefaultUserData(_key: define.PRINT_LOWLAVEL) == "" {
             mTxtPrintLowLavel.text = ""

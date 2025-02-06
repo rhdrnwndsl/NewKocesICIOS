@@ -130,9 +130,9 @@ class CashController: UIViewController {
                 lbl_svc.alpha = 0.0
                 isTouch = "Svc"
                 mCashTxtFieldSvc.backgroundColor = .white
-                mCashTxtFieldTaxFree.backgroundColor = define.grey
-                mCashTxtFieldMoney.backgroundColor = define.grey
-                mCashTextFieldNumber.backgroundColor = define.grey
+                mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
+                mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
             }
         }
         //만약에 부가세 방법이 자동인 경우에는 비과세 입력 필드를 표시 하지 않는다.
@@ -145,9 +145,9 @@ class CashController: UIViewController {
             StackView_Txf.alpha = 1.0
             isTouch = "Txf"
             mCashTxtFieldTaxFree.backgroundColor = .white
-            mCashTxtFieldSvc.backgroundColor = define.grey
-            mCashTxtFieldMoney.backgroundColor = define.grey
-            mCashTextFieldNumber.backgroundColor = define.grey
+            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
+            mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         }
         //부가세 미설정시 금액 입력이 보이지 않게 처리 한다. 비과세만 입력가능 2021-07-21 kim.jy
         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use {
@@ -158,45 +158,45 @@ class CashController: UIViewController {
             mStackView_Money.alpha = 1.0
             isTouch = "Money"
             mCashTxtFieldMoney.backgroundColor = .white
-            mCashTxtFieldSvc.backgroundColor = define.grey
-            mCashTxtFieldTaxFree.backgroundColor = define.grey
-            mCashTextFieldNumber.backgroundColor = define.grey
+            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+            mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+            mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         }
     }
     
     @IBAction func clicked_money(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Money"
         mCashTxtFieldMoney.backgroundColor = .white
-        mCashTxtFieldSvc.backgroundColor = define.grey
-        mCashTxtFieldTaxFree.backgroundColor = define.grey
-        mCashTextFieldNumber.backgroundColor = define.grey
+        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_txf(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Txf"
         mCashTxtFieldTaxFree.backgroundColor = .white
-        mCashTxtFieldSvc.backgroundColor = define.grey
-        mCashTxtFieldMoney.backgroundColor = define.grey
-        mCashTextFieldNumber.backgroundColor = define.grey
+        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
+        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_svc(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Svc"
         mCashTxtFieldSvc.backgroundColor = .white
-        mCashTxtFieldTaxFree.backgroundColor = define.grey
-        mCashTxtFieldMoney.backgroundColor = define.grey
-        mCashTextFieldNumber.backgroundColor = define.grey
+        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
+        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
     @IBAction func clicked_number(_ sender: UITextField, forEvent event: UIEvent) {
         isTouch = "Number"
         mCashTextFieldNumber.backgroundColor = .white
-        mCashTxtFieldTaxFree.backgroundColor = define.grey
-        mCashTxtFieldMoney.backgroundColor = define.grey
-        mCashTxtFieldSvc.backgroundColor = define.grey
+        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
+        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
         sender.resignFirstResponder()
     }
     
@@ -1058,9 +1058,9 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                 if (mCashTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mCashTextFieldNumber.backgroundColor = define.grey
-                    mCashTxtFieldSvc.backgroundColor = define.grey
-                    mCashTxtFieldTaxFree.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -1071,10 +1071,10 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                 if (mCashTxtFieldTaxFree.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Txf"
-                    mCashTextFieldNumber.backgroundColor = define.grey
-                    mCashTxtFieldSvc.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldTaxFree.backgroundColor = .white
-                    mCashTxtFieldMoney.backgroundColor = define.grey
+                    mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -1087,10 +1087,10 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                     if (mCashTxtFieldSvc.text!.isEmpty) {
                         //만일 텍스트가 비어있다면?
                         isTouch = "Svc"
-                        mCashTextFieldNumber.backgroundColor = define.grey
+                        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                         mCashTxtFieldSvc.backgroundColor = .white
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
-                        mCashTxtFieldMoney.backgroundColor = define.grey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }
@@ -1100,9 +1100,9 @@ extension CashController: PayResultDelegate,CatResultDelegate {
             if !InputNumberGroup.isHidden {
                 isTouch = "Number"
                 mCashTextFieldNumber.backgroundColor = .white
-                mCashTxtFieldSvc.backgroundColor = define.grey
-                mCashTxtFieldTaxFree.backgroundColor = define.grey
-                mCashTxtFieldMoney.backgroundColor = define.grey
+                mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                 return
             }
 
@@ -1113,9 +1113,9 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                 if (mCashTxtFieldMoney.text!.isEmpty) {
                     //만일 텍스트가 비어있다면?
                     isTouch = "Money"
-                    mCashTextFieldNumber.backgroundColor = define.grey
-                    mCashTxtFieldSvc.backgroundColor = define.grey
-                    mCashTxtFieldTaxFree.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldMoney.backgroundColor = .white
                     return
                 }
@@ -1129,17 +1129,17 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                     if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                         //금액입력을 사용
                         isTouch = "Money"
-                        mCashTextFieldNumber.backgroundColor = define.grey
-                        mCashTxtFieldSvc.backgroundColor = define.grey
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
+                        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                         mCashTxtFieldMoney.backgroundColor = .white
                         return
                     }
                     isTouch = "Txf"
-                    mCashTextFieldNumber.backgroundColor = define.grey
-                    mCashTxtFieldSvc.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldTaxFree.backgroundColor = .white
-                    mCashTxtFieldMoney.backgroundColor = define.grey
+                    mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
             }
@@ -1154,26 +1154,26 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                         if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use || mTaxCalc.mVatMethod != TaxCalculator.TAXParameter.Auto {
                             //만일 텍스트가 비어있다면?
                             isTouch = "Txf"
-                            mCashTextFieldNumber.backgroundColor = define.grey
-                            mCashTxtFieldSvc.backgroundColor = define.grey
+                            mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                             mCashTxtFieldTaxFree.backgroundColor = .white
-                            mCashTxtFieldMoney.backgroundColor = define.grey
+                            mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                             return
                         }
                         
                         if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                             isTouch = "Money"
-                            mCashTextFieldNumber.backgroundColor = define.grey
-                            mCashTxtFieldSvc.backgroundColor = define.grey
-                            mCashTxtFieldTaxFree.backgroundColor = define.grey
+                            mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                            mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                            mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                             mCashTxtFieldMoney.backgroundColor = .white
                             return
                         }
                         isTouch = "Svc"
-                        mCashTextFieldNumber.backgroundColor = define.grey
+                        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                         mCashTxtFieldSvc.backgroundColor = .white
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
-                        mCashTxtFieldMoney.backgroundColor = define.grey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
                 }
@@ -1189,10 +1189,10 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                     if mTaxCalc.mSvcMethod != TaxCalculator.TAXParameter.Auto {
                         //봉사료 수동 입력의 경우
                         isTouch = "Svc"
-                        mCashTextFieldNumber.backgroundColor = define.grey
+                        mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
                         mCashTxtFieldSvc.backgroundColor = .white
-                        mCashTxtFieldTaxFree.backgroundColor = define.grey
-                        mCashTxtFieldMoney.backgroundColor = define.grey
+                        mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                        mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                         return
                     }
 
@@ -1202,28 +1202,28 @@ extension CashController: PayResultDelegate,CatResultDelegate {
                 if mTaxCalc.mApplyVat != TaxCalculator.TAXParameter.Use || mTaxCalc.mVatMethod != TaxCalculator.TAXParameter.Auto {
                     //비과세을 사용
                     isTouch = "Txf"
-                    mCashTextFieldNumber.backgroundColor = define.grey
-                    mCashTxtFieldSvc.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldTaxFree.backgroundColor = .white
-                    mCashTxtFieldMoney.backgroundColor = define.grey
+                    mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                     return
                 }
                 
                 if mTaxCalc.mApplyVat == TaxCalculator.TAXParameter.Use {
                     //금액입력을 사용
                     isTouch = "Money"
-                    mCashTextFieldNumber.backgroundColor = define.grey
-                    mCashTxtFieldSvc.backgroundColor = define.grey
-                    mCashTxtFieldTaxFree.backgroundColor = define.grey
+                    mCashTextFieldNumber.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                    mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
                     mCashTxtFieldMoney.backgroundColor = .white
                     return
                 }
                 
                 isTouch = "Number"
                 mCashTextFieldNumber.backgroundColor = .white
-                mCashTxtFieldSvc.backgroundColor = define.grey
-                mCashTxtFieldTaxFree.backgroundColor = define.grey
-                mCashTxtFieldMoney.backgroundColor = define.grey
+                mCashTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
+                mCashTxtFieldMoney.backgroundColor = define.layout_border_lightgrey
                 return
             }
 
