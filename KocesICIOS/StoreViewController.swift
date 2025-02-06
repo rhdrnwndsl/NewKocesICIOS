@@ -107,7 +107,7 @@ class StoreViewController: UIViewController {
     private let representativeButtonView = UIView()
     private lazy var registerButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("가맹점등록", for: .normal)
+        button.setTitle(Utils.getIsCAT() ? "가맹점추가":"가맹점등록", for: .normal)
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = Utils.getSubTitleFont()
@@ -140,6 +140,7 @@ class StoreViewController: UIViewController {
         return segmented
     }()
   
+    let CharMaxLength = 10  //TID, 사업자번호, 시리얼넘버 입력자리 제한 수
     private lazy var serialNumberTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
@@ -151,6 +152,7 @@ class StoreViewController: UIViewController {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "사업자번호 입력"
+        textField.keyboardType = .numberPad
         textField.font = Utils.getTextFont()
         return textField
     }()
@@ -158,12 +160,12 @@ class StoreViewController: UIViewController {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "TID 입력"
+        textField.keyboardType = .numberPad
         textField.font = Utils.getTextFont()
         return textField
     }()
 
     private var countAck: Int = 0
-    let CharMaxLength = 10
     
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
@@ -1070,6 +1072,17 @@ class StoreViewController: UIViewController {
         // 만약 TARGETDEVICE가 TAGETCAT이 아니라면 등록용 UI를 보여줍니다.
         if Utils.getIsCAT() {
             print("가맹점등록 버튼이 클릭되었습니다.")
+            if self.representativeMerchant.tid == "" {
+                showEditPopup(forRepresentative: true, index: nil, add: true)
+            } else {
+                for i in 0..<self.subMerchants.count {
+                    if self.subMerchants[i].tid == "" {
+                        showEditPopup(forRepresentative: false, index: i, add: true)
+                        return
+                    }
+                }
+            }
+          
         } else {
             contentStackView.isHidden = true
             titleStackView.isHidden = false
@@ -1086,7 +1099,7 @@ class StoreViewController: UIViewController {
     
     @objc private func didTapEditRepresentative() {
         // 대표사업자 정보 수정
-        showEditPopup(forRepresentative: true, index: nil)
+        showEditPopup(forRepresentative: true, index: nil, add: false)
     }
     
     @objc private func didTapRemoveSubMerchant(_ sender: UIButton) {
@@ -1118,7 +1131,7 @@ class StoreViewController: UIViewController {
         let index = sender.tag
         guard index < subMerchants.count else { return }
         // 서브사업자 정보 수정
-        showEditPopup(forRepresentative: false, index: index)
+        showEditPopup(forRepresentative: false, index: index, add: false)
     }
     
     // 서브사업자 표시/숨김 갱신
@@ -1192,24 +1205,27 @@ class StoreViewController: UIViewController {
     }
     
     // MARK: - 정보수정 팝업 표시
-    private func showEditPopup(forRepresentative: Bool, index: Int?) {
+    private func showEditPopup(forRepresentative: Bool, index: Int?, add: Bool) {
+        
         let alert = UIAlertController(title: "정보수정",
                                       message: "수정할 내용을 입력하세요.",
                                       preferredStyle: .alert)
-        alert.addTextField { textField in
-            textField.placeholder = "TID"
-            if forRepresentative {
-                textField.text = self.representativeMerchant.tid
-            } else if let i = index {
-                textField.text = self.subMerchants[i].tid
+        if Utils.getIsCAT() {
+            alert.addTextField { textField in
+                textField.placeholder = "TID"
+                if forRepresentative {
+                    textField.text = self.representativeMerchant.tid
+                } else if let i = index {
+                    textField.text = self.subMerchants[i].tid
+                }
             }
-        }
-        alert.addTextField { textField in
-            textField.placeholder = "사업자번호"
-            if forRepresentative {
-                textField.text = self.representativeMerchant.businessNumber
-            } else if let i = index {
-                textField.text = self.subMerchants[i].businessNumber
+            alert.addTextField { textField in
+                textField.placeholder = "사업자번호"
+                if forRepresentative {
+                    textField.text = self.representativeMerchant.businessNumber
+                } else if let i = index {
+                    textField.text = self.subMerchants[i].businessNumber
+                }
             }
         }
         alert.addTextField { textField in
@@ -1250,12 +1266,32 @@ class StoreViewController: UIViewController {
             let fields = alert.textFields ?? []
             guard fields.count == 6 else { return }
             
-            let tid = fields[0].text ?? ""
-            let bizNum = fields[1].text ?? ""
-            let storeName = fields[2].text ?? ""
-            let phone = fields[3].text ?? ""
-            let address = fields[4].text ?? ""
-            let repName = fields[5].text ?? ""
+            var tid = ""
+            var bizNum = ""
+            var storeName =  ""
+            var phone = ""
+            var address = ""
+            var repName = ""
+            if Utils.getIsCAT() {
+                tid = fields[0].text ?? ""
+                bizNum = fields[1].text ?? ""
+                storeName = fields[2].text ?? ""
+                phone = fields[3].text ?? ""
+                address = fields[4].text ?? ""
+                repName = fields[5].text ?? ""
+            } else {
+                if forRepresentative {
+                    tid = self.representativeMerchant.tid
+                    bizNum = self.representativeMerchant.businessNumber
+                } else if let i = index {
+                    tid = self.subMerchants[i].tid
+                    bizNum = self.subMerchants[i].businessNumber
+                }
+                storeName = fields[0].text ?? ""
+                phone = fields[1].text ?? ""
+                address = fields[2].text ?? ""
+                repName = fields[3].text ?? ""
+            }
             
             if forRepresentative {
                 self.representativeMerchant = MerchantInfo(
