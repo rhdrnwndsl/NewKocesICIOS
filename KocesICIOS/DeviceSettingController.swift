@@ -740,7 +740,7 @@ class DeviceSettingController: UIViewController, UIScrollViewDelegate {
             mCatPort.text = Setting.shared.getDefaultUserData(_key: define.CAT_SERVER_PORT)
             
             printDefaultSet()
-            if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+            if Utils.getIsCAT() {
                 var _checkCount = 0
                 /** 0 */
                 for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
@@ -1080,7 +1080,7 @@ class DeviceSettingController: UIViewController, UIScrollViewDelegate {
     func initStackViewBleCat()
     {
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             mStackBle.isHidden = true
             mStackBle.alpha = 0.0
             mStackCat.isHidden = false

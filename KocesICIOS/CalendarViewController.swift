@@ -265,7 +265,7 @@ class CalendarViewController: UIViewController {
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             dateFormatter.dateFormat = "yyMMddHHmmss"
             //거래 내역 가져오기
-            var mDBTradeTableResult:[DBTradeResult] = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
+            var mDBTradeTableResult:[DBTradeResult] = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
             if mDBTradeTableResult.count > 0 {
                 mFirstDate.date = dateFormatter.date(from: mDBTradeTableResult[mDBTradeTableResult.count - 1].getAuDate())!
             } else {
@@ -296,7 +296,7 @@ class CalendarViewController: UIViewController {
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyMMddHHmmss"
         //거래 내역 가져오기
-        var mDBTradeTableResult:[DBTradeResult] = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
+        var mDBTradeTableResult:[DBTradeResult] = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
         
         if mDBTradeTableResult.count > 0 {
             mFirstDate.date = dateFormatter.date(from: mDBTradeTableResult[mDBTradeTableResult.count - 1].getAuDate())!
@@ -368,7 +368,7 @@ class CalendarViewController: UIViewController {
        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {[self] in
 //            CalendarResult()
-            getTradeListPeriod(Tid: Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID), From: dateFormat.string(from: mFirstDate.date), To: dateFormat.string(from: mLastDate.date))
+            getTradeListPeriod(Tid: Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID), From: dateFormat.string(from: mFirstDate.date), To: dateFormat.string(from: mLastDate.date))
         }
 
     }
@@ -394,7 +394,7 @@ class CalendarViewController: UIViewController {
             }
             switch queryresult[i].getTrade() {
             case define.TradeMethod.AppCard.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -407,7 +407,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.EmvQr.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -420,7 +420,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.Wechat.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -433,7 +433,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.Ali.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -446,7 +446,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.Zero.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -459,7 +459,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.Kakao.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -472,7 +472,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.Credit.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCardType() == "1" || queryresult[i].getCardType() == " " { //신용카드
@@ -517,7 +517,7 @@ class CalendarViewController: UIViewController {
 
                 break
             case define.TradeMethod.Cash.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     continue
                 }
                 if queryresult[i].getCashTarget() == define.TradeMethod.CashPrivate.rawValue {  //개인
@@ -925,7 +925,7 @@ class CalendarViewController: UIViewController {
         var _store10:String = ""
         for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
             if key.contains(define.STORE_TID) {
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     if key == define.CAT_STORE_TID {
                         if (value as! String) != "" {
                             _tid0 = value as! String
@@ -1194,7 +1194,7 @@ extension CalendarViewController:TcpResultDelegate, UITabBarControllerDelegate {
     func CalendarResult() {
         listener = TcpResult()
         listener?.delegate = self
-        mKocesSdk.CalendarResult(Command: Command.CMD_CACULATE_AGGREGATION_REQ, Tid: Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID), Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", StartDay: dateFormat.string(from: mFirstDate.date) + "000000", EndDay: dateFormat.string(from: mLastDate.date) + "235959", MchData: "", CallbackListener: listener?.delegate as! TcpResultDelegate)
+        mKocesSdk.CalendarResult(Command: Command.CMD_CACULATE_AGGREGATION_REQ, Tid: Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID), Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", StartDay: dateFormat.string(from: mFirstDate.date) + "000000", EndDay: dateFormat.string(from: mLastDate.date) + "235959", MchData: "", CallbackListener: listener?.delegate as! TcpResultDelegate)
     }
     
 }

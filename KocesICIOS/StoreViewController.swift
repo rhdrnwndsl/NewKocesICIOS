@@ -68,7 +68,7 @@ class StoreViewController: UIViewController {
     private let representativePosLabelView = UIView()
     private lazy var posLabel: UILabel = {
         let label = UILabel()
-        label.text = "POS"
+        label.text = Utils.getIsCAT() ? "CAT":"POS"
         label.font = Utils.getTitleFont()
         label.textAlignment = .left
         return label
@@ -485,7 +485,7 @@ class StoreViewController: UIViewController {
         var count = "1"
         for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
             if key.contains(define.STORE_TID) {
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     if key == "CAT_STORE_TID" || key == "CAT_STORE_TID0" {
                         self.representativeMerchant = MerchantInfo(
                             tid: (Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID) == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID + "0"):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID)),
@@ -740,7 +740,7 @@ class StoreViewController: UIViewController {
         let spacerView2 = UIView()
         spacerView2.setContentHuggingPriority(.defaultLow, for: .horizontal)
         var arrayView: [UIView]
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             arrayView = [spacerView, removeButton, editButton]
         } else {
             arrayView = [spacerView, spacerView2, editButton]
@@ -752,7 +752,7 @@ class StoreViewController: UIViewController {
         
         container.addSubview(buttonStack)
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             NSLayoutConstraint.activate([
                 removeButton.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
                 removeButton.widthAnchor.constraint(equalToConstant: Utils.getRowWidth()),
@@ -848,6 +848,9 @@ class StoreViewController: UIViewController {
         tidNumberTextField.delegate = self
         bisNumberTextField.delegate = self
         serialNumberTextField.delegate = self
+        tidNumberTextField.text = Setting.shared.getDefaultUserData(_key: define.STORE_TID)
+        bisNumberTextField.text = Setting.shared.getDefaultUserData(_key: define.STORE_BSN)
+        serialNumberTextField.text = Setting.shared.getDefaultUserData(_key: define.STORE_SERIAL)
         
         //새로운 버튼을 만든다 키보드 닫기 버튼을 만든다.
         let bar = UIToolbar()
@@ -1065,7 +1068,9 @@ class StoreViewController: UIViewController {
     
     @objc private func didTapRegisterButton() {
         // 만약 TARGETDEVICE가 TAGETCAT이 아니라면 등록용 UI를 보여줍니다.
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) != define.TAGETCAT {
+        if Utils.getIsCAT() {
+            print("가맹점등록 버튼이 클릭되었습니다.")
+        } else {
             contentStackView.isHidden = true
             titleStackView.isHidden = false
             if registrationView == nil {
@@ -1075,8 +1080,7 @@ class StoreViewController: UIViewController {
                 registrationView?.isHidden = false
             }
             storeDownloadTapped()
-        } else {
-            print("가맹점등록 버튼이 클릭되었습니다.")
+          
         }
     }
     
@@ -1089,7 +1093,7 @@ class StoreViewController: UIViewController {
         let index = sender.tag
         guard index < subMerchants.count else { return }
         let i = index
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             Setting.shared.setDefaultUserData(_data: "", _key: define.CAT_STORE_TID + String(i+1))
             Setting.shared.setDefaultUserData(_data: "", _key: define.CAT_STORE_BSN + String(i+1))
             Setting.shared.setDefaultUserData(_data: "", _key: define.CAT_STORE_NAME + String(i+1))
@@ -1262,7 +1266,7 @@ class StoreViewController: UIViewController {
                     address: address,
                     representativeName: repName
                 )
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     Setting.shared.setDefaultUserData(_data: tid, _key: define.CAT_STORE_TID)
                     Setting.shared.setDefaultUserData(_data: tid, _key: define.CAT_STORE_TID + "0")
                     Setting.shared.setDefaultUserData(_data: bizNum, _key: define.CAT_STORE_BSN)
@@ -1301,7 +1305,7 @@ class StoreViewController: UIViewController {
                     representativeName: repName
                 )
                 
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     Setting.shared.setDefaultUserData(_data: tid, _key: define.CAT_STORE_TID + String(i+1))
                     Setting.shared.setDefaultUserData(_data: bizNum, _key: define.CAT_STORE_BSN + String(i+1))
                     Setting.shared.setDefaultUserData(_data: storeName, _key: define.CAT_STORE_NAME + String(i+1))

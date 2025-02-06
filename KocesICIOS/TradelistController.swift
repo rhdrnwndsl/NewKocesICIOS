@@ -69,7 +69,7 @@ class TradelistController:UIViewController{
         mTradeTable.dataSource = self
         mTradeTable.delegate = self
         //거래 내역 가져오기
-        mDBTradeTableResult = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
+        mDBTradeTableResult = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
         mTradeTable.reloadData()
         //네비게이션 바의 배경색 rgb 변경
         UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
@@ -130,7 +130,7 @@ class TradelistController:UIViewController{
 //        mBtnTradeDMonth.setTitleColor(UIColor(displayP3Red: 255/255, green:255/255, blue: 255/255, alpha: 100.0), for: .normal)
         mFirstDate.date = Date()
         mLastDate.date = Date()
-        mDBTradeTableResult = sqlite.instance.getTradeListParsingData(Tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID), 결제구분: .NULL, from: dateFormat.string(from: mFirstDate.date), to: dateFormat.string(from: mLastDate.date))
+        mDBTradeTableResult = sqlite.instance.getTradeListParsingData(Tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID), 결제구분: .NULL, from: dateFormat.string(from: mFirstDate.date), to: dateFormat.string(from: mLastDate.date))
         mTradeTable.reloadData()
         mTradeTable.translatesAutoresizingMaskIntoConstraints = false
         var _height:Float = Float((mDBTradeTableResult?.count ?? 20) * 100)
@@ -147,7 +147,7 @@ class TradelistController:UIViewController{
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             dateFormatter.dateFormat = "yyMMddHHmmss"
-            mDBTradeTableResult = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
+            mDBTradeTableResult = sqlite.instance.getTradeList(tid: Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" ? "":Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
             if mDBTradeTableResult?.count ?? 0 > 0 {
                 mFirstDate.date = dateFormatter.date(from: mDBTradeTableResult![mDBTradeTableResult!.count - 1].getAuDate())!
             } else {
@@ -236,7 +236,7 @@ class TradelistController:UIViewController{
             }
             return
         }
-        SetTradeData(Tid: Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
+        SetTradeData(Tid: Utils.getIsCAT() ?  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):Setting.shared.getDefaultUserData(_key: define.STORE_TID))
     }
     
     func SetTradeData(Tid _tid:String) {
@@ -407,7 +407,7 @@ class TradelistController:UIViewController{
         var _store10:String = ""
         for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
             if key.contains(define.STORE_TID) {
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     if key == define.CAT_STORE_TID {
                         if (value as! String) != "" {
                             _tid0 = value as! String

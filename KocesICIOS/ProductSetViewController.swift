@@ -329,7 +329,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private func loadTIDValue() {
         // 외부 Setting 클래스로부터 TID 값을 로드합니다.
         var tidValue: String?
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             tidValue = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID)
         } else {
             tidValue = Setting.shared.getDefaultUserData(_key: define.STORE_TID)

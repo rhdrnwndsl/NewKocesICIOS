@@ -640,7 +640,7 @@ extension CashCancelController : UITabBarControllerDelegate, CatResultDelegate, 
         var _addr10:String = ""
         for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
             if key.contains(define.STORE_TID) {
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     if key == define.CAT_STORE_TID {
                         if (value as! String) != "" {
                             _tid0 = value as! String

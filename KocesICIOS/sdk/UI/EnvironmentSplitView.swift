@@ -59,9 +59,14 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         mainView.dataSource = self
         mainView.translatesAutoresizingMaskIntoConstraints = false
         mainView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-
-        mainView.backgroundColor = .systemGray6
-        mainView.separatorStyle = .singleLine
+        
+        // 그룹 스타일 테이블뷰의 배경을 회색으로, 셀 간 여백을 주기 위해 contentInset 설정
+        mainView.backgroundColor = define.layout_border_lightgrey
+        mainView.separatorStyle = .none
+        mainView.contentInset = UIEdgeInsets(top: define.pading_wight,
+                                             left: define.pading_wight,
+                                             bottom: define.pading_wight,
+                                             right: define.pading_wight)
         addSubview(mainView)
     }
 
@@ -174,6 +179,17 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         parentViewController?.present(mainTabBarController, animated: true, completion: nil)
     }
 
+    
+    // MARK: - Section Header Spacing
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 20 // 섹션 간 간격
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let spacer = UIView()
+        spacer.backgroundColor = .clear
+        return spacer
+    }
       
     // MARK: - UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -186,11 +202,41 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        
+        // 기존 셀 스타일 초기화
+        cell.backgroundColor = .clear
+        cell.contentView.subviews.forEach { subview in
+            if subview.tag == 999 { subview.removeFromSuperview() }
+        }
+        
+        // containerView: white background, 라운드 효과, 좌우 상하 여백 적용
+        let containerInset = UIEdgeInsets(top: define.pading_wight / 2, left: 0, bottom: define.pading_wight / 2, right: 0)
+        let containerFrame = cell.contentView.bounds.inset(by: containerInset)
+        let containerView = UIView(frame: containerFrame)
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 8
+        containerView.layer.masksToBounds = true
+        containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        containerView.tag = 999
+        cell.contentView.insertSubview(containerView, at: 0)
+        
+        // 기존 텍스트 라벨을 containerView 위로 이동 및 inset 적용
+        if let textLabel = cell.textLabel {
+            textLabel.frame = containerView.bounds.insetBy(dx: define.pading_wight, dy: define.pading_wight / 2)
+            textLabel.backgroundColor = .clear
+            textLabel.font = Utils.getSubTitleFont()
+            textLabel.textColor = .darkGray
+        }
+        
+        // cell 선택 시 색상 변경 (예: 선택된 셀의 배경을 green으로)
+        if indexPath == selectedIndexPath {
+            containerView.backgroundColor = define.layout_bg_green
+        }
+        
+        // 셀의 accessory는 containerView 위에 표시되도록 함 (기존 방식 그대로)
         let item = sections[indexPath.section].items[indexPath.row]
         cell.textLabel?.text = item.title
-        cell.textLabel?.font = Utils.getSubTitleFont()
         cell.accessoryType = item.hasSwitch ? .none : .disclosureIndicator
-
         if item.hasSwitch {
             let switchView = UISwitch()
             switchView.isOn = false
@@ -200,34 +246,29 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         }
         
         // Style the cell
-        styleCell(cell, at: indexPath)
+//        styleCell(cell, at: indexPath)
         return cell
     }
     
-    private func styleCell(_ cell: UITableViewCell, at indexPath: IndexPath) {
-//        let cornerRadius: CGFloat = 10.0
-//        let padding: CGFloat = 10.0
-
-        // 배경색 처리
-        if indexPath == selectedIndexPath {
-            cell.backgroundColor = define.layout_bg_green
-        } else {
-            cell.backgroundColor = .white
-        }
-
-        // 테이블 뷰의 배경색과 여백 일치
-        mainView.backgroundColor = .systemGray6
-        
-        //셀 레이아웃에 패딩 적용
-
-        // 셀 내용에 패딩 적용
-        cell.contentView.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
-        cell.contentView.layer.masksToBounds = true
-
-    }
+//    private func styleCell(_ cell: UITableViewCell, at indexPath: IndexPath) {
+//        // 배경색 처리
+//        if indexPath == selectedIndexPath {
+//            cell.backgroundColor = define.layout_bg_green
+//        } else {
+//            cell.backgroundColor = .white
+//        }
+//
+//        // 테이블 뷰의 배경색과 여백 일치
+//        mainView.backgroundColor = .systemGray6
+//
+//        // 셀 내용에 패딩 적용
+//        cell.contentView.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
+//        cell.contentView.layer.masksToBounds = true
+//    }
     
+
     func tableView(_ tableView: UITableView, layoutMarginsForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        return UIEdgeInsets(top: define.pading_wight, left: 0, bottom: define.pading_wight, right: 0)
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -241,20 +282,16 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return Utils.getRowHeight() // 원하는 높이로 조정
     }
-    
+
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         
-        header.textLabel?.font = Utils.getSubTitleFont()
-        header.textLabel?.textColor = .darkGray
-        header.textLabel?.textAlignment = .left
-        
-        header.contentView.backgroundColor = .systemGray6 // 배경색 설정
-        header.backgroundView = nil // 기존 backgroundView 제거 (레이아웃 영향 방지)
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return Utils.getRowHeight()
+//        header.textLabel?.font = Utils.getSubTitleFont()
+//        header.textLabel?.textColor = .darkGray
+//        header.textLabel?.textAlignment = .left
+//        
+//        header.contentView.backgroundColor = .systemGray6 // 배경색 설정
+//        header.backgroundView = nil // 기존 backgroundView 제거 (레이아웃 영향 방지)
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -264,13 +301,11 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
   
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         // 선택된 셀의 IndexPath 저장
         selectedIndexPath = indexPath
         mainView.reloadData() // 테이블 뷰 리로드하여 배경색 업데이트
         
         let item = sections[indexPath.section].items[indexPath.row]
-
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width { // Portrait mode
             isContentViewVisible = true
             updateLayoutForCurrentOrientation()

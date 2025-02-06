@@ -1961,6 +1961,11 @@ class Utils{
         return UIDevice.current.userInterfaceIdiom == .pad
     }
     
+    // MARK: - 디바이스가 CAT인지 체크
+    static func getIsCAT() -> Bool {
+        return Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT
+    }
+    
     static func getTitleFont() -> UIFont {
         return getIsPad() ? define.pad_title_font : define.phone_title_font
     }

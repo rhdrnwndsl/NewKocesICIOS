@@ -185,7 +185,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
         bar.items = [flexSpace, flexSpace, doneBtn]
         bar.sizeToFit()
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             mTitleTextLabel.text = "CAT"
             mBtnAddStore.isHidden = false
             mBtnAddStore.alpha = 1.0
@@ -361,7 +361,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
                 for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
                     if key.contains(define.STORE_TID) {
                         if (value as! String) != "" {
-                            if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                            if Utils.getIsCAT() {
                                 if key == "CAT_STORE_TID" {
                                     _TidCount += 1
                                 } else if key == "CAT_STORE_TID1" {
@@ -489,7 +489,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
             return
         }
         var _checkCount = 0
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             /** 0 */
             for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
                 if key.contains(define.CAT_STORE_TID) {
@@ -756,7 +756,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
     }
     
     func StoreDeleteInfo(StoreNumber _sn:Int){
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             if _sn == 0 {
                 Setting.shared.setDefaultUserData(_data:  "", _key: define.CAT_STORE_TID)
                 Setting.shared.setDefaultUserData(_data:  "", _key: define.CAT_STORE_TID + "0")
@@ -1055,7 +1055,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
             // do action.
             return
         }
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             
         } else {
             //ble 일 경우 만일 한번도 등록다운로드를 하지 않았다면 수정을 할 수 없게 막는다
@@ -1161,7 +1161,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
         
         let alert = UIAlertController(title: "사업자 정보 수정", message: "아래 항목을 정확히 입력하세요.", preferredStyle: .alert)
         //CAT 연동일 때 처리
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             alert.addTextField { (textField) in
                 textField.placeholder = "TID를 입력하세요"
                 if _sn == 0 {
@@ -1323,7 +1323,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
         }))
         
         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [self, alert] (_) in
-            if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+            if Utils.getIsCAT() {
                 if alert.textFields?[0].text?.replacingOccurrences(of: " ", with: "") == "" {
                     AlertBox(title: "사업자 정보 수정", message: "TID를 잘못 입력하였습니다", text: "확인")
                     return
@@ -1376,7 +1376,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
                 }
             }
 
-            if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+            if Utils.getIsCAT() {
                 if _sn == 0 {
                     Setting.shared.setDefaultUserData(_data: (alert.textFields?[0].text) ?? "", _key: define.CAT_STORE_TID)
                     Setting.shared.setDefaultUserData(_data: (alert.textFields?[0].text) ?? "", _key: define.CAT_STORE_TID + "0")
@@ -1654,7 +1654,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
     {
         for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
             if key.contains(define.STORE_TID) {
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+                if Utils.getIsCAT() {
                     if key == "CAT_STORE_TID" || key == "CAT_STORE_TID0" {
                         mShopName.text = "  " + (Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME) == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "0"):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME))
                         mShopPhone.text = "  " +  (Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE) == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "0"):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE))
@@ -1826,7 +1826,7 @@ class StoreSettingController: UIViewController, UIScrollViewDelegate {
         
     
         //로컬 가맹점 정보 읽어서 표시 하기
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT {
+        if Utils.getIsCAT() {
             mShopName.text = "  " + (Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME) == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "0"):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME))
             mShopPhone.text = "  " +  (Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE) == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "0"):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE))
             mShopAddr.text = "  " +  (Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR) == "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "0"):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR))
