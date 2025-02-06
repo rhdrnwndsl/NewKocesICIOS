@@ -18,7 +18,13 @@ struct MerchantInfo {
     var representativeName: String
 }
 
+protocol StoreViewControllerDelegate: AnyObject {
+    func storeViewControllerInit(_ controller: StoreViewController)
+}
+
 class StoreViewController: UIViewController {
+    weak var delegate: StoreViewControllerDelegate?
+    
     let mKocesSdk:KocesSdk = KocesSdk.instance
     var listener: TcpResult?
     let mSqlite:sqlite = sqlite.instance
@@ -1030,6 +1036,7 @@ class StoreViewController: UIViewController {
             } else {
                 registrationView?.isHidden = false
             }
+            storeDownloadTapped()
         } else {
             print("가맹점등록 버튼이 클릭되었습니다.")
         }
@@ -1126,6 +1133,11 @@ class StoreViewController: UIViewController {
     }
     
     // MARK: - 가맹점다운로드 완료
+    @objc private func storeDownloadTapped() {
+        print("가맹점 다운로드 버튼 클릭. 가맹점 다운로드 화면으로 이동")
+        // 직접 전환하는 대신 delegate 호출
+        delegate?.storeViewControllerInit(self)
+    }
     public func backStoreDownload() {
         // --- 데이터 셋업
         setupStoreInfoData()

@@ -21,7 +21,6 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
         UITabBarItem(title: "환경설정", image: UIImage(systemName: "gearshape"), tag: 1)
     ]
     
-
     private var rootView = EnvironmentSplitView()
     private func createSections() -> [SettingSection] {
         return [
@@ -66,17 +65,7 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        //네비게이션 바의 배경색 rgb 변경
-        UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
-
+        
         rootView = EnvironmentSplitView()
         rootView.configure(with: createSections())
         // 부모 컨트롤러로 self를 등록하여, EnvironmentSplitView 내에서 자식 ProductSetViewController의 delegate로 할당되도록 함
@@ -100,6 +89,18 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //네비게이션 바의 배경색 rgb 변경
+        UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
+
+     
+    }
+    
     @objc func BackMainView() {
         rootView.backToMainView()
     }
@@ -118,7 +119,12 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
 
 // MARK: - ProductSetViewControllerDelegate Implementation
 
-extension EnvironmentTabController: ProductSetViewControllerDelegate {
+extension EnvironmentTabController: ProductSetViewControllerDelegate, StoreViewControllerDelegate {
+    func storeViewControllerInit(_ controller: StoreViewController) {
+        print("StoreViewController: 가맹점 다운로드 화면으로 이동")
+        rootView.isStoreDownload = true
+    }
+    
     
     func productSetViewControllerDidTapRegister(_ controller: ProductSetViewController) {
         // ProductRegisterViewController 전환: 네비게이션 스택에 push

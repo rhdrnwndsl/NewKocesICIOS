@@ -21,6 +21,8 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         case PRIVACY = "개인정보처리방침"
         case APPINFO = "앱정보"
     }
+    private var isContentView = ""  //현재 실행중인 컨텐트뷰의 이름
+    public var isStoreDownload = false //가맹점정보화면 = false 가맹점다운로드화면 = true
     
     // UI 요소
     private let mainView = UITableView(frame: .zero, style: .grouped)   // 가로뷰 왼쪽 메뉴화면
@@ -64,6 +66,8 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
 
     private func setupContentView() {
+        isContentView = ""
+        isStoreDownload = false
         contentView.backgroundColor = .white
         contentView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentView)
@@ -135,12 +139,11 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     func backToMainView() {
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width { // Portrait mode
             if isContentViewVisible {
-                let storyboard = getMainStoryBoard()
-                var viewController = storyboard.instantiateViewController(withIdentifier: "StoreViewController") as! StoreViewController
-                if parentViewController == viewController {
-                    if viewController.contentStackView.isHidden {
-                        //만일 이게 숨겨져 있다면 현재 등록다운로드뷰인경우
-                        viewController.backStoreDownload()
+                if isContentView == EnvironmentSplit.STORE.rawValue {
+                    if isStoreDownload {
+                        isStoreDownload = false
+                        remove(asChildViewController: storesettingVC)
+                        add(asChildViewController: storesettingVC)
                         return
                     }
                 }
@@ -151,12 +154,12 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
                 backToMain()
             }
         } else {
-            let storyboard = getMainStoryBoard()
-            var viewController = storyboard.instantiateViewController(withIdentifier: "StoreViewController") as! StoreViewController
-            if parentViewController == viewController {
-                if viewController.contentStackView.isHidden {
-                    //만일 이게 숨겨져 있다면 현재 등록다운로드뷰인경우
-                    viewController.backStoreDownload()
+            if isContentView == EnvironmentSplit.STORE.rawValue {
+                if isStoreDownload {
+                    isStoreDownload = false
+                    storesettingVC.backStoreDownload()
+                    remove(asChildViewController: storesettingVC)
+                    add(asChildViewController: storesettingVC)
                     return
                 }
             }
@@ -333,7 +336,9 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         // Instantiate View Controller
 //        var viewController = storyboard.instantiateViewController(withIdentifier: "StoreSettingController") as! StoreSettingController
         var viewController = storyboard.instantiateViewController(withIdentifier: "StoreViewController") as! StoreViewController
-        
+        if let parentVC = self.parentViewController as? StoreViewControllerDelegate {
+            viewController.delegate = parentVC
+        }
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
 
@@ -441,6 +446,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         // 공통적으로 적용되는 로직을 처리
         initController()
+        isContentView = selectTab.title
         switch selectTab.title {
         case EnvironmentSplit.STORE.rawValue:
             add(asChildViewController: storesettingVC)
