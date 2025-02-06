@@ -1965,6 +1965,9 @@ class Utils{
     static func getIsCAT() -> Bool {
         return Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETCAT
     }
+    static func getIsBT() -> Bool {
+        return Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE
+    }
     
     static func getTitleFont() -> UIFont {
         return getIsPad() ? define.pad_title_font : define.phone_title_font

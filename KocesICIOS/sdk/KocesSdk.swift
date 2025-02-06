@@ -3412,7 +3412,7 @@ class KocesSdk : BLEManagerDelegate{
 
         }
 
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "직전에 연결했었던 장비가 검색되었다 : " + deviceName, Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "직전에 연결했었던 장비가 검색되었다 : " + deviceName, Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3428,7 +3428,7 @@ class KocesSdk : BLEManagerDelegate{
             blePrintState = define.PrintDeviceState.BLENOPRINT
         }
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 종료", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 종료", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3445,7 +3445,7 @@ class KocesSdk : BLEManagerDelegate{
             blePrintState = define.PrintDeviceState.BLENOPRINT
         }
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 검색 실패", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 검색 실패", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3468,7 +3468,7 @@ class KocesSdk : BLEManagerDelegate{
     }
     
     func bleManagerScanSuccess() {
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 검색 성공", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 검색 성공", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3477,7 +3477,7 @@ class KocesSdk : BLEManagerDelegate{
     }
     
     func bleManagerConnectStart() {
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 시작", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 시작", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3509,7 +3509,7 @@ class KocesSdk : BLEManagerDelegate{
         mBleConnectedName = name
         mBleConnectedUUID = uuid
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 성공 : " + mBleConnectedName, Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 성공 : " + mBleConnectedName, Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3525,7 +3525,7 @@ class KocesSdk : BLEManagerDelegate{
             blePrintState = define.PrintDeviceState.BLENOPRINT
         }
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 실패", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 실패", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3542,7 +3542,7 @@ class KocesSdk : BLEManagerDelegate{
             blePrintState = define.PrintDeviceState.BLENOPRINT
         }
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 타임아웃 실패", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 타임아웃 실패", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3559,7 +3559,7 @@ class KocesSdk : BLEManagerDelegate{
             blePrintState = define.PrintDeviceState.BLENOPRINT
         }
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 해제", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 연결 해제", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3571,7 +3571,7 @@ class KocesSdk : BLEManagerDelegate{
     
     func bleManagerIsConnected() {
 
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 이미 연결 중입니다", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "블루투스 이미 연결 중입니다", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3591,7 +3591,7 @@ class KocesSdk : BLEManagerDelegate{
 
         debugPrint("App -> Device Complete :", Utils.UInt8ArrayToHexCode(_value: mSendLastData,_option: true))
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "쓰기 성공", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "쓰기 성공", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))
@@ -3607,7 +3607,7 @@ class KocesSdk : BLEManagerDelegate{
             blePrintState = define.PrintDeviceState.BLENOPRINT
         }
         
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             LogFile.instance.InsertLog("BLE_Status : " + "페어링 실패", Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID));
         } else {
             LogFile.instance.InsertLog("BLE_Status : " + "페어링 실패", Tid: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID))

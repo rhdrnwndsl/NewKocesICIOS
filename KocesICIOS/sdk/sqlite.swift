@@ -2110,7 +2110,7 @@ class sqlite {
         defer { sqlite3_finalize(queryStatement) }
 
         // 1) TID 후보군 가져오기 (0 ~ 10까지)
-        let isTargetBLE = (Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE)
+        let isTargetBLE = (Utils.getIsBT())
         let prefixKey = isTargetBLE ? define.STORE_TID : define.CAT_STORE_TID
 
         // “tidPlaceholders”는 여러 개 TID를 저장 (빈 문자열 제외)
@@ -2336,7 +2336,7 @@ class sqlite {
             bindValues.append(_tid)
         } else {
             // 다수 TID from Setting
-            let isBLE = (Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE)
+            let isBLE = (Utils.getIsBT())
             let prefix = isBLE ? define.STORE_TID : define.CAT_STORE_TID
             
             var tidList: [String] = []

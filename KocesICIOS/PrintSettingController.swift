@@ -380,7 +380,7 @@ class PrintSettingController:UIViewController {
         listener = TcpResult()
         listener?.delegate = self
         /** log : Original App 가맹점다운로드 시작*/
-        if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+        if Utils.getIsBT() {
             if Setting.shared.getDefaultUserData(_key: define.STORE_TID) == "" {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
                     alertLoading.dismiss(animated: false){ [self] in

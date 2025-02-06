@@ -610,7 +610,7 @@ class DeviceSettingController: UIViewController, UIScrollViewDelegate {
             Setting.shared.setDefaultUserData(_data: define.TAGETBLE, _key: define.TARGETDEVICE)    //어플 기동 할 때 타겟 대상을 결정
             
             printDefaultSet()
-            if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+            if Utils.getIsBT() {
                 var _checkCount = 0
                 /** 0 */
                 for (key,value) in UserDefaults.standard.dictionaryRepresentation() {

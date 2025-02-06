@@ -556,7 +556,7 @@ class CalendarViewController: UIViewController {
 
                 break
             case define.TradeMethod.CAT_App.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -569,7 +569,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_We.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -582,7 +582,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_Ali.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -595,7 +595,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_Zero.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -608,7 +608,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_Kakao.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -621,7 +621,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_Payco.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
@@ -634,7 +634,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_Cash.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCashTarget() == define.TradeMethod.CashPrivate.rawValue {  //개인
@@ -672,7 +672,7 @@ class CalendarViewController: UIViewController {
                 }
                 break
             case define.TradeMethod.CAT_Credit.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCardType() == "1" || queryresult[i].getCardType() == " " { //신용카드
@@ -717,7 +717,7 @@ class CalendarViewController: UIViewController {
                 
                 break
             case define.TradeMethod.CAT_CashIC.rawValue:
-                if Setting.shared.getDefaultUserData(_key: define.TARGETDEVICE) == define.TAGETBLE {
+                if Utils.getIsBT() {
                     continue
                 }
                 if queryresult[i].getCancel() == "0" {
