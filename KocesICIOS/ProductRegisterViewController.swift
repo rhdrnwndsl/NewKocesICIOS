@@ -553,7 +553,7 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     }
     
     @objc func registerImageTapped() {
-        let alert = UIAlertController(title: "이미지 선택", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "이미지 선택", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "카메라", style: .default, handler: { _ in
             self.openCamera()
         }))

@@ -63,10 +63,10 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         // 그룹 스타일 테이블뷰의 배경을 회색으로, 셀 간 여백을 주기 위해 contentInset 설정
         mainView.backgroundColor = define.layout_border_lightgrey
         mainView.separatorStyle = .none
-        mainView.contentInset = UIEdgeInsets(top: define.pading_wight,
-                                             left: define.pading_wight,
-                                             bottom: define.pading_wight,
-                                             right: define.pading_wight)
+//        mainView.contentInset = UIEdgeInsets(top: define.pading_wight,
+//                                             left: define.pading_wight,
+//                                             bottom: define.pading_wight,
+//                                             right: define.pading_wight)
         addSubview(mainView)
     }
 
@@ -182,7 +182,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Section Header Spacing
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20 // 섹션 간 간격
+        return Utils.getRowSubHeight() // 섹션 간 간격
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -199,73 +199,111 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sections[section].items.count
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cornerRadius: CGFloat = define.pading_wight
+        cell.backgroundColor = .clear
+
+        // section 내 셀의 총 개수
+        let numberOfRows = tableView.numberOfRows(inSection: indexPath.section)
+        // 셀 내부 content의 inset (왼쪽/right 여백 적용)
+        let bounds = cell.bounds.insetBy(dx: define.pading_wight, dy: 0)
+        
+        let path: UIBezierPath
+        if numberOfRows == 1 {
+            // 한 셀만 있는 경우 모든 모서리를 둥글게
+            path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+        } else {
+            if indexPath.row == 0 {
+                // 첫 셀: 위쪽 모서리만 둥글게
+                path = UIBezierPath(roundedRect: bounds,
+                                    byRoundingCorners: [.topLeft, .topRight],
+                                    cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+            } else if indexPath.row == numberOfRows - 1 {
+                // 마지막 셀: 아래쪽 모서리만 둥글게
+                path = UIBezierPath(roundedRect: bounds,
+                                    byRoundingCorners: [.bottomLeft, .bottomRight],
+                                    cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+            } else {
+                // 중간 셀: 직각 사각형
+                path = UIBezierPath(rect: bounds)
+            }
+        }
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        // 선택된 셀이면 배경색을 변경 (예: define.layout_bg_green), 아니면 흰색
+        if indexPath == selectedIndexPath {
+            shapeLayer.fillColor = define.layout_bg_green.cgColor
+        } else {
+            shapeLayer.fillColor = UIColor.white.cgColor
+        }
+        
+        // 마지막 셀을 제외한 모든 셀에 separator(언더라인) 추가
+        if indexPath.row < numberOfRows - 1 {
+            let separatorHeight = 1.0 / UIScreen.main.scale
+            let separatorLayer = CALayer()
+            // 셀 내부 inset에 맞춰 좌우 10pt 여백 적용
+            separatorLayer.frame = CGRect(x: bounds.origin.x + 10,
+                                          y: bounds.height - separatorHeight,
+                                          width: bounds.width - 20,
+                                          height: separatorHeight)
+            separatorLayer.backgroundColor = define.underline_grey.cgColor
+            shapeLayer.addSublayer(separatorLayer)
+        }
+        
+        let bgView = UIView(frame: cell.bounds)
+        bgView.layer.insertSublayer(shapeLayer, at: 0)
+        cell.backgroundView = bgView
+    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // 재사용 셀 생성
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
-        // 기존 셀 스타일 초기화
+        // 셀 기본 설정
         cell.backgroundColor = .clear
+        cell.selectionStyle = .none
+        
+        // 기존 accessoryView는 제거
+        cell.accessoryType = .none
+        cell.accessoryView = nil
+        
+        // 재사용에 대비해 기존 contentView의 인디케이터(태그 1000) 제거
         cell.contentView.subviews.forEach { subview in
-            if subview.tag == 999 { subview.removeFromSuperview() }
+            if subview.tag == 1000 { subview.removeFromSuperview() }
         }
         
-        // containerView: white background, 라운드 효과, 좌우 상하 여백 적용
-        let containerInset = UIEdgeInsets(top: define.pading_wight / 2, left: 0, bottom: define.pading_wight / 2, right: 0)
-        let containerFrame = cell.contentView.bounds.inset(by: containerInset)
-        let containerView = UIView(frame: containerFrame)
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 8
-        containerView.layer.masksToBounds = true
-        containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        containerView.tag = 999
-        cell.contentView.insertSubview(containerView, at: 0)
-        
-        // 기존 텍스트 라벨을 containerView 위로 이동 및 inset 적용
-        if let textLabel = cell.textLabel {
-            textLabel.frame = containerView.bounds.insetBy(dx: define.pading_wight, dy: define.pading_wight / 2)
-            textLabel.backgroundColor = .clear
-            textLabel.font = Utils.getSubTitleFont()
-            textLabel.textColor = .darkGray
-        }
-        
-        // cell 선택 시 색상 변경 (예: 선택된 셀의 배경을 green으로)
-        if indexPath == selectedIndexPath {
-            containerView.backgroundColor = define.layout_bg_green
-        }
-        
-        // 셀의 accessory는 containerView 위에 표시되도록 함 (기존 방식 그대로)
+        // 셀 내용 설정 (예: 텍스트 라벨)
         let item = sections[indexPath.section].items[indexPath.row]
         cell.textLabel?.text = item.title
-        cell.accessoryType = item.hasSwitch ? .none : .disclosureIndicator
+        cell.textLabel?.font = Utils.getSubTitleFont()
+        cell.textLabel?.textColor = .darkGray
+        
+        // 만일 스위치가 필요한 경우 accessoryView에 스위치를 설정
         if item.hasSwitch {
             let switchView = UISwitch()
             switchView.isOn = false
             cell.accessoryView = switchView
         } else {
-            cell.accessoryView = nil
+            // 스위치가 없는 경우, 인디케이터를 cell.contentView에 추가
+            let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
+            indicator.tintColor = .lightGray
+            indicator.tag = 1000 // 재사용 시 제거하기 위한 태그
+            indicator.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(indicator)
+            NSLayoutConstraint.activate([
+                indicator.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+                indicator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -define.pading_wight * 2),
+//                indicator.widthAnchor.constraint(equalToConstant: 12),
+//                indicator.heightAnchor.constraint(equalToConstant: 16)
+            ])
         }
         
-        // Style the cell
-//        styleCell(cell, at: indexPath)
         return cell
+
     }
-    
-//    private func styleCell(_ cell: UITableViewCell, at indexPath: IndexPath) {
-//        // 배경색 처리
-//        if indexPath == selectedIndexPath {
-//            cell.backgroundColor = define.layout_bg_green
-//        } else {
-//            cell.backgroundColor = .white
-//        }
-//
-//        // 테이블 뷰의 배경색과 여백 일치
-//        mainView.backgroundColor = .systemGray6
-//
-//        // 셀 내용에 패딩 적용
-//        cell.contentView.layoutMargins = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
-//        cell.contentView.layer.masksToBounds = true
-//    }
-    
+
 
     func tableView(_ tableView: UITableView, layoutMarginsForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: define.pading_wight, left: 0, bottom: define.pading_wight, right: 0)
