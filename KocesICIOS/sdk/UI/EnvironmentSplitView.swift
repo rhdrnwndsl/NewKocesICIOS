@@ -502,6 +502,21 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         remove(asChildViewController: TaxSettingVC)
         remove(asChildViewController: ProductSettingVC)
         remove(asChildViewController: qnaVC)
+        
+        mainView.reloadData()
+    }
+    
+    public func disapearRemove() {
+        remove(asChildViewController: networksettingVC)
+        remove(asChildViewController: devicesettingVC)
+        remove(asChildViewController: infoSettingVC)
+        remove(asChildViewController: printSettingVC)
+        remove(asChildViewController: storesettingVC)
+        remove(asChildViewController: TaxSettingVC)
+        remove(asChildViewController: ProductSettingVC)
+        remove(asChildViewController: qnaVC)
+        selectedIndexPath = nil
+        mainView.reloadData()
     }
     
     func changeViewController(selectTab:SettingItem) {

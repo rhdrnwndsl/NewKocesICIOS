@@ -107,9 +107,11 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        rootView.disapearRemove()
         if let tabBarController = self.tabBarController as? TabBarController {
             tabBarController.showAllTabs() // 원래 탭 복원
         }
+        
     }
     
     override func didReceiveMemoryWarning() {

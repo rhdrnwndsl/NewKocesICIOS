@@ -68,7 +68,7 @@ class StoreViewController: UIViewController {
     private let representativePosLabelView = UIView()
     private lazy var posLabel: UILabel = {
         let label = UILabel()
-        label.text = Utils.getIsCAT() ? "CAT":"POS"
+        label.text = Utils.getIsCAT() ? "가맹점정보 : CAT":"가맹점정보 : POS"
         label.font = Utils.getTitleFont()
         label.textAlignment = .left
         return label

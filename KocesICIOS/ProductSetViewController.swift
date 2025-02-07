@@ -19,6 +19,21 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - UI Components
     
+    // 맨 위에 표시할 "POS" 라벨
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.text =  "상품관리"
+        label.font = Utils.getTitleFont()
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let titleUnderline: UIView = {
+        let view = UIView()
+        view.backgroundColor = define.underline_grey
+        return view
+    }()
+    
     // 첫번째 섹션: "상품관리가맹점 설정"
     private let merchantTitleLabel: UILabel = {
         let label = UILabel()
@@ -37,7 +52,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     private let merchantContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = define.layout_border_lightgrey
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = define.pading_wight
         view.clipsToBounds = true
         return view
     }()
@@ -70,6 +85,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     
     private let posNumberTextField: UITextField = {
         let textField = UITextField()
+        textField.text = Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO)
         textField.placeholder = "숫자 2자리 입력"
         textField.borderStyle = .roundedRect
         textField.keyboardType = .numberPad
@@ -170,7 +186,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
     
     private func setupUI() {
         // view에 subview 추가
-        [merchantTitleLabel, merchantUnderline, merchantContainerView, productTitleLabel, productUnderline, productContainerView].forEach {
+        [titleLabel, titleUnderline, merchantTitleLabel, merchantUnderline, merchantContainerView, productTitleLabel, productUnderline, productContainerView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -222,12 +238,26 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         let margin: CGFloat = 10
         
         NSLayoutConstraint.activate([
+            // titleLabel 제약조건
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: margin),
+            titleLabel.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
+            
+            // titleUnderline (제목 밑 언더라인)
+            titleUnderline.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            titleUnderline.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            titleUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
+            titleUnderline.heightAnchor.constraint(equalToConstant: 1),
+            
             // merchantTitleLabel 제약조건
-            merchantTitleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: margin),
+            merchantTitleLabel.topAnchor.constraint(equalTo: titleUnderline.bottomAnchor),
             merchantTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
+            merchantTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: margin),
+            merchantTitleLabel.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
             
             // merchantUnderline (제목 밑 언더라인)
-            merchantUnderline.topAnchor.constraint(equalTo: merchantTitleLabel.bottomAnchor, constant: define.pading_wight),
+            merchantUnderline.topAnchor.constraint(equalTo: merchantTitleLabel.bottomAnchor),
             merchantUnderline.leadingAnchor.constraint(equalTo: merchantTitleLabel.leadingAnchor),
             merchantUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             merchantUnderline.heightAnchor.constraint(equalToConstant: 1),
@@ -238,17 +268,17 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
             merchantContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             
             // tidRowView (상단 행) - merchantContainerView 내부
-            tidRowView.topAnchor.constraint(equalTo: merchantContainerView.topAnchor, constant: define.pading_wight),
+            tidRowView.topAnchor.constraint(equalTo: merchantContainerView.topAnchor),
             tidRowView.leadingAnchor.constraint(equalTo: merchantContainerView.leadingAnchor, constant: define.pading_wight),
             tidRowView.trailingAnchor.constraint(equalTo: merchantContainerView.trailingAnchor, constant: -define.pading_wight),
             tidRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
             
             // posRowView (하단 행)
-            posRowView.topAnchor.constraint(equalTo: tidRowView.bottomAnchor, constant: define.pading_wight),
+            posRowView.topAnchor.constraint(equalTo: tidRowView.bottomAnchor),
             posRowView.leadingAnchor.constraint(equalTo: merchantContainerView.leadingAnchor, constant: define.pading_wight),
             posRowView.trailingAnchor.constraint(equalTo: merchantContainerView.trailingAnchor, constant: -define.pading_wight),
             posRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
-            posRowView.bottomAnchor.constraint(equalTo: merchantContainerView.bottomAnchor, constant: -define.pading_wight),
+            posRowView.bottomAnchor.constraint(equalTo: merchantContainerView.bottomAnchor),
             
             // TID row 내부 제약조건
             tidLabel.leadingAnchor.constraint(equalTo: tidRowView.leadingAnchor),
@@ -276,8 +306,10 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
             // 두번째 섹션: 상품관리 설정 제목 및 언더라인
             productTitleLabel.topAnchor.constraint(equalTo: merchantContainerView.bottomAnchor, constant: Utils.getRowSubHeight()),
             productTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
+            productTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: margin),
+            productTitleLabel.heightAnchor.constraint(equalToConstant: Utils.getRowHeight()),
             
-            productUnderline.topAnchor.constraint(equalTo: productTitleLabel.bottomAnchor, constant: define.pading_wight),
+            productUnderline.topAnchor.constraint(equalTo: productTitleLabel.bottomAnchor),
             productUnderline.leadingAnchor.constraint(equalTo: productTitleLabel.leadingAnchor),
             productUnderline.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             productUnderline.heightAnchor.constraint(equalToConstant: 1),
@@ -288,17 +320,17 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
             productContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
             
             // productManageRowView 제약조건 (상품관리 행)
-            productManageRowView.topAnchor.constraint(equalTo: productContainerView.topAnchor, constant: define.pading_wight),
+            productManageRowView.topAnchor.constraint(equalTo: productContainerView.topAnchor),
             productManageRowView.leadingAnchor.constraint(equalTo: productContainerView.leadingAnchor, constant: define.pading_wight),
             productManageRowView.trailingAnchor.constraint(equalTo: productContainerView.trailingAnchor, constant: -define.pading_wight),
             productManageRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
             
             // productBackupRowView 제약조건 (상품정보백업 행)
-            productBackupRowView.topAnchor.constraint(equalTo: productManageRowView.bottomAnchor, constant: define.pading_wight),
+            productBackupRowView.topAnchor.constraint(equalTo: productManageRowView.bottomAnchor),
             productBackupRowView.leadingAnchor.constraint(equalTo: productContainerView.leadingAnchor, constant: define.pading_wight),
             productBackupRowView.trailingAnchor.constraint(equalTo: productContainerView.trailingAnchor, constant: -define.pading_wight),
             productBackupRowView.heightAnchor.constraint(equalToConstant: Utils.getRowSubHeight()),
-            productBackupRowView.bottomAnchor.constraint(equalTo: productContainerView.bottomAnchor, constant: -define.pading_wight),
+            productBackupRowView.bottomAnchor.constraint(equalTo: productContainerView.bottomAnchor),
             
             // 상품관리 행 내부 제약조건
             productManageLabel.leadingAnchor.constraint(equalTo: productManageRowView.leadingAnchor),
@@ -352,21 +384,44 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         // TID 값이 없는 경우 리턴 및 로그 남기기
         guard let tid = tidValueLabel.text, !tid.isEmpty else {
             print("TID 값이 없습니다. POS번호 저장 실패")
+            AlertBox(title: "POS번호등록", message: "TID 값이 없습니다. POS번호 저장 실패", text: "확인")
             return
         }
         
         let posNumber = posNumberTextField.text ?? ""
         print("입력한 POS번호: \(posNumber)")
         // 이후 실제 저장 로직 구현 가능 (현재는 로그만 남김)
+        Setting.shared.setDefaultUserData(_data: posNumber, _key: define.LOGIN_POS_NO)
+        AlertBox(title: "POS번호등록", message: "등록한 POS번호는 \(posNumber) 입니다", text: "확인")
     }
     
     @objc private func productRegisterTapped() {
+        guard let tid = tidValueLabel.text, !tid.isEmpty else {
+            print("TID 값이 없습니다. POS번호 저장 실패")
+            AlertBox(title: "상품등록 실패", message: "TID 값이 없습니다. 가맹점 다운로드를 진행해 주세요", text: "확인")
+            return
+        }
+        let posNo = Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO)
+        if posNo.isEmpty {
+            AlertBox(title: "상품등록 실패", message: "POS번호 값이 없습니다. POS번호를 입력해 주세요", text: "확인")
+            return
+        }
         print("상품등록 버튼 클릭 - 다른 화면으로 이동 (뒤로가기 시 이 화면으로 복귀)")
         // 직접 전환하는 대신 delegate 호출
         delegate?.productSetViewControllerDidTapRegister(self)
     }
     
     @objc private func productModifyTapped() {
+        guard let tid = tidValueLabel.text, !tid.isEmpty else {
+            print("TID 값이 없습니다. POS번호 저장 실패")
+            AlertBox(title: "상품등록 실패", message: "TID 값이 없습니다. 가맹점 다운로드를 진행해 주세요", text: "확인")
+            return
+        }
+        let posNo = Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO)
+        if posNo.isEmpty {
+            AlertBox(title: "상품등록 실패", message: "POS번호 값이 없습니다. POS번호를 입력해 주세요", text: "확인")
+            return
+        }
         print("상품수정 버튼 클릭 - 다른 화면으로 이동 (뒤로가기 시 이 화면으로 복귀)")
         // 직접 전환하는 대신 delegate 호출
         delegate?.productSetViewControllerDidTapModify(self)
@@ -401,6 +456,13 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         return updatedText.count <= 2
+    }
+    
+    func AlertBox(title : String, message : String, text : String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: text, style: UIAlertAction.Style.cancel, handler: nil)
+        alertController.addAction(okButton)
+        return self.present(alertController, animated: true, completion: nil)
     }
 }
 
