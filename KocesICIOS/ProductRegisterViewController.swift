@@ -70,7 +70,31 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     let vatAmountLabel = UILabel()
     let vatAmountTextField = UITextField()
     
-    // 9. 사용여부 (세그먼트: 사용/미사용)
+    // 9. 봉사료적용 (스위치)
+    let svcableLabel = UILabel()
+    let svcableSwitch = UISwitch()
+    
+    // 10. 봉사료방식 (세그먼트: 자동/수동) – svcable일 때만 보임
+    let svcModeContainer = UIStackView()
+    let svcModeLabel = UILabel()
+    let svcModeSegmented = UISegmentedControl(items: ["자동", "수동"])
+    
+    // 11. 봉사료계산방식 (세그먼트: 포함/미포함) – svcable일 때만 보임
+    let svcCalcContainer = UIStackView()
+    let svcCalcLabel = UILabel()
+    let svcCalcSegmented = UISegmentedControl(items: ["포함", "미포함"])
+    
+    // 12. 봉사료율 (텍스트필드) – svcable && (svcMode == 자동)
+    let svcRateContainer = UIStackView()
+    let svcRateLabel = UILabel()
+    let svcRateTextField = UITextField()
+    
+    // 13. 봉사료액 (텍스트필드) – svcable && (svcMode == 수동)
+    let svcAmountContainer = UIStackView()
+    let svcAmountLabel = UILabel()
+    let svcAmountTextField = UITextField()
+    
+    // 14. 사용여부 (세그먼트: 사용/미사용)
     let usageLabel = UILabel()
     let usageSegmented = UISegmentedControl(items: ["사용", "미사용"])
     
@@ -94,15 +118,15 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     let pricingContainer = UIView()
     let pricingStack = UIStackView()
     let supplyPriceLabel = UILabel()
-    let supplyPriceTextField = UITextField()
+    let supplyPriceTextField = UILabel()
     let taxLabel = UILabel()
-    let taxTextField = UITextField()
+    let taxTextField = UILabel()
     let nonTaxLabel = UILabel()
-    let nonTaxTextField = UITextField()
+    let nonTaxTextField = UILabel()
     let serviceChargeLabel = UILabel()
-    let serviceChargeTextField = UITextField()
+    let serviceChargeTextField = UILabel()
     let paymentAmountLabel = UILabel()
-    let paymentAmountTextField = UITextField()
+    let paymentAmountTextField = UILabel()
     
     // MARK: - Lifecycle
     
@@ -119,14 +143,24 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         setupRightSide()
         
         // 기본값 및 타겟 설정
-        taxableSwitch.isOn = true
+        taxableSwitch.isOn = true       //부가세는 기본이 사용
         vatModeSegmented.selectedSegmentIndex = 0  // 자동
         vatCalcSegmented.selectedSegmentIndex = 0   // 포함
         updateTaxViewsVisibility()
+
+        svcableSwitch.isOn = false      //봉사료는 기본이 미사용
+        svcModeSegmented.selectedSegmentIndex = 0  // 자동
+        svcCalcSegmented.selectedSegmentIndex = 0   // 포함
+        updateSvcViewsVisibility()
+        
+        usageSegmented.selectedSegmentIndex = 0 //사용
+        defaultImageSegmented.selectedSegmentIndex = 0 //사용
         
         selectCategoryButton.addTarget(self, action: #selector(selectCategoryTapped), for: .touchUpInside)
         taxableSwitch.addTarget(self, action: #selector(taxableSwitchChanged), for: .valueChanged)
         vatModeSegmented.addTarget(self, action: #selector(vatModeChanged), for: .valueChanged)
+        svcableSwitch.addTarget(self, action: #selector(svcableSwitchChanged), for: .valueChanged)
+        svcModeSegmented.addTarget(self, action: #selector(svcModeChanged), for: .valueChanged)
         registerImageButton.addTarget(self, action: #selector(registerImageTapped), for: .touchUpInside)
         removeImageButton.addTarget(self, action: #selector(removeImageTapped), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
@@ -135,11 +169,8 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         transactionAmountTextField.keyboardType = .numberPad
         vatRateTextField.keyboardType = .numberPad
         vatAmountTextField.keyboardType = .numberPad
-        supplyPriceTextField.keyboardType = .numberPad
-        taxTextField.keyboardType = .numberPad
-        nonTaxTextField.keyboardType = .numberPad
-        serviceChargeTextField.keyboardType = .numberPad
-        paymentAmountTextField.keyboardType = .numberPad
+        svcRateTextField.keyboardType = .numberPad
+        svcAmountTextField.keyboardType = .numberPad
     }
     
     // 가로 모드 전용
@@ -155,7 +186,7 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         
         // 타이틀 레이블
         titleLabel.text = "상품설정"
-        titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        titleLabel.font = Utils.getTitleFont()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         topBar.addSubview(titleLabel)
         
@@ -233,7 +264,7 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         ])
         
         // Row 1: 상품명
-        let productNameRow = createRow(labelText: "상품명", textField: productNameTextField)
+        let productNameRow = createTextFieldRow(labelText: "상품명", textField: productNameTextField)
         leftStack.addArrangedSubview(productNameRow)
         
         // Row 2: 상품분류
@@ -272,7 +303,7 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         leftStack.addArrangedSubview(categoryRow)
         
         // Row 3: 거래금액
-        let transactionRow = createRow(labelText: "거래금액", textField: transactionAmountTextField)
+        let transactionRow = createTextFieldRow(labelText: "거래금액", textField: transactionAmountTextField)
         leftStack.addArrangedSubview(transactionRow)
         
         // Row 4: 과세여부 (라벨 + 스위치)
@@ -353,8 +384,87 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         vatAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         vatAmountContainer.addArrangedSubview(vatAmountTextField)
         leftStack.addArrangedSubview(vatAmountContainer)
+  
+        // Row 9: 봉사료적용 (라벨 + 스위치)
+        let svcableRow = UIView()
+        svcableRow.translatesAutoresizingMaskIntoConstraints = false
         
-        // Row 9: 사용여부
+        svcableLabel.text = "봉사료적용"
+        svcableLabel.font = UIFont.systemFont(ofSize: 16)
+        svcableLabel.translatesAutoresizingMaskIntoConstraints = false
+        svcableRow.addSubview(svcableLabel)
+        
+        svcableSwitch.translatesAutoresizingMaskIntoConstraints = false
+        svcableRow.addSubview(svcableSwitch)
+        
+        NSLayoutConstraint.activate([
+            svcableLabel.topAnchor.constraint(equalTo: svcableRow.topAnchor),
+            svcableLabel.leadingAnchor.constraint(equalTo: svcableRow.leadingAnchor),
+            svcableLabel.bottomAnchor.constraint(equalTo: svcableRow.bottomAnchor),
+            svcableSwitch.centerYAnchor.constraint(equalTo: svcableRow.centerYAnchor),
+            svcableSwitch.trailingAnchor.constraint(equalTo: svcableRow.trailingAnchor)
+        ])
+        leftStack.addArrangedSubview(svcableRow)
+        
+        // Row 10: 봉사료방식 (세그먼트)
+        svcModeContainer.axis = .horizontal
+        svcModeContainer.spacing = 10
+        svcModeContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        svcModeLabel.text = "봉사료방식"
+        svcModeLabel.font = UIFont.systemFont(ofSize: 16)
+        svcModeLabel.translatesAutoresizingMaskIntoConstraints = false
+        svcModeContainer.addArrangedSubview(svcModeLabel)
+        
+        svcModeSegmented.translatesAutoresizingMaskIntoConstraints = false
+        svcModeContainer.addArrangedSubview(svcModeSegmented)
+        leftStack.addArrangedSubview(svcModeContainer)
+        
+        // Row 11: 봉사료계산방식
+        svcCalcContainer.axis = .horizontal
+        svcCalcContainer.spacing = 10
+        svcCalcContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        svcCalcLabel.text = "봉사료계산방식"
+        svcCalcLabel.font = UIFont.systemFont(ofSize: 16)
+        svcCalcLabel.translatesAutoresizingMaskIntoConstraints = false
+        svcCalcContainer.addArrangedSubview(svcCalcLabel)
+        
+        svcCalcSegmented.translatesAutoresizingMaskIntoConstraints = false
+        svcCalcContainer.addArrangedSubview(svcCalcSegmented)
+        leftStack.addArrangedSubview(svcCalcContainer)
+        
+        // Row 12: 봉사료율
+        svcRateContainer.axis = .horizontal
+        svcRateContainer.spacing = 10
+        svcRateContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        svcRateLabel.text = "봉사료율"
+        svcRateLabel.font = UIFont.systemFont(ofSize: 16)
+        svcRateLabel.translatesAutoresizingMaskIntoConstraints = false
+        svcRateContainer.addArrangedSubview(svcRateLabel)
+        
+        svcRateTextField.borderStyle = .roundedRect
+        svcRateTextField.translatesAutoresizingMaskIntoConstraints = false
+        svcRateContainer.addArrangedSubview(svcRateTextField)
+        leftStack.addArrangedSubview(svcRateContainer)
+        
+        // Row 13: 봉사료액
+        svcAmountContainer.axis = .horizontal
+        svcAmountContainer.spacing = 10
+        svcAmountContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        svcAmountLabel.text = "봉사료액"
+        svcAmountLabel.font = UIFont.systemFont(ofSize: 16)
+        svcAmountLabel.translatesAutoresizingMaskIntoConstraints = false
+        svcAmountContainer.addArrangedSubview(svcAmountLabel)
+        
+        svcAmountTextField.borderStyle = .roundedRect
+        svcAmountTextField.translatesAutoresizingMaskIntoConstraints = false
+        svcAmountContainer.addArrangedSubview(svcAmountTextField)
+        leftStack.addArrangedSubview(svcAmountContainer)
+ 
+        // Row 14: 사용여부
         let usageRow = UIView()
         usageRow.translatesAutoresizingMaskIntoConstraints = false
         
@@ -440,7 +550,8 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         pricingContainer.backgroundColor = .white
         pricingContainer.layer.cornerRadius = 8
         pricingContainer.layer.borderWidth = 1
-        pricingContainer.layer.borderColor = UIColor.lightGray.cgColor
+        pricingContainer.layer.borderColor = define.layout_border_lightgrey.cgColor
+        pricingContainer.layer.backgroundColor = define.layout_border_lightgrey.cgColor
         pricingContainer.translatesAutoresizingMaskIntoConstraints = false
         rightStack.addArrangedSubview(pricingContainer)
         
@@ -474,7 +585,7 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     }
     
     // Helper: 공통 행 생성 (라벨 + 텍스트필드)
-    func createRow(labelText: String, textField: UITextField) -> UIView {
+    func createTextFieldRow(labelText: String, textField: UITextField) -> UIView {
         let row = UIView()
         row.translatesAutoresizingMaskIntoConstraints = false
         
@@ -502,6 +613,45 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         return row
     }
     
+    func createRow(labelText: String, textField: UILabel) -> UIView {
+        let row = UIView()
+        row.translatesAutoresizingMaskIntoConstraints = false
+        
+        let label = UILabel()
+        label.text = labelText
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(label)
+        
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(textField)
+        
+        let won = UILabel()
+        won.text = "원"
+        won.font = UIFont.systemFont(ofSize: 16)
+        won.translatesAutoresizingMaskIntoConstraints = false
+        row.addSubview(won)
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: row.topAnchor),
+            label.leadingAnchor.constraint(equalTo: row.leadingAnchor),
+            label.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+            label.widthAnchor.constraint(equalToConstant: 100),
+            
+            textField.topAnchor.constraint(equalTo: row.topAnchor),
+            textField.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 10),
+//            textField.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+            textField.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+            
+            won.topAnchor.constraint(equalTo: row.topAnchor),
+            won.leadingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 10),
+            won.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+            won.widthAnchor.constraint(equalToConstant: 50),
+            won.bottomAnchor.constraint(equalTo: row.bottomAnchor),
+        ])
+        return row
+    }
+    
     // MARK: - Actions
     
     @objc func taxableSwitchChanged() {
@@ -510,6 +660,14 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     
     @objc func vatModeChanged() {
         updateTaxViewsVisibility()
+    }
+    
+    @objc func svcableSwitchChanged() {
+        updateSvcViewsVisibility()
+    }
+    
+    @objc func svcModeChanged() {
+        updateSvcViewsVisibility()
     }
     
     func updateTaxViewsVisibility() {
@@ -527,6 +685,24 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         } else {
             vatRateContainer.isHidden = true
             vatAmountContainer.isHidden = true
+        }
+    }
+    
+    func updateSvcViewsVisibility() {
+        let svcable = svcableSwitch.isOn
+        svcModeContainer.isHidden = !svcable
+        svcCalcContainer.isHidden = !svcable
+        if svcable {
+            if svcModeSegmented.selectedSegmentIndex == 0 {
+                svcRateContainer.isHidden = false
+                svcAmountContainer.isHidden = true
+            } else {
+                svcRateContainer.isHidden = true
+                svcAmountContainer.isHidden = false
+            }
+        } else {
+            svcRateContainer.isHidden = true
+            svcAmountContainer.isHidden = true
         }
     }
     
@@ -571,6 +747,60 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     @objc func saveButtonTapped() {
         // 저장 처리 (입력 값 검증 등)
         print("저장 버튼 눌림")
+        let tid = Utils.getIsCAT() ?
+        Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID) :
+        Setting.shared.getDefaultUserData(_key: define.STORE_TID)
+        let pSeq = "00000"
+        let tableNo = Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO)
+        let pCode = "00000"
+        guard let pName = productNameTextField.text else {
+            AlertBox(title: "상품등록 실패", message: "상품명을 입력해 주십시오", text: "확인")
+            return
+        }
+        guard let pCategory = productCategoryValueLabel.text else {
+            AlertBox(title: "상품등록 실패", message: "상품분류을 입력해 주십시오", text: "확인")
+            return
+        }
+        guard let pPrice = transactionAmountTextField.text else {
+            AlertBox(title: "상품등록 실패", message: "거래금액을 입력해 주십시오", text: "확인")
+            return
+        }
+        let pDate = Utils.getDate(format: "yyMMddHHmmSS")
+        let pBarcode = ""
+        let pUse = usageSegmented.selectedSegmentIndex
+        let pImgUrl = ""
+        let pBitmapString = ""
+        let pUseVat = taxableSwitch.isOn ? 0:1
+        let pAutoVat = vatModeSegmented.selectedSegmentIndex
+        let pIncludeVat = vatCalcSegmented.selectedSegmentIndex
+        guard let pVatRate = vatRateTextField.text else { 
+            AlertBox(title: "상품등록 실패", message: "부가세율을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        guard let pVatWon = vatAmountTextField.text else {
+            AlertBox(title: "상품등록 실패", message: "부가세액을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        let pUseSvc = svcableSwitch.isOn ? 0:1
+        let pAutoSvc = svcModeSegmented.selectedSegmentIndex
+        let pIncludeSvc = svcCalcSegmented.selectedSegmentIndex
+        guard let pSvcRate = svcRateTextField.text else {
+            AlertBox(title: "상품등록 실패", message: "봉사료율을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        guard let pSvcWon = svcAmountTextField.text else {
+            AlertBox(title: "상품등록 실패", message: "봉사료액을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        guard let pTotalPrice = paymentAmountTextField.text else {
+            AlertBox(title: "상품등록 실패", message: "봉사료액을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        let pIsImgUse = defaultImageSegmented.selectedSegmentIndex
+        
+        let result = sqlite.instance.insertProductInfo(tid: tid, productSeq: pSeq, tableNo: Int(tableNo)!, pcode: pCode, pname: pName, pcategory: pCategory, price: pPrice, pdate: pDate, barcode: pBarcode, isUse: pUse, imgUrl: pImgUrl, imgBitmapString: pBitmapString, useVAT: pUseVat, autoVAT: pAutoVat, includeVAT: pIncludeVat, vatRate: Int(pVatRate)!, vatWon: pVatWon, useSVC: pUseSvc, autoSVC: pAutoSvc, includeSVC: pIncludeSvc, svcRate: Int(pSvcRate)!, svcWon: pSvcWon, totalPrice: pTotalPrice, isImgUse: pIsImgUse)
+        
+        AlertBox(title: result ? "상품등록 성공":"상품등록 실패", message: result ? "상품을 등록하였습니다":"상품등록에 실패하였습니다. 다시 시도해 주십시오", text: "확인")
     }
     
     // MARK: - Image Picker
@@ -609,5 +839,12 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func AlertBox(title : String, message : String, text : String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: text, style: UIAlertAction.Style.cancel, handler: nil)
+        alertController.addAction(okButton)
+        return self.present(alertController, animated: true, completion: nil)
     }
 }
