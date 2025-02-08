@@ -409,6 +409,13 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         print("상품등록 버튼 클릭 - 다른 화면으로 이동 (뒤로가기 시 이 화면으로 복귀)")
         // 직접 전환하는 대신 delegate 호출
         delegate?.productSetViewControllerDidTapRegister(self)
+        
+        print("상품등록 버튼 클릭 - 모달로 ProductRegisterViewController 호출")
+        let registerVC = ProductRegisterViewController()
+        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
+        let navController = UINavigationController(rootViewController: registerVC)
+        navController.modalPresentationStyle = .fullScreen  // 필요에 따라 .overFullScreen 또는 다른 스타일로 변경 가능
+        self.present(navController, animated: true, completion: nil)
     }
     
     @objc private func productModifyTapped() {
@@ -422,9 +429,14 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
             AlertBox(title: "상품등록 실패", message: "POS번호 값이 없습니다. POS번호를 입력해 주세요", text: "확인")
             return
         }
-        print("상품수정 버튼 클릭 - 다른 화면으로 이동 (뒤로가기 시 이 화면으로 복귀)")
+        print("상품수정 버튼 클릭 - 상품리스트 화면으로 이동(뒤로가기 시 이 화면으로 복귀)")
         // 직접 전환하는 대신 delegate 호출
         delegate?.productSetViewControllerDidTapModify(self)
+        let listVC = ProductListViewController()
+        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
+        let navController = UINavigationController(rootViewController: listVC)
+        navController.modalPresentationStyle = .fullScreen  // 필요에 따라 .overFullScreen 또는 다른 스타일로 변경 가능
+        self.present(navController, animated: true, completion: nil)
     }
     
     @objc private func exportDataTapped() {

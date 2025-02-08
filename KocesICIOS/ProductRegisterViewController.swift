@@ -133,7 +133,24 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        title = "상품 등록"
+               
+        // 내비게이션 바에 '나가기' 버튼 추가 (모달 dismiss)
+        let backImage = UIImage(systemName: "chevron.backward")
+        let backButton = UIButton()
+        backButton.setImage(backImage, for: .normal)
+        backButton.setTitle("Back", for: .normal)
+        backButton.setTitleColor(define.txt_blue, for: .normal)
+        backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
+        backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
         
+        let backNav = UIBarButtonItem(customView: backButton)
+
+        navigationItem.leftBarButtonItem = backNav
+     
+        
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "나가기", style: .plain, target: self, action: #selector(exitButtonTapped))
+               
         // 가로 모드 전용 (앱 설정이나 Info.plist에서 별도 처리 가능)
         // 여기서는 supportedInterfaceOrientations를 오버라이드합니다.
         
@@ -171,6 +188,13 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         vatAmountTextField.keyboardType = .numberPad
         svcRateTextField.keyboardType = .numberPad
         svcAmountTextField.keyboardType = .numberPad
+        
+        navigationItem.titleView?.backgroundColor = .black
+    }
+    
+    @objc private func exitButtonTapped() {
+        // 모달로 present된 경우 dismiss 처리
+        dismiss(animated: true, completion: nil)
     }
     
     // 가로 모드 전용

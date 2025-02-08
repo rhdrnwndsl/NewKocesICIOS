@@ -23,6 +23,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     private var isContentView = ""  //현재 실행중인 컨텐트뷰의 이름
     public var isStoreDownload = false //가맹점정보화면 = false 가맹점다운로드화면 = true
+    public var isProduct = false //상품등록/상품수정화면이 아니면 = false 상품등록/상품수정화면 = true
     
     // UI 요소
     private let mainView = UITableView(frame: .zero, style: .grouped)   // 가로뷰 왼쪽 메뉴화면
@@ -73,6 +74,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     private func setupContentView() {
         isContentView = ""
         isStoreDownload = false
+        isProduct = false
         contentView.backgroundColor = .white
         contentView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentView)
@@ -142,6 +144,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
 
     func backToMainView() {
+     
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width { // Portrait mode
             if isContentViewVisible {
                 if isContentView == EnvironmentSplit.STORE.rawValue {
@@ -149,6 +152,13 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
                         isStoreDownload = false
                         remove(asChildViewController: storesettingVC)
                         add(asChildViewController: storesettingVC)
+                        return
+                    }
+                } else if isContentView == EnvironmentSplit.PRODUCT.rawValue {
+                    if isProduct {
+                        isProduct = false
+                        remove(asChildViewController: ProductSettingVC)
+                        add(asChildViewController: ProductSettingVC)
                         return
                     }
                 }
@@ -165,6 +175,13 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
                     storesettingVC.backStoreDownload()
                     remove(asChildViewController: storesettingVC)
                     add(asChildViewController: storesettingVC)
+                    return
+                }
+            } else if isContentView == EnvironmentSplit.PRODUCT.rawValue {
+                if isProduct {
+                    isProduct = false
+                    remove(asChildViewController: ProductSettingVC)
+                    add(asChildViewController: ProductSettingVC)
                     return
                 }
             }

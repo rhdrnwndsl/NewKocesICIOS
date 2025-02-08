@@ -45,7 +45,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         switch item.title {
         case Title.Main.rawValue:   //메인
-            return
+            break
 //        case Title.Credit.rawValue: //신용
 //            CheckBeforeTrading()
 //            return
@@ -58,17 +58,18 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
 //            CheckPassword()
             return
         case Title.Store.rawValue:  //가맹점정보
-            return
-            
-            
+            break
         case Title.TradeList.rawValue:  //거래내역
-            return
-            
+            break
         case Title.CalendarInfo.rawValue:  //매출정보
-            return
+            break
         default:
-            return
+            print("item.title = ")
+            print(item.title)
+            break
         }
+        let environment = EnvironmentTabController()
+        environment.rootView.disapearRemove()
     }
     
 //    func CheckBeforeTrading() {
@@ -159,7 +160,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        
+        print("")
     }
 
 }

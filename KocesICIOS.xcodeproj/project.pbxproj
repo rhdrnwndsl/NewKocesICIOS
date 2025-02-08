@@ -12,6 +12,8 @@
 		393FC7342D4CB6D30045269B /* QnaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7332D4CB6D30045269B /* QnaViewController.swift */; };
 		393FC73C2D5199B80045269B /* ExtensionUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC73B2D5199B80045269B /* ExtensionUIView.swift */; };
 		393FC73E2D51D5180045269B /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC73D2D51D5180045269B /* StoreViewController.swift */; };
+		393FC7402D57AD100045269B /* ProductListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC73F2D57AD100045269B /* ProductListViewController.swift */; };
+		393FC7422D57AD440045269B /* ProductListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7412D57AD440045269B /* ProductListCell.swift */; };
 		3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */; };
 		3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486E2D22847C00B2BB5C /* SettingItem.swift */; };
 		3972C63D2D4C4C9300F989AB /* cat_cash.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3972C63A2D4C4C9300F989AB /* cat_cash.gif */; };
@@ -140,6 +142,8 @@
 		393FC7332D4CB6D30045269B /* QnaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QnaViewController.swift; sourceTree = "<group>"; };
 		393FC73B2D5199B80045269B /* ExtensionUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUIView.swift; sourceTree = "<group>"; };
 		393FC73D2D51D5180045269B /* StoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
+		393FC73F2D57AD100045269B /* ProductListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListViewController.swift; sourceTree = "<group>"; };
+		393FC7412D57AD440045269B /* ProductListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListCell.swift; sourceTree = "<group>"; };
 		3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentSplitView.swift; sourceTree = "<group>"; };
 		3970486E2D22847C00B2BB5C /* SettingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItem.swift; sourceTree = "<group>"; };
 		3972C63A2D4C4C9300F989AB /* cat_cash.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = cat_cash.gif; sourceTree = "<group>"; };
@@ -352,6 +356,7 @@
 				3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */,
 				3970486E2D22847C00B2BB5C /* SettingItem.swift */,
 				393FC73B2D5199B80045269B /* ExtensionUIView.swift */,
+				393FC7412D57AD440045269B /* ProductListCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -431,6 +436,7 @@
 				5E3883972D539A3500E14D49 /* ProductSetViewController.swift */,
 				5E3883992D53A29D00E14D49 /* ProductRegisterViewController.swift */,
 				5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */,
+				393FC73F2D57AD100045269B /* ProductListViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -834,6 +840,7 @@
 				5EC6FA8126B159AF00D59DCE /* OtherPayController.swift in Sources */,
 				5E59D0B9261EEBA2008FFA53 /* SwiftUIButton.swift in Sources */,
 				5ED74D11266B76FB0087F652 /* LogFile.swift in Sources */,
+				393FC7402D57AD100045269B /* ProductListViewController.swift in Sources */,
 				3BA07E9F25A8B79E0095B0C3 /* initProc.swift in Sources */,
 				393FC7342D4CB6D30045269B /* QnaViewController.swift in Sources */,
 				5EF60E06263D5397007DD0CC /* ScannerViewController.swift in Sources */,
@@ -862,6 +869,7 @@
 				5E11D16B25A73A4F00178305 /* NetworkSettingController.swift in Sources */,
 				3FC953C42652C2A200F3508D /* KeyboardButton.swift in Sources */,
 				3BA70B5B25E937790051AB37 /* mms.swift in Sources */,
+				393FC7422D57AD440045269B /* ProductListCell.swift in Sources */,
 				3BAC737D25DD377100CF4EDA /* ReceipPopUp.swift in Sources */,
 				5E01D86825B228B900DB32B7 /* BLEManager.swift in Sources */,
 				3BAE898025C2F8E700EF12BB /* VerityController.swift in Sources */,
