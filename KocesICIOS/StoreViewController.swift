@@ -1601,6 +1601,9 @@ extension StoreViewController: TcpResultDelegate, UITextFieldDelegate, CustomAle
                 bisNumberTextField.text = ""
                 serialNumberTextField.text = ""
                 
+                //sqlite 등록 (포인트카드 거래 때문)
+                sqlite.instance.upsertStore(AsNum: _result["AsNum"] ?? "", ShpNm: _result["ShpNm0"] ?? "", Tid: (_result["TermID0"] ?? "").trimmingCharacters(in: .whitespacesAndNewlines), BsnNo: (_result["BsnNo0"] ?? "").trimmingCharacters(in: .whitespacesAndNewlines), PreNm: _result["PreNm0"] ?? "", ShpAdr: _result["ShpAdr0"] ?? "", ShpTel: _result["ShpTel0"] ?? "", PointCount: (_result["pointCardCount"] ?? "").trimmingCharacters(in: .whitespacesAndNewlines), PointInfo: _result["pointCard"] ?? "", MchData: _result["MchData"] ?? "")
+                
 //                setStoreInfo()
                 alertLoading.dismiss(animated: true){ [self] in
                     AlertBox(title: "결과", message: "가맹점 등록 다운로드가 완료 되었습니다.", text: "확인")
@@ -1621,6 +1624,9 @@ extension StoreViewController: TcpResultDelegate, UITextFieldDelegate, CustomAle
                 Utils.setPosKeyChainUUIDtoBase64(Target: .KocesICIOSPay, Tid: (_result["TermID"] ?? "").replacingOccurrences(of: " ", with: ""), PosKeyChain: _key)
                 bisNumberTextField.text = ""
                 serialNumberTextField.text = ""
+                
+                //sqlite 등록 (포인트카드 거래 때문)
+                sqlite.instance.upsertStore(AsNum: _result["AsNum"] ?? "", ShpNm: _result["ShpNm"] ?? "", Tid: (_result["TermID"] ?? "").trimmingCharacters(in: .whitespacesAndNewlines), BsnNo: (_result["BsnNo"] ?? "").trimmingCharacters(in: .whitespacesAndNewlines), PreNm: _result["PreNm"] ?? "", ShpAdr: _result["ShpAdr"] ?? "", ShpTel: _result["ShpTel"] ?? "", PointCount: (_result["pointCardCount"] ?? "").trimmingCharacters(in: .whitespacesAndNewlines), PointInfo: _result["pointCard"] ?? "", MchData: _result["MchData"] ?? "")
                 
 //                setStoreInfo()
                 alertLoading.dismiss(animated: true){ [self] in
