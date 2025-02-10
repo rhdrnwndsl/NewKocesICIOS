@@ -290,6 +290,149 @@ class TaxCalculator {
         
         return value
     }
+    
+    //int _Money,int _TaxFree,String _svcWon,
+    //int _auto,int _vatMode, int _svcRate, int _vatRate, int SVCInclude, int VATInclude,
+    //int UseSVC, int UseVAT, String _vatWon,
+    //Boolean UsebleOrCat
+    
+    func TaxCalcProduct(금액 _Money:Int,
+                        비과세금액 _TaxFree:Int,
+                        봉사료액 _svcWon:Int,
+                        봉사료자동수동 _auto:Int,
+                        부가세자동수동 _vatMode:Int,
+                        봉사료율 _svcRate:Int,
+                        부가세율 _vatRate:Int,
+                        봉사료포함미포함 SVCInclude:Int,
+                        부가세포함미포함 VATInclude:Int,
+                        봉사료사용미사용 UseSVC:Int,
+                        부가세사용미사용 UseVAT:Int,
+                        부가세액 _vatWon:Int,
+                        BleUse bleUse:Bool = true) -> Dictionary<String, Int> {
+        getTaxOption()
+        var err:Int = 0
+        var Money:Int = _Money
+        var value:Dictionary = [String:Int]()
+        var originalMoney:Int = Money
+//        var PayMentMoney:Int = 0
+        var VAT:Int = 0
+        var SVC:Int = 0
+        var TXF:Int = _TaxFree
+        
+        var __svcWon:Int = _svcWon
+        var __vatWon:Int = _vatWon
+        
+        let Auto:Int = 0    //0=AUTO 1=MANUAL
+        let Included:Int = 0    //0=포함, 1=미포함
+        let NotIncluded:Int = 1
+        
+        if bleUse {     //ble인 경우
+            //제일 먼저 처리 할 것은 봉사료를 빼는 일이다.
+            if UseSVC == 0 {  //봉사료를 사용하는 것을
+                if _auto == Auto { //봉사료가 자동인 경우에 비율에 따라서 금액을 처리 한다. 0=AUTO 1=MANUAL
+                    var svcRt:Double = Double(_svcRate) / 100.0
+                    SVC = Int(Double(Money) * svcRt)
+                    if SVCInclude == Included { //봉사료 원금 포함의 경우 0=포함, 1=미포함
+                        originalMoney = originalMoney - SVC
+                    }
+                } else {      //봉사료 수동 입력
+                    if SVCInclude == Included {    //봉사료 원금 포함의 경우
+                        SVC = __svcWon
+                        originalMoney = originalMoney - SVC
+                    } else{
+                        SVC = __svcWon                    //봉사료 원금 미포함의 경우
+                    }
+                }
+            }
+            
+            //세금 계산 부분
+            if UseVAT == 0 {
+                if _vatMode == Auto {
+                    //부가세가 자동인경우
+                    var vatRt:Double = Double(mVatRate) / 100.0
+                    if VATInclude == Included {
+                        VAT =  Int(Double(originalMoney) - (Double(originalMoney) / (1.0 + vatRt)))
+                        originalMoney = originalMoney - VAT
+                    } else{   //세금 미포함
+                        VAT = Int(Double(originalMoney) * vatRt)
+                    }
+                } else {
+                    //부가세가 수동인경우
+                    if VATInclude == Included {   //부가세가 포함인경우
+                        VAT = __vatWon
+                        originalMoney = originalMoney - __vatWon
+                    } else{   //세금 미포함
+                        VAT = __vatWon
+                    }
+                }
+        
+            } else {   //세금적용 안함.
+                VAT = 0
+            }
+ 
+            originalMoney = originalMoney + TXF
+            
+            if(UseSVC == 0 && SVCInclude==NotIncluded){  //봉사료 적용, 봉사료 미포함
+                //PayMentMoney = PayMentMoney + SVC
+            }
+
+            if(UseVAT == 0 && VATInclude==NotIncluded){  //세금 적용,세금 비포함
+                //PayMentMoney = PayMentMoney + VAT
+            }
+
+        } else {
+            //ble 아니라 CAT에 따른 계산
+            if UseSVC == 0 {  //봉사료 적용
+                if _auto == Auto{         //봉사료 방식이 자동인 경우
+                    var svcRt:Double = Double(mSvcRate) / 100.0
+                    SVC = Int(Double(Money) * svcRt)
+                    if SVCInclude == Included { //봉사료 원금 포함의 경우
+                        originalMoney = originalMoney - SVC
+                    }
+                }else{          //봉사료 방식이 수동인 경우
+                    if SVCInclude == Included {   //봉사료가 원금 포함의 경우
+                        SVC = __svcWon
+                        originalMoney = originalMoney - SVC
+                    }else{
+                        //2021-08-17 kim.jy 이완재 과장님과 통화 후에 CAT봉사료 미포함 거래를 추가함
+                        SVC = __svcWon                    //봉사료 원금 미포함의 경우
+                    }
+                }
+            }
+
+            if UseVAT == 0 {
+                if _vatMode == Auto {
+                    //부가세가 자동인경우
+                    var vatRt:Double = Double(mVatRate) / 100.0
+                    if VATInclude == Included {
+                        VAT =  Int(Double(originalMoney) - (Double(originalMoney) / (1.0 + vatRt)))
+                        originalMoney = originalMoney - VAT
+                    } else { //세금 미포함
+                        VAT = Int(Double(originalMoney) * vatRt)
+                    }
+                } else {
+                    if VATInclude==Included {   //부가세가 포함인경우
+                        VAT = __vatWon
+                        originalMoney = originalMoney - __vatWon
+                    }
+                    else{   //세금 미포함
+                        VAT = __vatWon
+                    }
+                }
+            } else{   //세금적용 안함.
+                VAT = 0
+            }
+        }
+
+        //value["Money"] = originalMoney + PayMentMoney //CAT에서는 원금에서 공급가액 + 세금 + 봉사료만 처리하고 비과세는 금액만 산정하여 리턴 한다.
+        value["Money"] = originalMoney
+        value["VAT"] = VAT
+        value["SVC"] = SVC
+        value["TXF"] = TXF
+        value["Error"] = err
+        
+        return value
+    }
 }
     
     

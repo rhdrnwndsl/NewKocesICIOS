@@ -677,6 +677,57 @@ class sqlite {
     }
     
     // MARK: - 상품정보 등록 / 수정 / 일괄정보 가져오기
+    func getProductCount() -> Int {
+        let countQuery = "SELECT count(*) FROM \(define.DB_ProductTable);"
+        var queryStatement: OpaquePointer? = nil
+        
+        defer {
+            sqlite3_finalize(queryStatement)
+        }
+        
+        // prepare
+        guard sqlite3_prepare_v2(db_point, countQuery, -1, &queryStatement, nil) == SQLITE_OK else {
+            debugPrint("SELECT count(*) 준비 실패")
+            return 0
+        }
+        
+        // step
+        guard sqlite3_step(queryStatement) == SQLITE_ROW else {
+            debugPrint("카운트 조회 실패")
+            return 0
+        }
+        
+        let rowCount = Int(sqlite3_column_int(queryStatement, 0))
+        return rowCount
+    }
+    
+    func getCategoryList() -> [String] {
+        var categories: [String] = []
+        // Category 값만 추출하며 중복 없이 가져오기 위해 DISTINCT 사용
+        let query = "SELECT DISTINCT Category FROM \(define.DB_ProductTable);"
+        
+        var statement: OpaquePointer? = nil
+        // prepare 단계
+        guard sqlite3_prepare_v2(db_point, query, -1, &statement, nil) == SQLITE_OK else {
+            if let errorPointer = sqlite3_errmsg(db_point) {
+                let errorMessage = String(cString: errorPointer)
+                print("getCategoryList - prepare 실패: \(errorMessage)")
+            }
+            return categories
+        }
+        
+        // step 단계: 각 행마다 Category 컬럼의 값을 가져옴
+        while sqlite3_step(statement) == SQLITE_ROW {
+            if let cString = sqlite3_column_text(statement, 0) {
+                let category = String(cString: cString)
+                categories.append(category)
+            }
+        }
+        
+        sqlite3_finalize(statement)
+        return categories
+    }
+    
     
     /// 상품 정보를 INSERT (새로운 레코드 추가)
     /// - Returns: 성공 시 true, 실패 시 false
@@ -700,7 +751,7 @@ class sqlite {
     ) -> Bool {
         // 1) 쿼리
         let insertQuery = """
-            INSERT INTO DB_ProductTableName
+            INSERT INTO \(define.DB_ProductTable)
             (Tid, ProductSeq, TableNo, Code, Name, Category, Price, Date,
              Barcode, IsUse, ImgUrl, ImgString,
              VATUSE, VATAUTO, VATINCLUDE, VATRATE, VATWON,
@@ -795,7 +846,7 @@ class sqlite {
         //    WHERE ProductSeq=? AND Tid=?
         //    -> bind 순서 맨 뒤에 productSeq, tid
         let updateQuery = """
-            UPDATE DB_ProductTableName
+            UPDATE \(define.DB_ProductTable)
             SET
                 TableNo=?,
                 Name=?,
@@ -889,8 +940,8 @@ class sqlite {
         var result = [DBProductInfoResult]()
         
         // 1) 쿼리 구성
-        let selectAll = "SELECT * FROM DB_ProductTableName ORDER BY id ASC;"
-        let selectBySeq = "SELECT * FROM DB_ProductTableName WHERE ProductSeq=?;"
+        let selectAll = "SELECT * FROM \(define.DB_ProductTable) ORDER BY id ASC;"
+        let selectBySeq = "SELECT * FROM \(define.DB_ProductTable) WHERE ProductSeq=?;"
         
         // 실제 사용할 쿼리와 바인딩할 값
         var query = ""
@@ -1114,7 +1165,7 @@ class sqlite {
         oriAuDateTime: String
     ) -> Bool {
         let insertQuery = """
-            INSERT INTO DB_ProductTradeDetailTableName
+            INSERT INTO \(define.DB_ProductTradeDetailTable)
             (ProductNum, Tid, StoreName, StoreAddr, StoreNumber, StorePhone, StoreOwner,
              Trade, Code, Name, Category, Price, Count, isCombine, isCancel, AuDate, OriAuDateTime)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -1172,7 +1223,7 @@ class sqlite {
         // WHERE ProductNum=?
         let query = """
             SELECT *
-            FROM DB_ProductTradeDetailTableName
+            FROM \(define.DB_ProductTradeDetailTable)
             WHERE ProductNum=?
         """
         var statement: OpaquePointer? = nil

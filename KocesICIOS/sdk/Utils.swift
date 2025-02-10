@@ -1995,4 +1995,11 @@ class Utils{
     }
     
 }
-
+extension String {
+    var isNumberByRegularExpression: Bool {
+        range(
+            of: "^[0-9]*$",
+            options: .regularExpression
+        ) != nil
+    }
+}

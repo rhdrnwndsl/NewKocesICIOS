@@ -14,6 +14,7 @@
 		393FC73E2D51D5180045269B /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC73D2D51D5180045269B /* StoreViewController.swift */; };
 		393FC7402D57AD100045269B /* ProductListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC73F2D57AD100045269B /* ProductListViewController.swift */; };
 		393FC7422D57AD440045269B /* ProductListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7412D57AD440045269B /* ProductListCell.swift */; };
+		393FC7452D59D6410045269B /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 393FC7442D59D6410045269B /* SDWebImageWebPCoder */; };
 		3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */; };
 		3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486E2D22847C00B2BB5C /* SettingItem.swift */; };
 		3972C63D2D4C4C9300F989AB /* cat_cash.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3972C63A2D4C4C9300F989AB /* cat_cash.gif */; };
@@ -271,6 +272,7 @@
 			files = (
 				3B7DF6B625DBB2EE00253C18 /* CoreBluetooth.framework in Frameworks */,
 				284C9A69801F666230D9E8E2 /* Pods_KocesICIOS.framework in Frameworks */,
+				393FC7452D59D6410045269B /* SDWebImageWebPCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +565,7 @@
 			);
 			name = KocesICIOS;
 			packageProductDependencies = (
+				393FC7442D59D6410045269B /* SDWebImageWebPCoder */,
 			);
 			productName = osxapp;
 			productReference = 3BD895212595A4DE00083682 /* KocesICIOS.app */;
@@ -640,6 +643,7 @@
 			);
 			mainGroup = 3BD895182595A4DE00083682;
 			packageReferences = (
+				393FC7432D59D6400045269B /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 			);
 			productRefGroup = 3BD895222595A4DE00083682 /* Products */;
 			projectDirPath = "";
@@ -1232,6 +1236,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		393FC7432D59D6400045269B /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		393FC7442D59D6410045269B /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 393FC7432D59D6400045269B /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3BD895192595A4DE00083682 /* Project object */;
 }

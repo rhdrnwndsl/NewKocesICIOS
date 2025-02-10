@@ -7,6 +7,8 @@
 
 import UIKit
 import CoreData
+import SDWebImageWebPCoder
+
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //여기서 로딩화면을 몇초간 유지할지를 정한다
         sleep(3)
         NetworkManager.shared.startMonitoring()
+        // AppDelegate의 didFinishLaunchingWithOptions 내부 또는 SceneDelegate에서:
+        let webPCoder = SDImageWebPCoder.shared
+        SDImageCodersManager.shared.addCoder(webPCoder)
         return true
     }
 
