@@ -58,7 +58,9 @@ class KocesSdk : BLEManagerDelegate{
     var mLogTid:String = "" //로그를 찍는데 사용된 TID. 해당 TID는 서버에 데이터를 전송시 오류가 났을 경우에 로그찍을 때 사용된다
     
     var BleConnectCound:Int = 0 //ble 연결시 재시도 횟수
-
+    
+    public var listProducts:[Product] = Array()
+    
     private init()
     {
 
@@ -133,6 +135,93 @@ class KocesSdk : BLEManagerDelegate{
 
         DispatchQueue.main.async {
             self.mSqlite.DBUpdate()
+            self.getProductList()
+        }
+    }
+    
+    func getTid() -> String {
+        return Utils.getIsCAT() ?
+        Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID):
+        Setting.shared.getDefaultUserData(_key: define.STORE_TID)
+    }
+    
+    func getProductList() {
+        // DB에서 전체 상품정보를 가져옴 (옵셔널 바인딩 사용)
+        guard let allProducts = sqlite.instance.getProductInfoAllList(pSeq: "") else {
+            listProducts.removeAll()
+            return
+        }
+        
+        // 가져온 전체 데이터 중 현재 TID와 일치하는 데이터만 처리
+        for data in allProducts where data.tid == getTid() {
+            // 새로운 Product 객체 생성 및 데이터 설정
+            var newProduct = Product()
+            newProduct.setAll(
+                id: data.id,
+                tid: data.tid,
+                productSeq: data.productSeq,
+                tableNo: data.tableNo,
+                code: data.code,
+                name: data.name,
+                category: data.category,
+                price: Int(data.price) ?? 0,
+                pDate: data.date,
+                barcode: data.barcode,
+                isUse: data.isUse,
+                imgUrl: data.imgUrl,
+                desc: "",
+                imgString: data.imgString,
+                useVAT: data.vatUse,
+                autoVAT: data.vatMode,
+                includeVAT: data.vatInclude,
+                vatRate: data.vatRate,
+                vatWon: data.vatWon,
+                useSVC: data.svcUse,
+                autoSVC: data.svcMode,
+                includeSVC: data.svcInclude,
+                svcRate: data.svcRate,
+                svcWon: data.svcWon,
+                totalPrice: data.totalPrice,
+                count: 0,
+                isImgUse: data.isImgUse
+            )
+            
+            // 동일한 코드가 이미 등록되어 있는지 확인
+            if let index = listProducts.firstIndex(where: { $0.code == data.code }) {
+                // 이미 등록되어 있다면 해당 상품의 내용을 업데이트
+                listProducts[index].setAll(
+                    id: data.id,
+                    tid: data.tid,
+                    productSeq: data.productSeq,
+                    tableNo: data.tableNo,
+                    code: data.code,
+                    name: data.name,
+                    category: data.category,
+                    price: Int(data.price) ?? 0,
+                    pDate: data.date,
+                    barcode: data.barcode,
+                    isUse: data.isUse,
+                    imgUrl: data.imgUrl,
+                    desc: "",
+                    imgString: data.imgString,
+                    useVAT: data.vatUse,
+                    autoVAT: data.vatMode,
+                    includeVAT: data.vatInclude,
+                    vatRate: data.vatRate,
+                    vatWon: data.vatWon,
+                    useSVC: data.svcUse,
+                    autoSVC: data.svcMode,
+                    includeSVC: data.svcInclude,
+                    svcRate: data.svcRate,
+                    svcWon: data.svcWon,
+                    totalPrice: data.totalPrice,
+                    count: 0,
+                    isImgUse: data.isImgUse
+                )
+            } else {
+                // 동일한 코드가 없다면 리스트에 추가
+                listProducts.append(newProduct)
+            }
         }
     }
     

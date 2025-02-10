@@ -8,26 +8,11 @@
 import Foundation
 import UIKit
 
-// 임시 데이터 구조체 (실제 앱에서는 DB 또는 네트워크 데이터를 사용)
-struct Product {
-    let name: String
-    let uniqueID: String
-    let category: String
-    let registeredPrice: String
-    let paymentAmount: String
-    let lastModifiedDate: String
-    let usageStatus: String
-}
 
 class ProductListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let tableView = UITableView(frame: .zero, style: .plain)
-    
-    // 예제 더미 데이터
-    var products: [Product] = [
-        Product(name: "상품A", uniqueID: "ID001", category: "식품", registeredPrice: "10,000", paymentAmount: "11,000", lastModifiedDate: "2025-01-01", usageStatus: "사용"),
-        Product(name: "상품B", uniqueID: "ID002", category: "의류", registeredPrice: "20,000", paymentAmount: "22,000", lastModifiedDate: "2025-01-02", usageStatus: "미사용")
-    ]
+    let mKocesSdk:KocesSdk = KocesSdk.instance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,20 +124,20 @@ class ProductListViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: - TableView DataSource / Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return products.count
+        return mKocesSdk.listProducts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
          let cell = tableView.dequeueReusableCell(withIdentifier: "ProductListCell", for: indexPath) as! ProductListCell
-         let product = products[indexPath.row]
+         let product = mKocesSdk.listProducts[indexPath.row]
          cell.configure(with: product)
          return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          tableView.deselectRow(at: indexPath, animated: true)
-         let product = products[indexPath.row]
+         let product = mKocesSdk.listProducts[indexPath.row]
          let modifyVC = ProductModifyViewController()
          modifyVC.product = product   // 수정할 상품 정보를 전달
 //         navigationController?.pushViewController(modifyVC, animated: true)

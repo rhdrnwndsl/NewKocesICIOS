@@ -51,12 +51,13 @@ class ProductListCell: UITableViewCell {
     }
     
     func configure(with product: Product) {
-         nameLabel.text = product.name
-         uniqueIDLabel.text = product.uniqueID
-         categoryLabel.text = product.category
-         registeredPriceLabel.text = product.registeredPrice
-         paymentAmountLabel.text = product.paymentAmount
-         lastModifiedLabel.text = product.lastModifiedDate
-         usageStatusLabel.text = product.usageStatus
+        nameLabel.text = product.name
+        uniqueIDLabel.text = product.productSeq
+        categoryLabel.text = product.category
+        registeredPriceLabel.text = String(product.price)
+        paymentAmountLabel.text = product.totalPrice
+        lastModifiedLabel.text = product.pDate
+        usageStatusLabel.text = product.isUse == 1 ? "사용":"미사용"
     }
 }
+
