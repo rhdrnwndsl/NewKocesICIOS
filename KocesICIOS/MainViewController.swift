@@ -11,9 +11,9 @@ import AVFoundation
 import Photos
 
 class MainViewController: UIViewController, UITabBarControllerDelegate {
-    let mKocesSdk:KocesSdk = KocesSdk.instance
-    let mSqlite:sqlite = sqlite.instance
 
+    // 기존 MainViewController의 UI (스토리보드에 연결된 6개 버튼과 스택뷰)
+    @IBOutlet weak var commonHomeStackView: UIStackView!
     @IBOutlet weak var mBtn_Credit: UIButton!   //신용버튼
     @IBOutlet weak var mBtn_Cash: UIButton!     //현금버튼
     @IBOutlet weak var mBtn_TradeList: UIButton!    //거래내역
@@ -21,25 +21,22 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
     @IBOutlet weak var mBtn_EasyPay: UIButton!      //간편결제
     @IBOutlet weak var mBtn_OtherPay: UIButton!     //기타결제
     
+    // ProductHomeViewController를 자식으로 추가할 변수
+    var productHomeVC: ProductHomeViewController?
+    
+    let mKocesSdk:KocesSdk = KocesSdk.instance
+    let mSqlite:sqlite = sqlite.instance
+    
     //로딩 메세지박스
     var alertLoading = UIAlertController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //배경이미지
-        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = #imageLiteral(resourceName: "MAIN_BG_LOGO")
-        backgroundImage.contentMode = .scaleAspectFill
-        self.view.insertSubview(backgroundImage, at: 0)
-        backgroundImage.translatesAutoresizingMaskIntoConstraints = false
-        backgroundImage.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        backgroundImage.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        setupBackground()
 
-        //        stackViewCode.layer.borderWidth = 1.0
-                //장치가 연결 되어 있는지 않은지 확인 한다. 만일 최초 앱이 실행되어 여기에 도달한다면 1회 블루투스장치 검사를 하고 2회이상 메인뷰를 실행하고 있다면 검사하지 않는다
+        // BLE 관련 내용은 기존 코드의 공통 BLE 검사로 처리
+        //장치가 연결 되어 있는지 않은지 확인 한다. 만일 최초 앱이 실행되어 여기에 도달한다면 1회 블루투스장치 검사를 하고 2회이상 메인뷰를 실행하고 있다면 검사하지 않는다
         if mKocesSdk.bleState == define.TargetDeviceState.BLENOCONNECT {
             if mKocesSdk.mFirstRunning == 0 {
                 let alertController = UIAlertController(title: "장치연결", message: "BLE 디바이스가 연결 되지 않았습니다", preferredStyle: UIAlertController.Style.alert)
@@ -52,67 +49,153 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
                 self.present(alertController, animated: true, completion: nil)
             }
         }
-
     }
     
     //UI가 모두 정상적으로 로딩이 된 후에
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(didBle(_:)), name: NSNotification.Name(rawValue: "BLEStatus"), object: nil)
         
-//        //이용약관을 체크하지 않았다면 약관으로 이동
-//        let APP_TERMS_CHECK:String = Setting.shared.getDefaultUserData(_key: define.APP_TERMS_CHECK)
-//        if APP_TERMS_CHECK.isEmpty {
-//            let controller = (storyboard?.instantiateViewController(identifier: "TermsViewController"))! as TermsViewController
-//            controller.modalPresentationStyle = .fullScreen
-//            self.present(controller, animated: false)
-//            return
-//        } else {
-//            //권한설정을 완료하지 않았다면 권한설정으로 이동
-//            let APP_PERMISSION_CHECK:String = Setting.shared.getDefaultUserData(_key: define.APP_PERMISSION_CHECK)
-//            if APP_PERMISSION_CHECK.isEmpty {
-//                let controller = (storyboard?.instantiateViewController(identifier: "PermissionViewController"))! as PermissionViewController
-//                controller.modalPresentationStyle = .fullScreen
-//                self.present(controller, animated: false)
-//                return
-//            }
-//
-//        }
+        //앱투앱으로 처리하고 넘어오면 해당 데이터 초기화
+        Setting.shared.mWebAPPReturnAddr = ""
         
-        initRes()
+        // 앱 UI 설정값에 따라 분기처리
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
         
-//        if mKocesSdk.bleState == define.TargetDeviceState.BLENOCONNECT {
-//            if mKocesSdk.mFirstRunning == 0 {
-//                let alertController = UIAlertController(title: "장치연결", message: "BLE 디바이스가 연결 되지 않았습니다", preferredStyle: UIAlertController.Style.alert)
-//                let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.cancel) {_ in
-//                    self.AlertLoadingBox(title: "잠시만 기다려 주세요")
-//                    self.mKocesSdk.mFirstRunning = 1
-//                    self.mKocesSdk.bleConnect()
-//                }
-//                alertController.addAction(okButton)
-//                self.present(alertController, animated: true, completion: nil)
-//            }
-//        }
+        if appUISetting == define.UIMethod.Common.rawValue {
+            // Common: 기존 MainViewController UI (6개 버튼 등) 사용
+            // BLE 관련 내용은 공통 설정(예: initRes() 내부에 BLE 체크 부분은 공통으로 사용)
+            initRes()
+            // ProductHomeViewController UI가 있다면 숨김(또는 제거)
+            removeProductHomeUI()
+        } else if appUISetting == define.UIMethod.Product.rawValue {
+            // Product: ProductHomeViewController UI 보이고, 기존 MainViewController UI는 숨김
+            hideCommonUI()
+            addProductHomeUI()
+        } else {
+            // 그 외 (AppToApp 등): EnvironmentTabController로 이동
+            navigateToEnvironmentTabController()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
-
     }
     
     deinit {
         //등록된 노티 전체 제거
         NotificationCenter.default.removeObserver(self)
-        //등록된 노티 개별 제거
-//        NotificationCenter.default.removeObserver ( self, name : UIScene.didActivateNotification , object : nil )
-//        NotificationCenter.default.removeObserver ( self, name : NSNotification.Name(rawValue: "BLEStatus") , object : nil )
     }
     
+    // MARK: - Background Setup
+        
+    private func setupBackground() {
+        //네비게이션 바의 배경색 rgb 변경
+        UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
+
+        //네비게이션 바타이틀을 이미지로 지정(로고)
+        let imageView = UIImageView()
+        let image = #imageLiteral(resourceName: "TOP_LOGO_White")
+        navigationItem.titleView = UISetting.navigationLogoTitle(TitleImageSet: imageView, TitleImage: image)
+        
+        let backgroundImage = UIImageView(frame: view.bounds) // 아니면 UIScreen.main.bounds
+        backgroundImage.image = #imageLiteral(resourceName: "MAIN_BG_LOGO")
+        backgroundImage.contentMode = .scaleAspectFill
+        self.view.insertSubview(backgroundImage, at: 0)
+        backgroundImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImage.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundImage.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    // MARK: - 분기별 UI 설정
+        
+    /// Common UI(기존 6개 버튼 등)를 초기화하고 보이도록 설정 (BLE 관련 기능 포함)
+    func initRes() {
+        mBtn_Credit.setImage(UIImage(named: "card-normal"), for: .normal)
+        mBtn_Credit.setImage(UIImage(named: "card-select"), for: .highlighted)
+        mBtn_Cash.setImage( UIImage(named: "cash-normal"), for: .normal)
+        mBtn_Cash.setImage( UIImage(named: "cash-select"), for: .highlighted)
+        mBtn_TradeList.setImage(UIImage(named: "trade-normal") , for: .normal)
+        mBtn_TradeList.setImage(UIImage(named: "trade-select") , for: .highlighted)
+        mBtn_SalesInquiry.setImage(UIImage(named: "calendar-normal") , for: .normal)
+        mBtn_SalesInquiry.setImage(UIImage(named: "calendar-select"), for: .highlighted)
+        mBtn_EasyPay.setImage(UIImage(named: "easy-normal") , for: .normal)
+        mBtn_EasyPay.setImage(UIImage(named: "easy-select") , for: .highlighted)
+        mBtn_OtherPay.setImage(UIImage(named: "other-normal") , for: .normal)
+        mBtn_OtherPay.setImage(UIImage(named: "other-select") , for: .highlighted)
+    }
+    
+    /// Common UI를 숨기는 함수: 기존 MainViewController의 UI 요소를 숨깁니다.
+    func hideCommonUI() {
+        commonHomeStackView.isHidden = true
+        mBtn_Credit.isHidden = true
+        mBtn_Cash.isHidden = true
+        mBtn_TradeList.isHidden = true
+        mBtn_SalesInquiry.isHidden = true
+        mBtn_EasyPay.isHidden = true
+        mBtn_OtherPay.isHidden = true
+    }
+    
+    /// Common UI를 다시 보이게 하는 함수 (필요 시 호출)
+    func showCommonUI() {
+        commonHomeStackView.isHidden = false
+        mBtn_Credit.isHidden = false
+        mBtn_Cash.isHidden = false
+        mBtn_TradeList.isHidden = false
+        mBtn_SalesInquiry.isHidden = false
+        mBtn_EasyPay.isHidden = false
+        mBtn_OtherPay.isHidden = false
+    }
+    
+    /// ProductHomeViewController의 UI를 자식 뷰 컨트롤러로 추가
+    func addProductHomeUI() {
+        // 이미 추가되어 있다면 제거 후 다시 추가할 수도 있음
+        removeProductHomeUI()
+        productHomeVC = ProductHomeViewController()
+        guard let productHomeVC = productHomeVC else { return }
+        addChild(productHomeVC)
+        productHomeVC.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(productHomeVC.view)
+        productHomeVC.didMove(toParent: self)
+        
+        // ProductHomeViewController의 뷰를 전체 화면에 맞게 제약조건 설정
+        NSLayoutConstraint.activate([
+            productHomeVC.view.topAnchor.constraint(equalTo: view.topAnchor),
+            productHomeVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            productHomeVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            productHomeVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    /// ProductHomeViewController의 UI를 제거(숨김)
+    func removeProductHomeUI() {
+        if let productHomeVC = productHomeVC {
+            productHomeVC.willMove(toParent: nil)
+            productHomeVC.view.removeFromSuperview()
+            productHomeVC.removeFromParent()
+            self.productHomeVC = nil
+        }
+    }
+    
+    /// EnvironmentTabController로 이동 (모달 전환)
+    func navigateToEnvironmentTabController() {
+        let storyboard = getStoryBoard()
+        if let envTabVC = storyboard?.instantiateViewController(withIdentifier: "EnvironmentTabController") as? EnvironmentTabController {
+            envTabVC.navigationItem.title = "환경설정"
+            navigationController?.pushViewController(envTabVC, animated: true)
+        }
+    }
+  
     /** 1. 카메라 권한 체크하는 곳 */
     func checkCameraPermission(){
         AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
@@ -139,8 +222,6 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             switch status{
             case .authorized:
                 print("Album: 권한 허용")
-                
-        //        stackViewCode.layer.borderWidth = 1.0
                 //장치가 연결 되어 있는지 않은지 확인 한다. 만일 최초 앱이 실행되어 여기에 도달한다면 1회 블루투스장치 검사를 하고 2회이상 메인뷰를 실행하고 있다면 검사하지 않는다
                 if mKocesSdk.bleState == define.TargetDeviceState.BLENOCONNECT {
                     if mKocesSdk.mFirstRunning == 0 {
@@ -179,42 +260,6 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             }
         })
     }
-    
-  
-
-
-    
-    ///메인화면 초기 설정 작업 진행
-    func initRes()
-    {
-        Setting.shared.mWebAPPReturnAddr = ""
-        //네비게이션 바의 배경색 rgb 변경
-        UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
-        
-//        UISetting.setGradientBackground(_bar: navigationController?.navigationBar ?? UINavigationBar(), colors: [
-//            UIColor.systemBlue.cgColor,
-//            UIColor.white.cgColor
-//        ])
-        
-        //네비게이션 바타이틀을 이미지로 지정(로고)
-        let imageView = UIImageView()
-        let image = #imageLiteral(resourceName: "TOP_LOGO_White")
-        navigationItem.titleView = UISetting.navigationLogoTitle(TitleImageSet: imageView, TitleImage: image)
-
-        mBtn_Credit.setImage(UIImage(named: "card-normal"), for: .normal)
-        mBtn_Credit.setImage(UIImage(named: "card-select"), for: .highlighted)
-        mBtn_Cash.setImage( UIImage(named: "cash-normal"), for: .normal)
-        mBtn_Cash.setImage( UIImage(named: "cash-select"), for: .highlighted)
-        mBtn_TradeList.setImage(UIImage(named: "trade-normal") , for: .normal)
-        mBtn_TradeList.setImage(UIImage(named: "trade-select") , for: .highlighted)
-        mBtn_SalesInquiry.setImage(UIImage(named: "calendar-normal") , for: .normal)
-        mBtn_SalesInquiry.setImage(UIImage(named: "calendar-select"), for: .highlighted)
-        mBtn_EasyPay.setImage(UIImage(named: "easy-normal") , for: .normal)
-        mBtn_EasyPay.setImage(UIImage(named: "easy-select") , for: .highlighted)
-        mBtn_OtherPay.setImage(UIImage(named: "other-normal") , for: .normal)
-        mBtn_OtherPay.setImage(UIImage(named: "other-select") , for: .highlighted)
-        
-    }
 
     /// 신용 버튼 클릭함
     /// - Parameter sender: <#sender description#>
@@ -224,12 +269,10 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             // do action.
             return
         }
-        
-        
+
         //CAT상태에서는 ble체크를 하지 않는다.
         if CheckBle() {
             if CheckBeforeTrading() {
-    //            self.tabBarController?.selectedIndex = 1
                 moveCredit()
             }
         }
@@ -253,11 +296,9 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             moveCash()
         } else {
             if CheckBeforeTrading() {
-    //            self.tabBarController?.selectedIndex = 2
                 moveCash()
             }
         }
-
     }
     
     /// 거래내역 버튼 클릭함
@@ -268,7 +309,6 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             // do action.
             return
         }
-//        self.tabBarController?.selectedIndex = 3
         moveTradeList()
     }
     
@@ -292,7 +332,6 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
         }
     }
     
-    
     /// 정산 버튼 클릭함
     /// - Parameter sender: <#sender description#>
     @IBAction func mBtn_SalesInquiry_Clicked(_ sender: UIButton, forEvent event: UIEvent) {
@@ -304,89 +343,60 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
         moveSalesInquiry()
     }
     
-    func moveSalesInquiry()
-    {
-
-        var storyboard:UIStoryboard?
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        } else {
-            storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-        }
+    func moveSalesInquiry() {
+        var storyboard:UIStoryboard? = getStoryBoard()
         let controller = (storyboard!.instantiateViewController(identifier: "CalendarViewController")) as CalendarViewController
         controller.navigationItem.title = "매출정보"    //2021-08-19 수정사항 169.B
         navigationController?.pushViewController(controller, animated: true)
     }
+    
     func easyPay(){
-
-        var storyboard:UIStoryboard?
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        } else {
-            storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-        }
+        var storyboard:UIStoryboard? = getStoryBoard()
         let controller = (storyboard!.instantiateViewController(identifier: "EasyPayController")) as EasyPayController
         controller.navigationItem.title = "간편결제"
         navigationController?.pushViewController(controller, animated: true)
     }
+    
     func otherPay(){
-        var storyboard:UIStoryboard?
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        } else {
-            storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-        }
-        let controller = (storyboard!.instantiateViewController(identifier: "ProductHomeViewController")) as ProductHomeViewController
-        
-//        let controller = (storyboard!.instantiateViewController(identifier: "OtherPayController")) as OtherPayController
-//        controller.navigationItem.title = "기타결제"
-        controller.navigationItem.title = "상품홈화면"
+        var storyboard:UIStoryboard? = getStoryBoard()
+        let controller = (storyboard!.instantiateViewController(identifier: "OtherPayController")) as OtherPayController
+        controller.navigationItem.title = "기타결제"
+//        let controller = (storyboard!.instantiateViewController(identifier: "ProductHomeViewController")) as ProductHomeViewController
+//        controller.navigationItem.title = "상품홈화면"
         navigationController?.pushViewController(controller, animated: true)
     }
-    func moveTradeList()
-    {
-
-        var storyboard:UIStoryboard?
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        } else {
-            storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-        }
+    
+    func moveTradeList(){
+        var storyboard:UIStoryboard? = getStoryBoard()
         let controller = (storyboard!.instantiateViewController(identifier: "TradelistController")) as TradelistController
         controller.navigationItem.title = "거래내역"
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func moveCash()
-    {
-
-        var storyboard:UIStoryboard?
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        } else {
-            storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-        }
+    func moveCash(){
+        var storyboard:UIStoryboard? = getStoryBoard()
         let controller = (storyboard!.instantiateViewController(identifier: "CashController")) as CashController
         controller.navigationItem.title = "현금결제"
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func moveCredit()
-    {
-        var storyboard:UIStoryboard?
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        } else {
-            storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
-        }
+    func moveCredit(){
+        var storyboard:UIStoryboard? = getStoryBoard()
         let controller = (storyboard!.instantiateViewController(identifier: "CreditController")) as CreditController
         controller.navigationItem.title = "카드결제"    //수정사항 169.1 A
         navigationController?.pushViewController(controller, animated: true)
     }
     
+    func getStoryBoard() -> UIStoryboard? {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIStoryboard(name: "Main", bundle: Bundle.main)
+        } else {
+            return UIStoryboard(name: "pad", bundle: Bundle.main)
+        }
+    }
+    
     @objc func didBle(_ notification: Notification) {
         guard let bleStatus: String = notification.userInfo?["Status"] as? String else { return }
-
         switch bleStatus {
         case define.IsPaired:   //직전에 연결했었던 장비를 스캔하였을 때
             //장치 이름만 추출 하기 2020-03-08 kim.jy
@@ -397,12 +407,9 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
                 if temp.count > 0 {
                     deviceName = String(temp[0])
                 }
-
             }
             mKocesSdk.manager.connect(uuid: mKocesSdk.isPaireduuid)
-
             print("BLE_Status :", bleStatus)
-            
             break
         case define.ScanSuccess:    //다른 장비를 스캔하였을 때
             // 검색할 때 띄웠던 로딩박스를 지운다
@@ -426,13 +433,7 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
                             if temp.count > 0 {
                                 deviceName = String(temp[0])
                             }
-
                         }
-//                        blealert.addAction(UIAlertAction(title: String(describing: device["device"].unsafelyUnwrapped) , style: .default, handler: { (Action) in
-//                            let uuid = device["uuid"] as! UUID
-//                            self.AlertLoadingBox(title: "잠시만 기다려 주세요")
-//                            self.mKocesSdk.manager.connect(uuid: uuid)
-//                        }))
                         blealert.addAction(UIAlertAction(title: deviceName , style: .default, handler: { (Action) in
                             let uuid = device["uuid"] as! UUID
                             self.AlertLoadingBox(title: "잠시만 기다려 주세요")
@@ -440,19 +441,16 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
                         }))
                     }
                     let button = UIAlertAction(title: "취소", style: .default, handler: {(action) in
-                        AlertBox(title: "장치연결취소", message: "장치 연결을 종료하였습니다", text: "확인")
+                        self.AlertBox(title: "장치연결취소", message: "장치 연결을 종료하였습니다", text: "확인")
                     })
                     blealert.addAction(button)
                 }
                 self.present(blealert, animated: true, completion: nil)
             }
             print("BLE_Status :", bleStatus)
-            
             break
         case define.ConnectSuccess:
             print("BLE_Status :", bleStatus)
-            
-            
             mKocesSdk.bleReConnected()  //혹시 연결이 끊어져있다면 자동으로 1회 재연결을 시도한다.
             // 검색할 때 띄웠던 로딩박스를 지운다
             alertLoading.dismiss(animated: true){ [self] in
@@ -484,7 +482,6 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
                 self.present(alertFail, animated: true, completion: nil)
             }
             break
-
         case define.ScanFail:
             // 검색할 때 띄웠던 로딩박스를 지운다
             alertLoading.dismiss(animated: true){ [self] in
@@ -513,15 +510,14 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
         case define.Receive:
             DeviceInfoRes(ResData: self.mKocesSdk.mReceivedData)
             break
-            
         default:
             break
         }
     }
+    
     /// 장치 정보 파싱 함수
     /// - Parameter _res: 무결성 검사 결과 데이터
-    func DeviceInfoRes(ResData _res:[UInt8])
-    {
+    func DeviceInfoRes(ResData _res:[UInt8]) {
         let receive: String = String(describing: _res)
         let receiveData = _res
         
@@ -541,25 +537,14 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             mKocesSdk.mModelNumber = TmIcNo
             mKocesSdk.mSerialNumber = serialNumber
             mKocesSdk.mModelVersion = version //version
-            /** 시리얼번호 저장 */
-            //Setting.shared.setDefaultUserData(_data: serialNumber, _key: define.STORE_SERIAL) //가맹점 등록이 완료 되지 않은 상태에서 시리얼 저장 안함.
-//            mSerialTextField.text = serialNumber
+            //가맹점 등록이 완료 되지 않은 상태에서 시리얼 저장 안함.
             alertLoading.dismiss(animated: false){ [self] in
-                
                 if mKocesSdk.mVerityCheck != define.VerityMethod.Success.rawValue {
                     AlertBox(title: "무결성검증실패", message: "리더기 무결성 검증실패 제조사A/S요망", text: "확인")
                     return
                 }
-                
                 if key != "00" {
                     AlertBox(title: "장치정보", message: "키 갱신이 필요합니다", text: "확인")
-                } else {
-//                    let alertController = UIAlertController(title: "무결성검증성공", message: "무결성검사가 정상입니다", preferredStyle: UIAlertController.Style.alert)
-//                    let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default){_ in
-//
-//                    }
-//                    alertController.addAction(okButton)
-//                    self.present(alertController, animated: true, completion: nil)
                 }
             }
             break
@@ -591,23 +576,19 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             default:
                 break
             }
-            
             mKocesSdk.bleReConnected()  //혹시 연결이 끊어져있다면 자동으로 1회 재연결을 시도한다.
-            
             mKocesSdk.GetDeviceInfo(Date: Utils.getDate(format: "yyyyMMddHHmmss"))
-
             break
         default:
             break
         }
-
     }
     
     func AlertBox(title : String, message : String, text : String) {
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-            let okButton = UIAlertAction(title: text, style: UIAlertAction.Style.cancel, handler: nil)
-            alertController.addAction(okButton)
-            return self.present(alertController, animated: true, completion: nil)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: text, style: UIAlertAction.Style.cancel, handler: nil)
+        alertController.addAction(okButton)
+        return self.present(alertController, animated: true, completion: nil)
     }
     
     //로딩 박스
@@ -671,7 +652,6 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
         let temp:String = KocesSdk.instance.ChecklistBeforeTrading()
         
         //21-06-01. by.tlswlsdn 코세스 수정요청사항 중 CAT결제방식 선택시 가맹점등록 다운로드없이 결제진행 관련검토
-        //
         if KocesSdk.instance.bleState != define.TargetDeviceState.CATCONNECTED {
             if temp != "" {     //temp에 문자열이 있는 경우 거래전 체크 사항에 문제가 있는 것으로 판단 한다.
                 let alert = UIAlertController(title: nil, message: temp, preferredStyle: .alert)
@@ -683,21 +663,8 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
                 return false
             }
         }
-        //
-        
-//        if temp != "" {     //temp에 문자열이 있는 경우 거래전 체크 사항에 문제가 있는 것으로 판단 한다.
-//            let alert = UIAlertController(title: nil, message: temp, preferredStyle: .alert)
-//            present(alert, animated: false, completion: {Timer.scheduledTimer(withTimeInterval: 3, repeats:false, block: {_ in
-//                self.dismiss(animated: false){
-//                    self.tabBarController?.selectedIndex = 0
-//                }
-//            })})
-//            return false
-//        }
-
         return true
     }
-    
 }
 
 extension MainViewController: CustomAlertDelegate{
@@ -715,6 +682,4 @@ extension MainViewController: CustomAlertDelegate{
             mKocesSdk.manager.scan()
         }
     }
-    
-    
 }
