@@ -317,6 +317,11 @@ class KocesSdk : BLEManagerDelegate{
         }
     }
     
+    func clearProductList() {
+        listProducts.removeAll()
+        listProducts = []
+    }
+    
     func TcpRead(Client _client:TCPClient, Time _time:Int = 30) -> [UInt8] {
         guard let response = _client.read(1024*10, timeout: _time) else {
 
