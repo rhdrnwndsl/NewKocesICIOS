@@ -73,11 +73,23 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
             initRes()
             // ProductHomeViewController UI가 있다면 숨김(또는 제거)
             removeProductHomeUI()
+            // 거래내역, 매출정보 탭 숨기기
+            if let tabBarController = self.tabBarController as? TabBarController {
+                tabBarController.hideTabs(at: [2, 3]) // 2번과 3번 탭 숨기기
+            }
         } else if appUISetting == define.UIMethod.Product.rawValue {
             // Product: ProductHomeViewController UI 보이고, 기존 MainViewController UI는 숨김
             hideCommonUI()
             addProductHomeUI()
+            // 거래내역, 매출정보 모두 보이게 설정
+            if let tabBarController = self.tabBarController as? TabBarController {
+                tabBarController.showAllTabs() // 원래 탭 복원
+            }
         } else {
+            // 메인홈 ,거래내역, 매출정보 탭 숨기기 -> 환경설정밖에 없다
+            if let tabBarController = self.tabBarController as? TabBarController {
+                tabBarController.hideTabs(at: [0, 2, 3]) // 0번, 2번과 3번 탭 숨기기
+            }
             // 그 외 (AppToApp 등): EnvironmentTabController로 이동
             navigateToEnvironmentTabController()
         }

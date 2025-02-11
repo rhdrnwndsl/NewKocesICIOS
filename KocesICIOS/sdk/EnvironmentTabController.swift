@@ -23,44 +23,81 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
     
     public var rootView = EnvironmentSplitView()
     private func createSections() -> [SettingSection] {
-        return [
+        var storeSection =
+        SettingSection(
+            title: "가맹점설정",
+            items: [
+                SettingItem(title: "가맹점정보", hasSwitch: false, detail: "Standard", action: nil),
+                SettingItem(title: "결제설정", hasSwitch: false, detail: "Standard", action: nil),
+            ]
+        )
+        var deviceSection =
+        SettingSection(
+            title: "장치설정",
+            items: [
+//                    SettingItem(title: "USB설정", hasSwitch: false, detail: "Standard", action: nil),
+                SettingItem(title: "BT설정", hasSwitch: false, detail: "Standard", action: nil),
+                SettingItem(title: "CAT설정", hasSwitch: false, detail: nil, action: nil),
+                SettingItem(title: "프린트설정", hasSwitch: false, detail: nil, action: nil),
+            ]
+        )
+        var productSection =
+        SettingSection(
+            title: "상품설정",
+            items: [
+                SettingItem(title: "상품관리", hasSwitch: false, detail: "Standard", action: nil),
+            ]
+        )
+        var managerSection =
+        SettingSection(
+            title: "관리자설정",
+            items: [
+                SettingItem(title: "네트워크설정", hasSwitch: false, detail: nil, action: nil),
+            ]
+        )
+        var infoSection =
+        SettingSection(
+            title: "앱정보",
+            items: [
+                SettingItem(title: "Q&A", hasSwitch: false, detail: nil, action: nil),
+                SettingItem(title: "개인정보처리방침", hasSwitch: false, detail: nil, action: nil),
+                SettingItem(title: "앱정보", hasSwitch: false, detail: nil, action: nil),
+            ]
+        )
+        
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+        
+        if appUISetting == define.UIMethod.Common.rawValue {
+            return [
+                storeSection,   //가맹점
+                deviceSection,  //장치
+                managerSection, //관리자
+                infoSection     //앱정보
+            ]
+        } else if appUISetting == define.UIMethod.Product.rawValue {
+            return [
+                storeSection,   //가맹점
+                deviceSection,  //장치
+                productSection, //상품
+                managerSection, //관리자
+                infoSection     //앱정보
+            ]
+        } else {
+            //AppToApp
+            storeSection =
             SettingSection(
                 title: "가맹점설정",
                 items: [
                     SettingItem(title: "가맹점정보", hasSwitch: false, detail: "Standard", action: nil),
-                    SettingItem(title: "결제설정", hasSwitch: false, detail: "Standard", action: nil),
-                ]
-            ),
-            SettingSection(
-                title: "장치설정",
-                items: [
-//                    SettingItem(title: "USB설정", hasSwitch: false, detail: "Standard", action: nil),
-                    SettingItem(title: "BT설정", hasSwitch: false, detail: "Standard", action: nil),
-                    SettingItem(title: "CAT설정", hasSwitch: false, detail: nil, action: nil),
-                    SettingItem(title: "프린트설정", hasSwitch: false, detail: nil, action: nil),
-                ]
-            ),
-            SettingSection(
-                title: "상품설정",
-                items: [
-                    SettingItem(title: "상품관리", hasSwitch: false, detail: "Standard", action: nil),
-                ]
-            ),
-            SettingSection(
-                title: "관리자설정",
-                items: [
-                    SettingItem(title: "네트워크설정", hasSwitch: false, detail: nil, action: nil),
-                ]
-            ),
-            SettingSection(
-                title: "앱정보",
-                items: [
-                    SettingItem(title: "Q&A", hasSwitch: false, detail: nil, action: nil),
-                    SettingItem(title: "개인정보처리방침", hasSwitch: false, detail: nil, action: nil),
-                    SettingItem(title: "앱정보", hasSwitch: false, detail: nil, action: nil),
                 ]
             )
-        ]
+            return [
+                storeSection,   //가맹점
+                deviceSection,  //장치
+                managerSection, //관리자
+                infoSection     //앱정보
+            ]
+        }
     }
 
     override func viewDidLoad() {
@@ -84,26 +121,24 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
             self.view = rootView
             
             setupNavigationBar()
-            
-            //테스트용
-            if let tabBarController = self.tabBarController as? TabBarController {
-                tabBarController.hideTabs(at: [2, 3]) // 1번과 2번 탭 숨기기
-            }
         } else {
             rootView.isProduct = false
         }
     }
     
     @objc func BackMainView() {
-        rootView.backToMainView()
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+        
+        if appUISetting == define.UIMethod.AppToApp.rawValue {
+            UIApplication.shared.perform (#selector (NSXPCConnection.suspend))
+        } else {
+            rootView.backToMainView()
+        }
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let tabBarController = self.tabBarController as? TabBarController {
-            tabBarController.showAllTabs() // 원래 탭 복원
-        }
-        
     }
     
     override func didReceiveMemoryWarning() {
