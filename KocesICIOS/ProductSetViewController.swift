@@ -414,8 +414,9 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         let registerVC = ProductRegisterViewController()
         // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
         let navController = UINavigationController(rootViewController: registerVC)
-        navController.modalPresentationStyle = .fullScreen  // 필요에 따라 .overFullScreen 또는 다른 스타일로 변경 가능
-        self.present(navController, animated: true, completion: nil)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = registerVC  // 또는 별도로 지정
+        present(navController, animated: true, completion: nil)
     }
     
     @objc private func productModifyTapped() {
@@ -435,7 +436,8 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate {
         let listVC = ProductListViewController()
         // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
         let navController = UINavigationController(rootViewController: listVC)
-        navController.modalPresentationStyle = .fullScreen  // 필요에 따라 .overFullScreen 또는 다른 스타일로 변경 가능
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = listVC  // 또는 별도로 지정
         self.present(navController, animated: true, completion: nil)
     }
     

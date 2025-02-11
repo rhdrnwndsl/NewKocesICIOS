@@ -7,8 +7,10 @@
 
 import Foundation
 import UIKit
+import SDWebImage
+import SDWebImageWebPCoder
 
-class ProductModifyViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate  {
+class ProductModifyViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIViewControllerTransitioningDelegate  {
     var product: Product?  // 수정할 상품 정보
     
     
@@ -42,7 +44,7 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
     let productCategoryValueLabel = UILabel()  // 선택된 상품분류명칭 표시
     let selectCategoryButton = UIButton(type: .system)
     // 상품분류 선택에 사용할 예시 리스트
-    let classificationList = ["식품", "의류", "전자제품"]
+    let classificationList = sqlite.instance.getCategoryList()
     
     // 3. 거래금액
     let transactionAmountLabel = UILabel()
@@ -130,72 +132,32 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
     let paymentAmountLabel = UILabel()
     let paymentAmountTextField = UILabel()
     
+    let mTaxCalc = TaxCalculator.Instance
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "상품 수정"
-               
-        // 내비게이션 바에 '나가기' 버튼 추가 (모달 dismiss)
-        let backImage = UIImage(systemName: "chevron.backward")
-        let backButton = UIButton()
-        backButton.setImage(backImage, for: .normal)
-        backButton.setTitle("Back", for: .normal)
-        backButton.setTitleColor(define.txt_blue, for: .normal)
-        backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
-        backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
-        
-        let backNav = UIBarButtonItem(customView: backButton)
 
-        navigationItem.leftBarButtonItem = backNav
-     
-        
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "나가기", style: .plain, target: self, action: #selector(exitButtonTapped))
-               
-        // 가로 모드 전용 (앱 설정이나 Info.plist에서 별도 처리 가능)
-        // 여기서는 supportedInterfaceOrientations를 오버라이드합니다.
-        
+        // UI 설정
+        setupNavigationBar()
         setupTopBar()
         setupMainContainer()
         setupLeftSide()
         setupRightSide()
         
         // 기본값 및 타겟 설정
-        taxableSwitch.isOn = true       //부가세는 기본이 사용
-        vatModeSegmented.selectedSegmentIndex = 0  // 자동
-        vatCalcSegmented.selectedSegmentIndex = 0   // 포함
-        updateTaxViewsVisibility()
-
-        svcableSwitch.isOn = false      //봉사료는 기본이 미사용
-        svcModeSegmented.selectedSegmentIndex = 0  // 자동
-        svcCalcSegmented.selectedSegmentIndex = 0   // 포함
-        updateSvcViewsVisibility()
+        setupDefaultData()
         
-        usageSegmented.selectedSegmentIndex = 0 //사용
-        defaultImageSegmented.selectedSegmentIndex = 0 //사용
-        
-        selectCategoryButton.addTarget(self, action: #selector(selectCategoryTapped), for: .touchUpInside)
-        taxableSwitch.addTarget(self, action: #selector(taxableSwitchChanged), for: .valueChanged)
-        vatModeSegmented.addTarget(self, action: #selector(vatModeChanged), for: .valueChanged)
-        svcableSwitch.addTarget(self, action: #selector(svcableSwitchChanged), for: .valueChanged)
-        svcModeSegmented.addTarget(self, action: #selector(svcModeChanged), for: .valueChanged)
-        registerImageButton.addTarget(self, action: #selector(registerImageTapped), for: .touchUpInside)
-        removeImageButton.addTarget(self, action: #selector(removeImageTapped), for: .touchUpInside)
-        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-        
-        // 숫자 전용 입력
-        transactionAmountTextField.keyboardType = .numberPad
-        vatRateTextField.keyboardType = .numberPad
-        vatAmountTextField.keyboardType = .numberPad
-        svcRateTextField.keyboardType = .numberPad
-        svcAmountTextField.keyboardType = .numberPad
-        
-        navigationItem.titleView?.backgroundColor = .black
+        // 수정할 상품데이터 설정
+        setupModifyData()
     }
     
     @objc private func exitButtonTapped() {
         // 모달로 present된 경우 dismiss 처리
+        // 수정 완료 알림을 전송
+           NotificationCenter.default.post(name: Notification.Name("ProductModified"), object: nil)
         dismiss(animated: true, completion: nil)
     }
     
@@ -206,13 +168,47 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
     
     // MARK: - Setup UI Methods
     
+    func setupNavigationBar() {
+        // 왼쪽에 커스텀 백 버튼 생성: "chevron.backward" 이미지 + "BACK" 텍스트
+        let backButton = UIButton(type: .system)
+        if let backImage = UIImage(systemName: "chevron.backward") {
+            backButton.setImage(backImage, for: .normal)
+        }
+        // 이미지와 텍스트 사이에 약간의 공백을 주기 위해 앞에 공백 추가
+        backButton.setTitle(" Back", for: .normal)
+        
+        // 아이콘과 텍스트 모두 흰색으로 설정
+        backButton.tintColor = define.txt_blue
+        backButton.setTitleColor(define.txt_blue, for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
+        // 크기 조정
+        backButton.sizeToFit()
+        backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
+        
+        // 커스텀 버튼을 좌측 바 버튼 아이템으로 설정
+        let leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        // 중앙 타이틀 설정
+        navigationItem.title = "상품수정"
+        
+        // 네비게이션바의 배경 및 타이틀 색상 설정 (모든 텍스트 흰색, 배경 검정)
+        if let navBar = navigationController?.navigationBar {
+            navBar.barTintColor = .black
+            navBar.backgroundColor = .black
+            navBar.tintColor = .white
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
+    }
+    
     func setupTopBar() {
         topBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(topBar)
         
         // 타이틀 레이블
         titleLabel.text = "상품설정"
-        titleLabel.font = Utils.getTitleFont()
+        titleLabel.font = Utils.getSubTitleFont()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         topBar.addSubview(titleLabel)
         
@@ -610,6 +606,84 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
         pricingStack.addArrangedSubview(paymentRow)
     }
     
+    func setupDefaultData() {
+        taxableSwitch.isOn = true       //부가세는 기본이 사용
+        vatModeSegmented.selectedSegmentIndex = 0  // 자동
+        vatCalcSegmented.selectedSegmentIndex = 0   // 포함
+        updateTaxViewsVisibility()
+
+        svcableSwitch.isOn = false      //봉사료는 기본이 미사용
+        svcModeSegmented.selectedSegmentIndex = 0  // 자동
+        svcCalcSegmented.selectedSegmentIndex = 0   // 포함
+        updateSvcViewsVisibility()
+        
+        usageSegmented.selectedSegmentIndex = 1 //사용
+        defaultImageSegmented.selectedSegmentIndex = 1  //사용
+        
+        selectCategoryButton.addTarget(self, action: #selector(selectCategoryTapped), for: .touchUpInside)
+        taxableSwitch.addTarget(self, action: #selector(taxableSwitchChanged), for: .valueChanged)
+        vatModeSegmented.addTarget(self, action: #selector(vatModeChanged), for: .valueChanged)
+        svcableSwitch.addTarget(self, action: #selector(svcableSwitchChanged), for: .valueChanged)
+        svcModeSegmented.addTarget(self, action: #selector(svcModeChanged), for: .valueChanged)
+        registerImageButton.addTarget(self, action: #selector(registerImageTapped), for: .touchUpInside)
+        removeImageButton.addTarget(self, action: #selector(removeImageTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        
+        // 숫자 전용 입력
+        transactionAmountTextField.keyboardType = .numberPad
+        vatRateTextField.keyboardType = .numberPad
+        vatAmountTextField.keyboardType = .numberPad
+        svcRateTextField.keyboardType = .numberPad
+        svcAmountTextField.keyboardType = .numberPad
+        
+        // 금액 및 세액, 세율 변경 시 통계 실시간수정
+        transactionAmountTextField.delegate = self
+        vatRateTextField.delegate = self
+        vatAmountTextField.delegate = self
+        svcRateTextField.delegate = self
+        svcAmountTextField.delegate = self
+        
+        // 3. 거래금액
+        transactionAmountTextField.text = "0"
+        // 7. 부가세율 (텍스트필드) – taxable && (vatMode == 자동)
+        vatRateTextField.text = "10"
+        // 8. 부가세액 (텍스트필드) – taxable && (vatMode == 수동)
+        vatAmountTextField.text = "0"
+        // 12. 봉사료율 (텍스트필드) – svcable && (svcMode == 자동)
+        svcRateTextField.text = "0"
+        // 13. 봉사료액 (텍스트필드) – svcable && (svcMode == 수동)
+        svcAmountTextField.text = "0"
+        // 토탈금액 합계 처리
+        totalMoneyCalcu()
+    }
+    
+    func setupModifyData() {
+        productNameTextField.text = product?.name
+        productCategoryValueLabel.text = product?.category
+        transactionAmountTextField.text = String(product?.price ?? 0)
+        taxableSwitch.setOn(product?.useVAT == 0 ? true:false, animated: false)
+        vatModeSegmented.selectedSegmentIndex = product?.autoVAT ?? 0
+        vatCalcSegmented.selectedSegmentIndex = product?.includeVAT ?? 0
+        vatRateTextField.text = String(product?.vatRate ?? 10)
+        vatAmountTextField.text = product?.vatWon
+        
+        svcableSwitch.setOn(product?.useSVC == 0 ? true:false, animated: false)
+        svcModeSegmented.selectedSegmentIndex = product?.autoSVC ?? 0
+        svcCalcSegmented.selectedSegmentIndex = product?.includeSVC ?? 0
+        svcRateTextField.text = String(product?.svcRate ?? 10)
+        svcAmountTextField.text = product?.svcWon
+        
+        usageSegmented.selectedSegmentIndex = product?.isUse ?? 1
+        
+        productImageView.image = decodeBitmapImage(from: product?.imgString ?? "")
+        
+        defaultImageSegmented.selectedSegmentIndex = product?.isImgUse ?? 1
+        updateTaxViewsVisibility()
+        updateSvcViewsVisibility()
+        
+        totalMoneyCalcu()
+    }
+    
     // Helper: 공통 행 생성 (라벨 + 텍스트필드)
     func createTextFieldRow(labelText: String, textField: UITextField) -> UIView {
         let row = UIView()
@@ -712,6 +786,7 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
             vatRateContainer.isHidden = true
             vatAmountContainer.isHidden = true
         }
+        totalMoneyCalcu()
     }
     
     func updateSvcViewsVisibility() {
@@ -730,6 +805,102 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
             svcRateContainer.isHidden = true
             svcAmountContainer.isHidden = true
         }
+        totalMoneyCalcu()
+    }
+    
+    private func totalMoneyCalcu() {
+        if (transactionAmountTextField.text == nil || transactionAmountTextField.text == ""){
+            return
+        }
+        var _total:Int = 0
+        var _money:Int = 0
+        var _txf:Int = 0
+        
+        //금액 계산
+        var taxvalue:[String:Int]
+        // 화면상에 표시되는 공급가액 금액을 CAT 처럼 맞추기 위해 일부러 한번 더 한다
+        var taxvalue2:[String:Int]
+        
+        if (taxableSwitch.isOn) {
+            if transactionAmountTextField.text!.isNumberByRegularExpression {
+                _money = Int(transactionAmountTextField.text ?? "0") ?? 0
+            } else {
+                AlertBox(title: "상품등록 실패", message: "거래금액은 숫자만 입력해 주십시오", text: "확인")
+                return
+            }
+           
+        } else {
+            _txf = Int(transactionAmountTextField.text ?? "0") ?? 0
+        }
+    //        private boolean mvatUse = true;         //vat 사용/미사용
+    //        private boolean mVatMode = true;        //vat mode auto:true, 통합:false
+    //        private boolean mvatInclude = true;     //vat 포함:true 미포함:false
+    //        private boolean mSvcUse = false;         //svc 사용/미사용
+    //        private boolean msvcMode = true;        //svc mode auto:true, manual:false
+    //        private boolean msvcInclude = true;    //svc 포함:true 미포함:false
+    //        private int mvatRate = 10;
+    //        private int msvcRate = 0;
+        let _deviceCheck:Bool = Utils.getIsCAT() ? false:true
+       
+        var _vatrate:Int = 0
+        var _vatwon:Int = 0
+        var _svcrate:Int = 0
+        var _svcwon:Int = 0
+        
+        if svcModeSegmented.selectedSegmentIndex == 0 {
+            if svcRateTextField.text!.isNumberByRegularExpression {
+                _svcrate = Int(svcRateTextField.text ?? "0") ?? 0
+            } else {
+                AlertBox(title: "상품등록 실패", message: "봉사료율은 숫자만 입력해 주십시오", text: "확인")
+                return
+            }
+           
+        } else {
+            if svcAmountTextField.text!.isNumberByRegularExpression {
+                _svcwon = Int(svcAmountTextField.text ?? "0") ?? 0
+            } else {
+                AlertBox(title: "상품등록 실패", message: "봉사료액은 숫자만 입력해 주십시오", text: "확인")
+                return
+            }
+       
+        }
+        
+        if vatModeSegmented.selectedSegmentIndex == 0 {
+            if vatRateTextField.text!.isNumberByRegularExpression {
+                _vatrate = Int(vatRateTextField.text ?? "0") ?? 0
+            } else {
+                AlertBox(title: "상품등록 실패", message: "부가세율은 숫자만 입력해 주십시오", text: "확인")
+                return
+            }
+        } else {
+            if vatAmountTextField.text!.isNumberByRegularExpression {
+                _vatwon = Int(vatAmountTextField.text ?? "0") ?? 0
+            } else {
+                AlertBox(title: "상품등록 실패", message: "부가세액은 숫자만 입력해 주십시오", text: "확인")
+                return
+            }
+        
+        }
+        
+        taxvalue = mTaxCalc.TaxCalcProduct(금액: _money, 비과세금액: _txf, 봉사료액: _svcwon, 봉사료자동수동: svcModeSegmented.selectedSegmentIndex, 부가세자동수동: vatModeSegmented.selectedSegmentIndex, 봉사료율: _svcrate, 부가세율: _vatrate, 봉사료포함미포함: svcCalcSegmented.selectedSegmentIndex, 부가세포함미포함: vatCalcSegmented.selectedSegmentIndex, 봉사료사용미사용: svcableSwitch.isOn ? 0:1, 부가세사용미사용: taxableSwitch.isOn ? 0:1, 부가세액: _vatwon, BleUse: _deviceCheck)
+ 
+        // 화면상에 표시되는 공급가액 금액을 CAT 처럼 맞추기 위해 일부러 한번 더 한다
+        taxvalue2 = mTaxCalc.TaxCalcProduct(금액: _money, 비과세금액: _txf, 봉사료액: _svcwon, 봉사료자동수동: svcModeSegmented.selectedSegmentIndex, 부가세자동수동: vatModeSegmented.selectedSegmentIndex, 봉사료율: _svcrate, 부가세율: _vatrate, 봉사료포함미포함: svcCalcSegmented.selectedSegmentIndex, 부가세포함미포함: vatCalcSegmented.selectedSegmentIndex, 봉사료사용미사용: svcableSwitch.isOn ? 0:1, 부가세사용미사용: taxableSwitch.isOn ? 0:1, 부가세액: _vatwon, BleUse: false)
+
+        var conMoney2 = taxvalue2["Money"]!
+
+        var conMoney = taxvalue["Money"]!
+        var conVAT = taxvalue["VAT"]!
+        var conSVC = taxvalue["SVC"]!
+        var conTXF = taxvalue["TXF"]!
+
+//        supplyPriceTextField.text = String(conMoney)
+        taxTextField.text = String(conVAT)
+        serviceChargeTextField.text = String(conSVC)
+        nonTaxTextField.text = String(conTXF)
+        paymentAmountTextField.text = _deviceCheck ? String(conMoney + conVAT + conSVC):String(conMoney + conVAT + conSVC + conTXF)
+
+        supplyPriceTextField.text = String(conMoney2)
     }
     
     @objc func selectCategoryTapped() {
@@ -776,9 +947,17 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
         let tid = Utils.getIsCAT() ?
         Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID) :
         Setting.shared.getDefaultUserData(_key: define.STORE_TID)
-        let pSeq = "00000"
         let tableNo = Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO)
-        let pCode = "00000"
+        let pCode = product?.code ?? ""
+        if pCode == "" {
+            AlertBox(title: "상품수정 실패", message: "상품코드 에러. 수정 할 상품을 다시 선택해 주십시오", text: "확인")
+            return
+        }
+        let pSeq = tid +
+        Utils.leftPad(str: tableNo, fillChar: "0", length: 3) +
+        Utils.leftPad(str: pCode, fillChar: "0", length: 5)
+                        
+   
         guard let pName = productNameTextField.text else {
             AlertBox(title: "상품수정 실패", message: "상품명을 입력해 주십시오", text: "확인")
             return
@@ -791,42 +970,124 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
             AlertBox(title: "상품수정 실패", message: "거래금액을 입력해 주십시오", text: "확인")
             return
         }
-        let pDate = Utils.getDate(format: "yyMMddHHmmSS")
-        let pBarcode = ""
-        let pUse = usageSegmented.selectedSegmentIndex
-        let pImgUrl = ""
-        let pBitmapString = ""
-        let pUseVat = taxableSwitch.isOn ? 0:1
-        let pAutoVat = vatModeSegmented.selectedSegmentIndex
-        let pIncludeVat = vatCalcSegmented.selectedSegmentIndex
+        if !pPrice.isNumberByRegularExpression {
+            AlertBox(title: "상품수정 실패", message: "거래금액은 숫자만 입력해 주십시오", text: "확인")
+            return
+        }
         guard let pVatRate = vatRateTextField.text else {
             AlertBox(title: "상품수정 실패", message: "부가세율을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        if !pVatRate.isNumberByRegularExpression {
+            AlertBox(title: "상품수정 실패", message: "부가세율은 숫자만 입력해 주십시오", text: "확인")
             return
         }
         guard let pVatWon = vatAmountTextField.text else {
             AlertBox(title: "상품수정 실패", message: "부가세액을 정상적으로 입력해 주십시오", text: "확인")
             return
         }
-        let pUseSvc = svcableSwitch.isOn ? 0:1
-        let pAutoSvc = svcModeSegmented.selectedSegmentIndex
-        let pIncludeSvc = svcCalcSegmented.selectedSegmentIndex
+        if !pVatWon.isNumberByRegularExpression {
+            AlertBox(title: "상품수정 실패", message: "부가세액을 숫자만 입력해 주십시오", text: "확인")
+            return
+        }
         guard let pSvcRate = svcRateTextField.text else {
             AlertBox(title: "상품수정 실패", message: "봉사료율을 정상적으로 입력해 주십시오", text: "확인")
+            return
+        }
+        if !pSvcRate.isNumberByRegularExpression {
+            AlertBox(title: "상품수정 실패", message: "봉사료율을 숫자만 입력해 주십시오", text: "확인")
             return
         }
         guard let pSvcWon = svcAmountTextField.text else {
             AlertBox(title: "상품수정 실패", message: "봉사료액을 정상적으로 입력해 주십시오", text: "확인")
             return
         }
-        guard let pTotalPrice = paymentAmountTextField.text else {
-            AlertBox(title: "상품수정 실패", message: "봉사료액을 정상적으로 입력해 주십시오", text: "확인")
+        if !pSvcWon.isNumberByRegularExpression {
+            AlertBox(title: "상품수정 실패", message: "봉사료액을 숫자만 입력해 주십시오", text: "확인")
             return
         }
+        guard let pTotalPrice = paymentAmountTextField.text else {
+            AlertBox(title: "상품수정 실패", message: "결제금액 합계가 정상적이지 않습니다. 금액 설정을 다시 해주십시오", text: "확인")
+            return
+        }
+        if !pTotalPrice.isNumberByRegularExpression {
+            AlertBox(title: "상품수정 실패", message: "결제금액 합계가 숫자만 입력해 주십시오", text: "확인")
+            return
+        }
+        if Int(pVatRate) ?? 0 > 50 {
+            AlertBox(title: "상품수정 실패", message: "부가세율은 50%를 넘을 수 없습니다", text: "확인")
+            return
+        }
+        if Int(pSvcRate) ?? 0 > 50 {
+            AlertBox(title: "상품수정 실패", message: "봉사료율은 50%를 넘을 수 없습니다", text: "확인")
+            return
+        }
+        
+        let pDate = Utils.getDate(format: "yyyy-MM-dd HH:mm:ss")
+        let pBarcode = ""
+        let pUse = usageSegmented.selectedSegmentIndex
+     
+        let pImgUrl = ""
+        let pBitmapString = bitmapImage()
+
+        let pUseVat = taxableSwitch.isOn ? 0:1
+        let pAutoVat = vatModeSegmented.selectedSegmentIndex
+        let pIncludeVat = vatCalcSegmented.selectedSegmentIndex
+
+        let pUseSvc = svcableSwitch.isOn ? 0:1
+        let pAutoSvc = svcModeSegmented.selectedSegmentIndex
+        let pIncludeSvc = svcCalcSegmented.selectedSegmentIndex
+       
+  
         let pIsImgUse = defaultImageSegmented.selectedSegmentIndex
         
-        let result = sqlite.instance.insertProductInfo(tid: tid, productSeq: pSeq, tableNo: Int(tableNo)!, pcode: pCode, pname: pName, pcategory: pCategory, price: pPrice, pdate: pDate, barcode: pBarcode, isUse: pUse, imgUrl: pImgUrl, imgBitmapString: pBitmapString, useVAT: pUseVat, autoVAT: pAutoVat, includeVAT: pIncludeVat, vatRate: Int(pVatRate)!, vatWon: pVatWon, useSVC: pUseSvc, autoSVC: pAutoSvc, includeSVC: pIncludeSvc, svcRate: Int(pSvcRate)!, svcWon: pSvcWon, totalPrice: pTotalPrice, isImgUse: pIsImgUse)
+        let result = sqlite.instance.updateProductInfo(tid: tid, productSeq: pSeq, tableNo: Int(tableNo)!, pname: pName, pcategory: pCategory, price: pPrice, pdate: pDate, barcode: pBarcode, isUse: pUse, imgUrl: pImgUrl, imgBitmapString: pBitmapString, useVAT: pUseVat, autoVAT: pAutoVat, includeVAT: pIncludeVat, vatRate: Int(pVatRate)!, vatWon: pVatWon, useSVC: pUseSvc, autoSVC: pAutoSvc, includeSVC: pIncludeSvc, svcRate: Int(pSvcRate)!, svcWon: pSvcWon, totalPrice: pTotalPrice, isImgUse: pIsImgUse)
+        if result {
+            KocesSdk.instance.setProductData(seq: pSeq)
+        }
         
         AlertBox(title: result ? "상품수정 성공":"상품수정 실패", message: result ? "상품을 수정하였습니다":"상품수정에 실패하였습니다. 다시 시도해 주십시오", text: "확인")
+    }
+    
+    func bitmapImage() -> String {
+        let thumbnailSize = CGSize(width: 300, height: 300)
+        if let image = productImageView.image {
+     
+            // 압축 품질은 0.0 ~ 1.0 사이의 값으로, 0.3은 30% 품질을 의미
+            let options: [SDImageCoderOption: Any] = [
+                .encodeMaxPixelSize: CGSize(width: 200, height: 200),
+                .encodeCompressionQuality: 0.1,
+                .encodeMaxFileSize: 1024 * 10
+            ]
+            if let webpData = SDImageWebPCoder.shared.encodedData(with: image, format: .webP, options: options) {
+                let base64String = webpData.base64EncodedString(options: [])
+                // base64String을 DB에 저장합니다.
+                print("WebP Base64 String: \(base64String)")
+                return base64String
+            } else {
+                print("이미지를 WebP로 인코딩 실패")
+            }
+        }
+        return ""
+    }
+    
+    func decodeBitmapImage(from base64String: String) -> UIImage? {
+        if base64String == "" {
+            return nil
+        }
+        // Base64 문자열을 Data로 변환
+        guard let webpData = Data(base64Encoded: base64String) else {
+            print("Base64 문자열 디코딩 실패")
+            return nil
+        }
+        
+        // SDImageWebPCoder를 이용해 Data를 UIImage로 디코딩
+        if let image = SDImageWebPCoder.shared.decodedImage(with: webpData, options: nil) {
+            return image
+        } else {
+            print("WebP 데이터를 UIImage로 디코딩 실패")
+            return nil
+        }
     }
     
     // MARK: - Image Picker
@@ -872,5 +1133,17 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
         let okButton = UIAlertAction(title: text, style: UIAlertAction.Style.cancel, handler: nil)
         alertController.addAction(okButton)
         return self.present(alertController, animated: true, completion: nil)
+    }
+    
+    // 입력이 실제 끝날때 호출 (시점)
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        totalMoneyCalcu()
+    }
+    
+    // MARK: - UIViewControllerTransitioningDelegate
+    func presentationController(forPresented presented: UIViewController,
+                                presenting: UIViewController?,
+                                source: UIViewController) -> UIPresentationController? {
+        return CustomPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

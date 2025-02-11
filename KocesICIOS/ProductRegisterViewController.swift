@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 import SDWebImageWebPCoder
 
-class ProductRegisterViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class ProductRegisterViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIViewControllerTransitioningDelegate {
     
     // MARK: - UI Elements
     
@@ -137,77 +137,16 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "상품 등록"
-               
-        // 내비게이션 바에 '나가기' 버튼 추가 (모달 dismiss)
-
-        let backImage = UIImage(systemName: "chevron.backward")
-        let backButton = UIButton()
-        backButton.setImage(backImage, for: .normal)
-        backButton.setTitle("Back", for: .normal)
-        backButton.setTitleColor(define.txt_blue, for: .normal)
-        backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
-        backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
-    
-        let backNav = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backNav
         
+        // UI 설정
+        setupNavigationBar()
         setupTopBar()
         setupMainContainer()
         setupLeftSide()
         setupRightSide()
         
         // 기본값 및 타겟 설정
-        taxableSwitch.isOn = true       //부가세는 기본이 사용
-        vatModeSegmented.selectedSegmentIndex = 0  // 자동
-        vatCalcSegmented.selectedSegmentIndex = 0   // 포함
-        updateTaxViewsVisibility()
-
-        svcableSwitch.isOn = false      //봉사료는 기본이 미사용
-        svcModeSegmented.selectedSegmentIndex = 0  // 자동
-        svcCalcSegmented.selectedSegmentIndex = 0   // 포함
-        updateSvcViewsVisibility()
-        
-        usageSegmented.selectedSegmentIndex = 1 //사용
-        defaultImageSegmented.selectedSegmentIndex = 1 //사용
-        
-        selectCategoryButton.addTarget(self, action: #selector(selectCategoryTapped), for: .touchUpInside)
-        taxableSwitch.addTarget(self, action: #selector(taxableSwitchChanged), for: .valueChanged)
-        vatModeSegmented.addTarget(self, action: #selector(vatModeChanged), for: .valueChanged)
-        svcableSwitch.addTarget(self, action: #selector(svcableSwitchChanged), for: .valueChanged)
-        svcModeSegmented.addTarget(self, action: #selector(svcModeChanged), for: .valueChanged)
-        registerImageButton.addTarget(self, action: #selector(registerImageTapped), for: .touchUpInside)
-        removeImageButton.addTarget(self, action: #selector(removeImageTapped), for: .touchUpInside)
-        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-        
-        // 숫자 전용 입력
-        transactionAmountTextField.keyboardType = .numberPad
-        vatRateTextField.keyboardType = .numberPad
-        vatAmountTextField.keyboardType = .numberPad
-        svcRateTextField.keyboardType = .numberPad
-        svcAmountTextField.keyboardType = .numberPad
-        
-        // 금액 및 세액, 세율 변경 시 통계 실시간수정
-        transactionAmountTextField.delegate = self
-        vatRateTextField.delegate = self
-        vatAmountTextField.delegate = self
-        svcRateTextField.delegate = self
-        svcAmountTextField.delegate = self
-        
-        // 3. 거래금액
-        transactionAmountTextField.text = "0"
-        // 7. 부가세율 (텍스트필드) – taxable && (vatMode == 자동)
-        vatRateTextField.text = "10"
-        // 8. 부가세액 (텍스트필드) – taxable && (vatMode == 수동)
-        vatAmountTextField.text = "0"
-        // 12. 봉사료율 (텍스트필드) – svcable && (svcMode == 자동)
-        svcRateTextField.text = "0"
-        // 13. 봉사료액 (텍스트필드) – svcable && (svcMode == 수동)
-        svcAmountTextField.text = "0"
-        // 토탈금액 합계 처리
-        totalMoneyCalcu()
-        
-//        navigationItem.titleView?.backgroundColor = .black
+        setupDefaultData()
     }
     
     @objc private func exitButtonTapped() {
@@ -222,13 +161,47 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
     
     // MARK: - Setup UI Methods
     
+    func setupNavigationBar() {
+        // 왼쪽에 커스텀 백 버튼 생성: "chevron.backward" 이미지 + "BACK" 텍스트
+        let backButton = UIButton(type: .system)
+        if let backImage = UIImage(systemName: "chevron.backward") {
+            backButton.setImage(backImage, for: .normal)
+        }
+        // 이미지와 텍스트 사이에 약간의 공백을 주기 위해 앞에 공백 추가
+        backButton.setTitle(" Back", for: .normal)
+        
+        // 아이콘과 텍스트 모두 흰색으로 설정
+        backButton.tintColor = define.txt_blue
+        backButton.setTitleColor(define.txt_blue, for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
+        // 크기 조정
+        backButton.sizeToFit()
+        backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
+        
+        // 커스텀 버튼을 좌측 바 버튼 아이템으로 설정
+        let leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        // 중앙 타이틀 설정
+        navigationItem.title = "상품등록"
+        
+        // 네비게이션바의 배경 및 타이틀 색상 설정 (모든 텍스트 흰색, 배경 검정)
+        if let navBar = navigationController?.navigationBar {
+            navBar.barTintColor = .black
+            navBar.backgroundColor = .black
+            navBar.tintColor = .white
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
+    }
+    
     func setupTopBar() {
         topBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(topBar)
         
         // 타이틀 레이블
         titleLabel.text = "상품설정"
-        titleLabel.font = Utils.getTitleFont()
+        titleLabel.font = Utils.getSubTitleFont()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         topBar.addSubview(titleLabel)
         
@@ -625,6 +598,58 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         let paymentRow = createRow(labelText: "결제금액", textField: paymentAmountTextField)
         pricingStack.addArrangedSubview(paymentRow)
     }
+    
+    func setupDefaultData() {
+        taxableSwitch.isOn = true       //부가세는 기본이 사용
+        vatModeSegmented.selectedSegmentIndex = 0  // 자동
+        vatCalcSegmented.selectedSegmentIndex = 0   // 포함
+        updateTaxViewsVisibility()
+
+        svcableSwitch.isOn = false      //봉사료는 기본이 미사용
+        svcModeSegmented.selectedSegmentIndex = 0  // 자동
+        svcCalcSegmented.selectedSegmentIndex = 0   // 포함
+        updateSvcViewsVisibility()
+        
+        usageSegmented.selectedSegmentIndex = 1 //사용
+        defaultImageSegmented.selectedSegmentIndex = 1 //사용
+        
+        selectCategoryButton.addTarget(self, action: #selector(selectCategoryTapped), for: .touchUpInside)
+        taxableSwitch.addTarget(self, action: #selector(taxableSwitchChanged), for: .valueChanged)
+        vatModeSegmented.addTarget(self, action: #selector(vatModeChanged), for: .valueChanged)
+        svcableSwitch.addTarget(self, action: #selector(svcableSwitchChanged), for: .valueChanged)
+        svcModeSegmented.addTarget(self, action: #selector(svcModeChanged), for: .valueChanged)
+        registerImageButton.addTarget(self, action: #selector(registerImageTapped), for: .touchUpInside)
+        removeImageButton.addTarget(self, action: #selector(removeImageTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        
+        // 숫자 전용 입력
+        transactionAmountTextField.keyboardType = .numberPad
+        vatRateTextField.keyboardType = .numberPad
+        vatAmountTextField.keyboardType = .numberPad
+        svcRateTextField.keyboardType = .numberPad
+        svcAmountTextField.keyboardType = .numberPad
+        
+        // 금액 및 세액, 세율 변경 시 통계 실시간수정
+        transactionAmountTextField.delegate = self
+        vatRateTextField.delegate = self
+        vatAmountTextField.delegate = self
+        svcRateTextField.delegate = self
+        svcAmountTextField.delegate = self
+        
+        // 3. 거래금액
+        transactionAmountTextField.text = "0"
+        // 7. 부가세율 (텍스트필드) – taxable && (vatMode == 자동)
+        vatRateTextField.text = "10"
+        // 8. 부가세액 (텍스트필드) – taxable && (vatMode == 수동)
+        vatAmountTextField.text = "0"
+        // 12. 봉사료율 (텍스트필드) – svcable && (svcMode == 자동)
+        svcRateTextField.text = "0"
+        // 13. 봉사료액 (텍스트필드) – svcable && (svcMode == 수동)
+        svcAmountTextField.text = "0"
+        // 토탈금액 합계 처리
+        totalMoneyCalcu()
+    }
+    
     
     // Helper: 공통 행 생성 (라벨 + 텍스트필드)
     func createTextFieldRow(labelText: String, textField: UITextField) -> UIView {
@@ -1070,30 +1095,15 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         alertController.addAction(okButton)
         return self.present(alertController, animated: true, completion: nil)
     }
-    
-    /**
-     금액 변경 시 처리
-     */
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(textField.text)
-//        totalMoneyCalcu()
-        return true
-//        var maxLength:Int = CharMaxLength
-//        switch textField {
-//        case tidNumberTextField:
-//            maxLength = CharMaxLength
-//        case bisNumberTextField:
-//            maxLength = CharMaxLength
-//        case serialNumberTextField:
-//            maxLength = CharMaxLength
-//        default:
-//            break
-//        }
-//        let newLength = (textField.text?.count)! + string.count - range.length
-//                return !(newLength > maxLength)
-    }
     // 입력이 실제 끝날때 호출 (시점)
     func textFieldDidEndEditing(_ textField: UITextField) {
         totalMoneyCalcu()
+    }
+    
+    // MARK: - UIViewControllerTransitioningDelegate
+    func presentationController(forPresented presented: UIViewController,
+                                presenting: UIViewController?,
+                                source: UIViewController) -> UIPresentationController? {
+        return CustomPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

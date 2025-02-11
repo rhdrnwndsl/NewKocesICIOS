@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-class ProductListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ProductListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIViewControllerTransitioningDelegate {
     
     let tableView = UITableView(frame: .zero, style: .plain)
     let mKocesSdk:KocesSdk = KocesSdk.instance
@@ -17,22 +17,56 @@ class ProductListViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "상품리스트"
+        
+        // UI 설정
+        setupNavigationBar()
         setupTableView()
-               
-        // 내비게이션 바에 '나가기' 버튼 추가 (모달 dismiss)
-        let backImage = UIImage(systemName: "chevron.backward")
-        let backButton = UIButton()
-        backButton.setImage(backImage, for: .normal)
-        backButton.setTitle("Back", for: .normal)
+        
+        // Observer 등록
+          NotificationCenter.default.addObserver(self, selector: #selector(handleProductModified), name: Notification.Name("ProductModified"), object: nil)
+    }
+    
+    @objc private func handleProductModified(_ notification: Notification) {
+        // UI 갱신 작업 수행 (예: 테이블뷰 리로드)
+        tableView.reloadData()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func setupNavigationBar() {
+        // 왼쪽에 커스텀 백 버튼 생성: "chevron.backward" 이미지 + "BACK" 텍스트
+        let backButton = UIButton(type: .system)
+        if let backImage = UIImage(systemName: "chevron.backward") {
+            backButton.setImage(backImage, for: .normal)
+        }
+        // 이미지와 텍스트 사이에 약간의 공백을 주기 위해 앞에 공백 추가
+        backButton.setTitle(" Back", for: .normal)
+        
+        // 아이콘과 텍스트 모두 흰색으로 설정
+        backButton.tintColor = define.txt_blue
         backButton.setTitleColor(define.txt_blue, for: .normal)
-        backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
+        // 크기 조정
+        backButton.sizeToFit()
         backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
         
-        let backNav = UIBarButtonItem(customView: backButton)
-
-        navigationItem.leftBarButtonItem = backNav
-        navigationItem.titleView?.backgroundColor = .black
+        // 커스텀 버튼을 좌측 바 버튼 아이템으로 설정
+        let leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        // 중앙 타이틀 설정
+        navigationItem.title = "상품리스트"
+        
+        // 네비게이션바의 배경 및 타이틀 색상 설정 (모든 텍스트 흰색, 배경 검정)
+        if let navBar = navigationController?.navigationBar {
+            navBar.barTintColor = .black
+            navBar.backgroundColor = .black
+            navBar.tintColor = .white
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
     }
     
     @objc private func exitButtonTapped() {
@@ -142,7 +176,15 @@ class ProductListViewController: UIViewController, UITableViewDelegate, UITableV
          modifyVC.product = product   // 수정할 상품 정보를 전달
 //         navigationController?.pushViewController(modifyVC, animated: true)
         let navController = UINavigationController(rootViewController: modifyVC)
-        navController.modalPresentationStyle = .fullScreen  // 필요에 따라 .overFullScreen 또는 다른 스타일로 변경 가능
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = modifyVC  // 또는 별도로 지정
         self.present(navController, animated: true, completion: nil)
+    }
+    
+    // MARK: - UIViewControllerTransitioningDelegate
+    func presentationController(forPresented presented: UIViewController,
+                                presenting: UIViewController?,
+                                source: UIViewController) -> UIPresentationController? {
+        return CustomPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

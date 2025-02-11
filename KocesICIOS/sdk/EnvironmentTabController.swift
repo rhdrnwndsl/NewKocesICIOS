@@ -83,27 +83,15 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
             rootView.setViewController(viewController: self)
             self.view = rootView
             
-            let backImage = UIImage(systemName: "chevron.backward")
-            let backButton = UIButton()
-            backButton.setImage(backImage, for: .normal)
-            backButton.setTitle("Back", for: .normal)
-            backButton.setTitleColor(define.txt_blue, for: .normal)
-            backButton.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
-            backButton.addTarget(self, action: #selector(BackMainView), for: .touchUpInside)
+            setupNavigationBar()
             
-            let backNav = UIBarButtonItem(customView: backButton)
-
-            navigationItem.leftBarButtonItem = backNav
-
+            //테스트용
             if let tabBarController = self.tabBarController as? TabBarController {
                 tabBarController.hideTabs(at: [2, 3]) // 1번과 2번 탭 숨기기
             }
         } else {
             rootView.isProduct = false
         }
-       
-        
-      
     }
     
     @objc func BackMainView() {
@@ -120,6 +108,30 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func setupNavigationBar() {
+        // 왼쪽에 커스텀 백 버튼 생성: "chevron.backward" 이미지 + "BACK" 텍스트
+        let backButton = UIButton(type: .system)
+        if let backImage = UIImage(systemName: "chevron.backward") {
+            backButton.setImage(backImage, for: .normal)
+        }
+        // 이미지와 텍스트 사이에 약간의 공백을 주기 위해 앞에 공백 추가
+        backButton.setTitle(" Back", for: .normal)
+        
+        // 아이콘과 텍스트 모두 흰색으로 설정
+        backButton.tintColor = define.txt_blue
+        backButton.setTitleColor(define.txt_blue, for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
+        // 크기 조정
+        backButton.sizeToFit()
+        backButton.addTarget(self, action: #selector(BackMainView), for: .touchUpInside)
+        
+        // 커스텀 버튼을 좌측 바 버튼 아이템으로 설정
+        let leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+
     }
 }
 
