@@ -22,8 +22,9 @@ class ProductHomeViewController: UIViewController {
     var categories: [String] = []
     var products: [Product] = []
     var filteredProducts: [Product] = []
-    // 장바구니: product.id를 key로 사용
-    var basket: [Int: BasketItem] = [:]
+    
+    var basket: [Int: BasketItem] = [:] // 장바구니: product.id를 key로 사용
+    var basketSelectedProductID: Int? = nil // 우측 장바구니에서 선택된 상품 (optional)
     
     // 좌측, 우측 컨테이너
     let leftContainer = UIView()
@@ -35,17 +36,19 @@ class ProductHomeViewController: UIViewController {
     var selectedCategory: String? = nil
     var productCollectionView: UICollectionView!
     
+    // 상단 버튼들
+    let plusBasketButton = UIButton(type: .system)
+    let minusBasketButton = UIButton(type: .system)
+    let removeBasketButton = UIButton(type: .system)
+    
     // 우측 화면 UI (장바구니)
     let basketTopView = UIView()
-    let addBasketButton = UIButton(type: .system)
-    let removeBasketButton = UIButton(type: .system)
     var basketTableView: UITableView!
     let basketSummaryView = UIView()
     let basketSummaryLabel = UILabel()
     let paymentButton = UIButton(type: .system)
     
-    // 우측 장바구니에서 선택된 상품 (optional)
-    var basketSelectedProductID: Int? = nil
+
     
     // MARK: - View Lifecycle
     
@@ -146,37 +149,66 @@ class ProductHomeViewController: UIViewController {
     }
     
     func setupRightSide() {
-        // 우측 상단: basketTopView (높이 50)
+        rightContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(rightContainer)
+        // 우측 컨테이너의 제약조건은 기존 코드와 동일
+             
+        // basketTopView (상단, 높이 50)
         basketTopView.translatesAutoresizingMaskIntoConstraints = false
         rightContainer.addSubview(basketTopView)
         
-        addBasketButton.setTitle("상품추가", for: .normal)
-        addBasketButton.translatesAutoresizingMaskIntoConstraints = false
-        addBasketButton.addTarget(self, action: #selector(basketAddButtonTapped), for: .touchUpInside)
-        basketTopView.addSubview(addBasketButton)
-        
+        // "+" 버튼: 왼쪽에 배치
+        plusBasketButton.setTitle("+", for: .normal)
+        plusBasketButton.translatesAutoresizingMaskIntoConstraints = false
+        plusBasketButton.addTarget(self, action: #selector(basketPlusButtonTapped), for: .touchUpInside)
+        basketTopView.addSubview(plusBasketButton)
+              
+        // "–" 버튼: 중앙에 배치
+        minusBasketButton.setTitle("–", for: .normal)
+        minusBasketButton.translatesAutoresizingMaskIntoConstraints = false
+        minusBasketButton.addTarget(self, action: #selector(basketMinusButtonTapped), for: .touchUpInside)
+        basketTopView.addSubview(minusBasketButton)
+              
+        // "상품제거" 버튼: 우측에 배치
         removeBasketButton.setTitle("상품제거", for: .normal)
         removeBasketButton.translatesAutoresizingMaskIntoConstraints = false
         removeBasketButton.addTarget(self, action: #selector(basketRemoveButtonTapped), for: .touchUpInside)
         basketTopView.addSubview(removeBasketButton)
-        
+
         NSLayoutConstraint.activate([
-            addBasketButton.leadingAnchor.constraint(equalTo: basketTopView.leadingAnchor, constant: 10),
-            addBasketButton.centerYAnchor.constraint(equalTo: basketTopView.centerYAnchor),
-            
+            basketTopView.topAnchor.constraint(equalTo: rightContainer.topAnchor),
+            basketTopView.leadingAnchor.constraint(equalTo: rightContainer.leadingAnchor),
+            basketTopView.trailingAnchor.constraint(equalTo: rightContainer.trailingAnchor),
+            basketTopView.heightAnchor.constraint(equalToConstant: 50),
+              
+            // plus button (왼쪽)
+            plusBasketButton.leadingAnchor.constraint(equalTo: basketTopView.leadingAnchor, constant: 10),
+            plusBasketButton.centerYAnchor.constraint(equalTo: basketTopView.centerYAnchor),
+            plusBasketButton.widthAnchor.constraint(equalToConstant: 40),
+            plusBasketButton.heightAnchor.constraint(equalToConstant: 40),
+              
+            // minus button (중앙)
+            minusBasketButton.centerXAnchor.constraint(equalTo: basketTopView.centerXAnchor),
+            minusBasketButton.centerYAnchor.constraint(equalTo: basketTopView.centerYAnchor),
+            minusBasketButton.widthAnchor.constraint(equalToConstant: 40),
+            minusBasketButton.heightAnchor.constraint(equalToConstant: 40),
+              
+            // remove button (우측)
             removeBasketButton.trailingAnchor.constraint(equalTo: basketTopView.trailingAnchor, constant: -10),
-            removeBasketButton.centerYAnchor.constraint(equalTo: basketTopView.centerYAnchor)
+            removeBasketButton.centerYAnchor.constraint(equalTo: basketTopView.centerYAnchor),
+            removeBasketButton.widthAnchor.constraint(equalToConstant: 80),
+            removeBasketButton.heightAnchor.constraint(equalToConstant: 40)
         ])
         
-        // 우측 중간: basketTableView (장바구니 항목 목록)
+        // Basket TableView (중간 : 장바구니 항목 목록)
         basketTableView = UITableView()
         basketTableView.translatesAutoresizingMaskIntoConstraints = false
         basketTableView.dataSource = self
         basketTableView.delegate = self
         basketTableView.register(BasketItemCell.self, forCellReuseIdentifier: "BasketItemCell")
         rightContainer.addSubview(basketTableView)
-        
-        // 우측 하단: basketSummaryView (요약 및 결제금액 버튼, 높이 80)
+              
+        // Basket Summary View (하단 영역, 요약 및 결제금액 버튼, 높이 80)
         basketSummaryView.translatesAutoresizingMaskIntoConstraints = false
         rightContainer.addSubview(basketSummaryView)
         basketSummaryLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -186,13 +218,8 @@ class ProductHomeViewController: UIViewController {
         paymentButton.translatesAutoresizingMaskIntoConstraints = false
         paymentButton.addTarget(self, action: #selector(paymentButtonTapped), for: .touchUpInside)
         basketSummaryView.addSubview(paymentButton)
-        
+
         NSLayoutConstraint.activate([
-            basketTopView.topAnchor.constraint(equalTo: rightContainer.topAnchor),
-            basketTopView.leadingAnchor.constraint(equalTo: rightContainer.leadingAnchor),
-            basketTopView.trailingAnchor.constraint(equalTo: rightContainer.trailingAnchor),
-            basketTopView.heightAnchor.constraint(equalToConstant: 50),
-            
             basketSummaryView.bottomAnchor.constraint(equalTo: rightContainer.bottomAnchor),
             basketSummaryView.leadingAnchor.constraint(equalTo: rightContainer.leadingAnchor),
             basketSummaryView.trailingAnchor.constraint(equalTo: rightContainer.trailingAnchor),
@@ -272,27 +299,41 @@ class ProductHomeViewController: UIViewController {
         updateBasketSummary()
     }
     
-    @objc func basketAddButtonTapped() {
-        if let selectedID = basketSelectedProductID, let item = basket[selectedID] {
-            basket[selectedID]?.quantity = item.quantity + 1
-            basketTableView.reloadData()
-            updateBasketSummary()
-        } else {
+    @objc func basketPlusButtonTapped() {
+        guard let selectedID = basketSelectedProductID, let item = basket[selectedID] else {
             print("선택된 장바구니 상품이 없습니다")
+            return
         }
+        basket[selectedID]?.quantity = item.quantity + 1
+        basketTableView.reloadData()
+        updateBasketSummary()
     }
-    
+       
+    @objc func basketMinusButtonTapped() {
+        guard let selectedID = basketSelectedProductID, let item = basket[selectedID] else {
+            print("선택된 장바구니 상품이 없습니다")
+            return
+        }
+        let newQuantity = item.quantity - 1
+        if newQuantity <= 0 {
+            basket.removeValue(forKey: selectedID)
+            basketSelectedProductID = nil
+        } else {
+            basket[selectedID]?.quantity = newQuantity
+        }
+        basketTableView.reloadData()
+        updateBasketSummary()
+    }
+       
     @objc func basketRemoveButtonTapped() {
         if let selectedID = basketSelectedProductID {
             basket.removeValue(forKey: selectedID)
             basketSelectedProductID = nil
-            basketTableView.reloadData()
-            updateBasketSummary()
         } else {
             basket.removeAll()
-            basketTableView.reloadData()
-            updateBasketSummary()
         }
+        basketTableView.reloadData()
+        updateBasketSummary()
     }
     
     @objc func paymentButtonTapped() {
@@ -346,29 +387,11 @@ extension ProductHomeViewController: UITableViewDataSource, UITableViewDelegate 
         let cell = tableView.dequeueReusableCell(withIdentifier: "BasketItemCell", for: indexPath) as! BasketItemCell
         let basketItem = Array(basket.values)[indexPath.row]
         cell.configure(with: basketItem)
-        // 선택된 항목 표시 (예: 배경색)
         cell.backgroundColor = (basketItem.product.id == basketSelectedProductID) ? UIColor.systemGray4 : UIColor.white
-        cell.plusButtonAction = { [weak self] in
-            guard let self = self, let item = self.basket[basketItem.product.id] else { return }
-            self.basket[basketItem.product.id]?.quantity = item.quantity + 1
-            tableView.reloadData()
-            self.updateBasketSummary()
-        }
-        cell.minusButtonAction = { [weak self] in
-            guard let self = self, let item = self.basket[basketItem.product.id] else { return }
-            let newQuantity = item.quantity - 1
-            if newQuantity <= 0 {
-                self.basket.removeValue(forKey: basketItem.product.id)
-            } else {
-                self.basket[basketItem.product.id]?.quantity = newQuantity
-            }
-            tableView.reloadData()
-            self.updateBasketSummary()
-        }
         return cell
     }
     
-    // 선택 시 토글 처리
+    // 셀 선택 시 토글 처리: 선택된 상품은 상단 버튼의 대상으로 지정
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItem = Array(basket.values)[indexPath.row]
         if basketSelectedProductID == selectedItem.product.id {
@@ -447,8 +470,6 @@ class ProductCollectionCell: UICollectionViewCell {
 class BasketItemCell: UITableViewCell {
     let nameLabel = UILabel()
     let priceLabel = UILabel()
-    let plusButton = UIButton(type: .system)
-    let minusButton = UIButton(type: .system)
     let quantityLabel = UILabel()
     
     var plusButtonAction: (() -> Void)?
@@ -467,60 +488,30 @@ class BasketItemCell: UITableViewCell {
     func setupUI() {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.translatesAutoresizingMaskIntoConstraints = false
-        minusButton.translatesAutoresizingMaskIntoConstraints = false
         quantityLabel.translatesAutoresizingMaskIntoConstraints = false
         
         nameLabel.font = UIFont.systemFont(ofSize: 14)
         priceLabel.font = UIFont.systemFont(ofSize: 14)
         quantityLabel.font = UIFont.systemFont(ofSize: 14)
         quantityLabel.textAlignment = .center
-        
-        plusButton.setTitle("+", for: .normal)
-        minusButton.setTitle("-", for: .normal)
-        
+
         contentView.addSubview(nameLabel)
         contentView.addSubview(priceLabel)
-        contentView.addSubview(plusButton)
         contentView.addSubview(quantityLabel)
-        contentView.addSubview(minusButton)
-        
+
+        // 한 줄에 좌측: 상품명, 중앙: 가격, 우측: 수량
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            priceLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            priceLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            priceLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            plusButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            plusButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            plusButton.widthAnchor.constraint(equalToConstant: 30),
-            plusButton.heightAnchor.constraint(equalToConstant: 30),
-            
-            quantityLabel.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
-            quantityLabel.leadingAnchor.constraint(equalTo: plusButton.trailingAnchor, constant: 10),
-            quantityLabel.widthAnchor.constraint(equalToConstant: 30),
-            
-            minusButton.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
-            minusButton.leadingAnchor.constraint(equalTo: quantityLabel.trailingAnchor, constant: 10),
-            minusButton.widthAnchor.constraint(equalToConstant: 30),
-            minusButton.heightAnchor.constraint(equalToConstant: 30),
-            
-            minusButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
+            quantityLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            quantityLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
-        
-        plusButton.addTarget(self, action: #selector(plusTapped), for: .touchUpInside)
-        minusButton.addTarget(self, action: #selector(minusTapped), for: .touchUpInside)
     }
-    
-    @objc func plusTapped() {
-        plusButtonAction?()
-    }
-    
-    @objc func minusTapped() {
-        minusButtonAction?()
-    }
-    
+
     func configure(with basketItem: BasketItem) {
         nameLabel.text = basketItem.product.name
         priceLabel.text = "\(basketItem.product.price)원"
