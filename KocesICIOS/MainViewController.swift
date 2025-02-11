@@ -336,8 +336,11 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
         } else {
             storyboard = UIStoryboard(name: "pad", bundle: Bundle.main)
         }
-        let controller = (storyboard!.instantiateViewController(identifier: "OtherPayController")) as OtherPayController
-        controller.navigationItem.title = "기타결제"
+        let controller = (storyboard!.instantiateViewController(identifier: "ProductHomeViewController")) as ProductHomeViewController
+        
+//        let controller = (storyboard!.instantiateViewController(identifier: "OtherPayController")) as OtherPayController
+//        controller.navigationItem.title = "기타결제"
+        controller.navigationItem.title = "상품홈화면"
         navigationController?.pushViewController(controller, animated: true)
     }
     func moveTradeList()

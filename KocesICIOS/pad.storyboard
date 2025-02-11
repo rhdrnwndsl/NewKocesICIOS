@@ -11008,6 +11008,21 @@
             </objects>
             <point key="canvasLocation" x="7424" y="3556"/>
         </scene>
+        <!--Product Home View Controller-->
+        <scene sceneID="sps-IA-Ui3">
+            <objects>
+                <viewController storyboardIdentifier="ProductHomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="RdK-o6-qke" customClass="ProductHomeViewController" customModule="KocesICIOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5xY-la-48G">
+                        <rect key="frame" x="0.0" y="0.0" width="1080" height="810"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="rVO-MK-C35"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QW7-JN-gYZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="8114" y="3578"/>
+        </scene>
     </scenes>
     <resources>
         <image name="99" width="1500" height="1500"/>
