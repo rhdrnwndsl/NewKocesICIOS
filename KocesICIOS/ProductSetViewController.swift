@@ -539,10 +539,28 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         // 2. CSV 파일 파싱 후 sqlite DB에 데이터 삽입
         
         // UIDocumentPickerViewController 생성 (CSV 파일 선택)
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.comma-separated-values-text", "public.text"], in: .import)
+        // "public.comma-separated-values-text"만 지정하여 CSV 파일만 보이게 함
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.comma-separated-values-text"], in: .import)
         documentPicker.delegate = self
         documentPicker.modalPresentationStyle = .formSheet
+        
+        // iOS 14 이상에서 기본 폴더 지정 (예: Documents/KocesICIOS/KOCES)
+        if #available(iOS 14.0, *) {
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let defaultFolderURL = documentsURL.appendingPathComponent("KOCES", isDirectory: true)
+            // 폴더가 없으면 생성
+            if !FileManager.default.fileExists(atPath: defaultFolderURL.path) {
+                do {
+                    try FileManager.default.createDirectory(at: defaultFolderURL, withIntermediateDirectories: true, attributes: nil)
+                    print("CSVFiles 폴더 생성 성공: \(defaultFolderURL.path)")
+                } catch {
+                    print("CSVFiles 폴더 생성 실패: \(error)")
+                }
+            }
+            documentPicker.directoryURL = defaultFolderURL
+        }
         present(documentPicker, animated: true, completion: nil)
+
     }
     
     // 파일 선택 성공 시 호출
