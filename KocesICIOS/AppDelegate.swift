@@ -40,16 +40,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         
+        // 앱 UI 설정값에 따라 분기처리
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+    
         // 세로방향 고정
         if UIDevice.current.userInterfaceIdiom == .phone ||
             UIDevice.current.userInterfaceIdiom == .unspecified {
             // 여기서 셋팅으로 일반모드일 경우 세로고정. 상품모드일 경우 가로고정으로 처리한다
-            return UIInterfaceOrientationMask.portrait
+            return appUISetting == define.UIMethod.Product.rawValue ? UIInterfaceOrientationMask.landscape:UIInterfaceOrientationMask.portrait
         } else {
             //맥, 카플레이, 패드, 비전프로
             return UIInterfaceOrientationMask.landscape
         }
-        
     }
     
     let mKocesSdk:KocesSdk = KocesSdk.instance
