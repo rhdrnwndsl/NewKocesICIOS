@@ -840,7 +840,7 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         taxTextField.text = String(conVAT)
         serviceChargeTextField.text = String(conSVC)
         nonTaxTextField.text = String(conTXF)
-        paymentAmountTextField.text = _deviceCheck ? String(conMoney + conVAT + conSVC + conTXF):String(conMoney + conVAT + conSVC)
+        paymentAmountTextField.text = _deviceCheck ? String(conMoney + conVAT + conSVC):String(conMoney + conVAT + conSVC + conTXF)
 
         supplyPriceTextField.text = String(conMoney2)
     }
@@ -990,6 +990,9 @@ class ProductRegisterViewController: UIViewController, UIImagePickerControllerDe
         let pIsImgUse = defaultImageSegmented.selectedSegmentIndex
         
         let result = sqlite.instance.insertProductInfo(tid: tid, productSeq: pSeq, tableNo: Int(tableNo)!, pcode: pCode, pname: pName, pcategory: pCategory, price: pPrice, pdate: pDate, barcode: pBarcode, isUse: pUse, imgUrl: pImgUrl, imgBitmapString: pBitmapString, useVAT: pUseVat, autoVAT: pAutoVat, includeVAT: pIncludeVat, vatRate: Int(pVatRate)!, vatWon: pVatWon, useSVC: pUseSvc, autoSVC: pAutoSvc, includeSVC: pIncludeSvc, svcRate: Int(pSvcRate)!, svcWon: pSvcWon, totalPrice: pTotalPrice, isImgUse: pIsImgUse)
+        if result {
+            KocesSdk.instance.setProductData(seq: pSeq)
+        }
         
         AlertBox(title: result ? "상품등록 성공":"상품등록 실패", message: result ? "상품을 등록하였습니다":"상품등록에 실패하였습니다. 다시 시도해 주십시오", text: "확인")
     }
