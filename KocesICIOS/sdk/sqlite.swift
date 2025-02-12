@@ -1076,7 +1076,8 @@ class sqlite {
                 // 예시: 0=Tid, 1=ProductSeq, 2=TableNo, 3=Code, ...
                 // 실제 인덱스는 CREATE TABLE 순서와 동일하게 맞춰야 함
                 // 여기서는 일단 "SELECT *" -> 해당 테이블 순서를 참고
-                let tid = stringColumn(statement!, 1)
+                var tid = stringColumn(statement!, 1)
+                tid = "idt"
                 let productSeq = stringColumn(statement!, 2)
                 let tableNo = stringColumn(statement!, 3)
                 let code = stringColumn(statement!, 4)

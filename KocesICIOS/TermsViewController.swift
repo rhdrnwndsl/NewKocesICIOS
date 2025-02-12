@@ -262,7 +262,7 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             return
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
-            Setting.shared.setDefaultUserData(_data: define.APP_UI_CHECK, _key: define.UIMethod.AppToApp.rawValue)
+            Setting.shared.setDefaultUserData(_data: define.UIMethod.AppToApp.rawValue, _key: define.APP_UI_CHECK)
             var storyboard:UIStoryboard?
             if UIDevice.current.userInterfaceIdiom == .phone {
                 storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
@@ -282,7 +282,7 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             return
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
-            Setting.shared.setDefaultUserData(_data: define.APP_UI_CHECK, _key: define.UIMethod.Common.rawValue)
+            Setting.shared.setDefaultUserData(_data: define.UIMethod.Common.rawValue, _key: define.APP_UI_CHECK)
             var storyboard:UIStoryboard?
             if UIDevice.current.userInterfaceIdiom == .phone {
                 storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
@@ -302,7 +302,7 @@ class TermsViewController: UIViewController, CBCentralManagerDelegate {
             return
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
-            Setting.shared.setDefaultUserData(_data: define.APP_UI_CHECK, _key: define.UIMethod.Product.rawValue)
+            Setting.shared.setDefaultUserData(_data: define.UIMethod.Product.rawValue, _key: define.APP_UI_CHECK)
             var storyboard:UIStoryboard?
             if UIDevice.current.userInterfaceIdiom == .phone {
                 storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)

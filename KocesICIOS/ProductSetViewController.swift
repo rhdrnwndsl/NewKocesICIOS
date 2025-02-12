@@ -587,8 +587,10 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         DispatchQueue.global(qos: .background).async {
             var totalLineCount = 0
             do {
-                let fileContents = try String(contentsOf: fileURL, encoding: .utf8)
-                let lines = fileContents.components(separatedBy: .newlines).filter { !$0.isEmpty }
+                var fileContents = try String(contentsOf: fileURL, encoding: .utf8)
+                fileContents = fileContents.replacingOccurrences(of: "\"", with: "")
+                var lines = fileContents.components(separatedBy: "idt")
+//                let lines = fileContents.components(separatedBy: .newlines).filter { !$0.isEmpty }
                 totalLineCount = lines.count
             } catch {
                 DispatchQueue.main.async {
@@ -601,10 +603,11 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
             // CSV 파일의 실제 파싱 및 DB 삽입 처리
             do {
                 // 파일을 다시 열어서 CSV를 한 줄씩 읽습니다.
-                let fileContents = try String(contentsOf: fileURL, encoding: .utf8)
-                var lines = fileContents.components(separatedBy: .newlines)
+                var fileContents = try String(contentsOf: fileURL, encoding: .utf8)
+                fileContents = fileContents.replacingOccurrences(of: "\"", with: "")
+                var lines = fileContents.components(separatedBy: "idt")
                 // CSV 파일에 헤더가 포함되어 있다면 제거 (헤더 행이 "Tid" 등의 문자열을 포함한다고 가정. 헤더 행은 존재하지 않음)
-//                if let header = lines.first, header.contains("Tid") {
+//                if let header = lines.first, header.contains("idt") {
 //                    lines.removeFirst()
 //                }
                 
@@ -612,7 +615,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
                 
                 // 최대 1000개까지만 처리
                 for line in lines {
-                    if line.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { continue }
+//                    if line.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { continue }
                     processedLines += 1
                     if processedLines > 1000 { break }
                     

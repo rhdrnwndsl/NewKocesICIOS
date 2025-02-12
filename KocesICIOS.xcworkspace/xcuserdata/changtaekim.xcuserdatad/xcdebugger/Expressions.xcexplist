@@ -35,12 +35,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ReceiptEasyPaySwiftUI.PrintReceiptInit():ReceiptEasyPaySwiftUI.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "Tax">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "KocesSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:MacAddr:DirectData:CallbackListener:):KocesSdk.swift">
       </ContextState>
       <ContextState
          contextName = "CashCancelController.clicked_btn_cancel(_:forEvent:):CashCancelController.swift">
@@ -188,13 +183,21 @@
                value = "Secu_Key.count">
             </PersistentString>
             <PersistentString
-               value = "Utils.UInt8ArrayToStr(UInt8Array: _Secu_Key)">
+               value = "Utils.utf8toHangul(str: _Secu_Key)">
             </PersistentString>
             <PersistentString
                value = "Secu_Key">
             </PersistentString>
             <PersistentString
-               value = "Utils.utf8toHangul(str: _Secu_Key)">
+               value = "Utils.UInt8ArrayToStr(UInt8Array: _Secu_Key)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProductRegisterViewController.totalMoneyCalcu():ProductRegisterViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "transactionAmountTextField.text">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -219,14 +222,6 @@
          <PersistentStrings>
             <PersistentString
                value = "bytes[bytes.count-1]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "ProductRegisterViewController.totalMoneyCalcu():ProductRegisterViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "transactionAmountTextField.text">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -264,13 +259,13 @@
          contextName = "TabBarController.tabBar(_:didSelect:):TabBarController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "originalViewControllers[i].nibBundle">
+               value = "item.title">
             </PersistentString>
             <PersistentString
                value = "originalViewControllers[i]">
             </PersistentString>
             <PersistentString
-               value = "item.title">
+               value = "originalViewControllers[i].nibBundle">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -281,10 +276,10 @@
                value = "data[&quot;CardNo&quot;]">
             </PersistentString>
             <PersistentString
-               value = "data[&quot;PcCoupon&quot;]">
+               value = "data[&quot;PcCard&quot;]">
             </PersistentString>
             <PersistentString
-               value = "data[&quot;PcCard&quot;]">
+               value = "data[&quot;PcCoupon&quot;]">
             </PersistentString>
             <PersistentString
                value = "data[&quot;PcPoint&quot;]">
@@ -336,7 +331,7 @@
          contextName = "firmwareController.responseData(_resData:):firmwareController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "mTmIcNo">
+               value = "File_Path_Name">
             </PersistentString>
             <PersistentString
                value = "updateSize">
@@ -357,7 +352,7 @@
                value = "multipadSerialNum">
             </PersistentString>
             <PersistentString
-               value = "File_Path_Name">
+               value = "mTmIcNo">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -435,13 +430,13 @@
          contextName = "PrintSettingController.testPrint():PrintSettingController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "_p">
+               value = "Utils.UInt8ArrayToStr(UInt8Array: _p)">
             </PersistentString>
             <PersistentString
                value = "Bundle.main.url(forResource: &quot;sign1&quot;, withExtension: &quot;bmp&quot;)">
             </PersistentString>
             <PersistentString
-               value = "Utils.UInt8ArrayToStr(UInt8Array: _p)">
+               value = "_p">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -497,6 +492,14 @@
             </PersistentString>
             <PersistentString
                value = "iscancel">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProductHomeViewController.loadData():ProductHomeViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "categories">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -642,7 +645,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "KocesSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:MacAddr:DirectData:CallbackListener:):KocesSdk.swift">
+         contextName = "ReceiptEasyPaySwiftUI.PrintReceiptInit():ReceiptEasyPaySwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Tax">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

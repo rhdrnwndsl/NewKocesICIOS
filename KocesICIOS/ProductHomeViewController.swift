@@ -248,15 +248,20 @@ class ProductHomeViewController: UIViewController {
         // 예시 상품 생성
         products = KocesSdk.instance.listProducts
         // 초기 선택 카테고리는 "전체"
-        selectedCategory = categories[0]
+        selectedCategory = categories.isEmpty ? nil:categories[0]
         updateFilteredProducts()
     }
     
     func updateFilteredProducts() {
-        if selectedCategory == "전체" || selectedCategory == nil {
-            filteredProducts = products.filter { $0.category == categories[0] }
+        if categories.isEmpty {
+            selectedCategory = nil
+            filteredProducts = []
         } else {
-            filteredProducts = products.filter { $0.category == selectedCategory }
+            if selectedCategory == "전체" || selectedCategory == nil {
+                filteredProducts = products.filter { $0.category == categories[0] }
+            } else {
+                filteredProducts = products.filter { $0.category == selectedCategory }
+            }
         }
         productCollectionView.reloadData()
     }
