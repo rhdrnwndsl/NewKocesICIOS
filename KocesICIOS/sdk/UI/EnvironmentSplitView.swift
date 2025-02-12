@@ -371,11 +371,11 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     
     // MARK: - Set ViewController 
-    private lazy var networksettingVC: NetworkSettingController = {
+    private lazy var networkVC: NetworkViewController = {
         // Load Storyboard
         let storyboard = getMainStoryBoard()
         // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "NetworkSettingController") as! NetworkSettingController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "NetworkViewController") as! NetworkViewController
 
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
@@ -395,10 +395,10 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
 
-    private lazy var infoSettingVC: InfoSettingController = {
+    private lazy var infoVC: AppInfoViewController = {
         // Load Storyboard
         let storyboard = getMainStoryBoard()
-        var viewController = storyboard.instantiateViewController(withIdentifier: "InfoSettingController") as! InfoSettingController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "AppInfoViewController") as! AppInfoViewController
          
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
@@ -406,12 +406,12 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
  
-    private lazy var printSettingVC: PrintSettingController = {
+    private lazy var printVC: PrintViewController = {
         // Load Storyboard
         let storyboard = getMainStoryBoard()
 
         // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "PrintSettingController") as! PrintSettingController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "PrintViewController") as! PrintViewController
 
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
@@ -511,10 +511,10 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     private func initController() {
-        remove(asChildViewController: networksettingVC)
+        remove(asChildViewController: networkVC)
         remove(asChildViewController: devicesettingVC)
-        remove(asChildViewController: infoSettingVC)
-        remove(asChildViewController: printSettingVC)
+        remove(asChildViewController: infoVC)
+        remove(asChildViewController: printVC)
         remove(asChildViewController: storesettingVC)
         remove(asChildViewController: TaxSettingVC)
         remove(asChildViewController: ProductSettingVC)
@@ -524,10 +524,10 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     public func disapearRemove() {
-        remove(asChildViewController: networksettingVC)
+        remove(asChildViewController: networkVC)
         remove(asChildViewController: devicesettingVC)
-        remove(asChildViewController: infoSettingVC)
-        remove(asChildViewController: printSettingVC)
+        remove(asChildViewController: infoVC)
+        remove(asChildViewController: printVC)
         remove(asChildViewController: storesettingVC)
         remove(asChildViewController: TaxSettingVC)
         remove(asChildViewController: ProductSettingVC)
@@ -566,7 +566,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
             add(asChildViewController: devicesettingVC)
             break
         case EnvironmentSplit.PRINT.rawValue:
-            add(asChildViewController: printSettingVC)
+            add(asChildViewController: printVC)
             break
         case EnvironmentSplit.PRODUCT.rawValue:
             add(asChildViewController: ProductSettingVC)
@@ -574,7 +574,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
             add(asChildViewController: qnaVC)
             break
         case EnvironmentSplit.APPINFO.rawValue:
-            add(asChildViewController: infoSettingVC)
+            add(asChildViewController: infoVC)
             break
         default:
             break
@@ -594,7 +594,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
             let password = alert.textFields?[0].text
             if password?.isEmpty == false && password == "3415" {
                 initController()
-                add(asChildViewController: networksettingVC)
+                add(asChildViewController: networkVC)
             } else {
                 let alert2 = UIAlertController(title: nil, message: "비밀번호를 잘못 입력하였습니다", preferredStyle: .alert)
                 self.parentViewController?.present(alert2, animated: false, completion:{Timer.scheduledTimer(withTimeInterval: 3, repeats:false, block: {_ in

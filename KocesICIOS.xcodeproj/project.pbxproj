@@ -17,6 +17,9 @@
 		393FC7452D59D6410045269B /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 393FC7442D59D6410045269B /* SDWebImageWebPCoder */; };
 		393FC7472D5AE3CE0045269B /* CustomPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7462D5AE3CE0045269B /* CustomPresentationController.swift */; };
 		393FC7492D5B48CE0045269B /* ProductHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC7482D5B48CE0045269B /* ProductHomeViewController.swift */; };
+		393FC74B2D5C3B780045269B /* NetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC74A2D5C3B780045269B /* NetworkViewController.swift */; };
+		393FC74D2D5C3FE30045269B /* AppInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC74C2D5C3FE30045269B /* AppInfoViewController.swift */; };
+		393FC74F2D5C5A6F0045269B /* PrintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393FC74E2D5C5A6F0045269B /* PrintViewController.swift */; };
 		3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */; };
 		3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3970486E2D22847C00B2BB5C /* SettingItem.swift */; };
 		3972C63D2D4C4C9300F989AB /* cat_cash.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3972C63A2D4C4C9300F989AB /* cat_cash.gif */; };
@@ -150,6 +153,9 @@
 		393FC7412D57AD440045269B /* ProductListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListCell.swift; sourceTree = "<group>"; };
 		393FC7462D5AE3CE0045269B /* CustomPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPresentationController.swift; sourceTree = "<group>"; };
 		393FC7482D5B48CE0045269B /* ProductHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductHomeViewController.swift; sourceTree = "<group>"; };
+		393FC74A2D5C3B780045269B /* NetworkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkViewController.swift; sourceTree = "<group>"; };
+		393FC74C2D5C3FE30045269B /* AppInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoViewController.swift; sourceTree = "<group>"; };
+		393FC74E2D5C5A6F0045269B /* PrintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintViewController.swift; sourceTree = "<group>"; };
 		3970486C2D225E6B00B2BB5C /* EnvironmentSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentSplitView.swift; sourceTree = "<group>"; };
 		3970486E2D22847C00B2BB5C /* SettingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItem.swift; sourceTree = "<group>"; };
 		3972C63A2D4C4C9300F989AB /* cat_cash.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = cat_cash.gif; sourceTree = "<group>"; };
@@ -447,6 +453,9 @@
 				5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */,
 				393FC73F2D57AD100045269B /* ProductListViewController.swift */,
 				393FC7482D5B48CE0045269B /* ProductHomeViewController.swift */,
+				393FC74A2D5C3B780045269B /* NetworkViewController.swift */,
+				393FC74C2D5C3FE30045269B /* AppInfoViewController.swift */,
+				393FC74E2D5C5A6F0045269B /* PrintViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -877,6 +886,7 @@
 				3F16E945263ACD9300E57042 /* KaKaoPaySdk.swift in Sources */,
 				3B9FAEA825D0019000E736D0 /* TradeListTableCell.swift in Sources */,
 				393FC7472D5AE3CE0045269B /* CustomPresentationController.swift in Sources */,
+				393FC74F2D5C5A6F0045269B /* PrintViewController.swift in Sources */,
 				5EB7561F260BCC7700A3E252 /* StoreTabController.swift in Sources */,
 				397A06D72B297597002B90A5 /* NetworkManager.swift in Sources */,
 				5EA8688225E34ED30023289B /* TabBarController.swift in Sources */,
@@ -901,9 +911,11 @@
 				5E3883982D539A3900E14D49 /* ProductSetViewController.swift in Sources */,
 				3B9547AD259D0F8A00B24185 /* Setting.swift in Sources */,
 				393FC73C2D5199B80045269B /* ExtensionUIView.swift in Sources */,
+				393FC74D2D5C3FE30045269B /* AppInfoViewController.swift in Sources */,
 				5E4EE6A625F09F580020A5E5 /* TermsViewController.swift in Sources */,
 				3F44597726452D2A00BE16CE /* CatSdk.swift in Sources */,
 				3970486D2D225E6B00B2BB5C /* EnvironmentSplitView.swift in Sources */,
+				393FC74B2D5C3B780045269B /* NetworkViewController.swift in Sources */,
 				39FCC1662D4355DC00412E66 /* TradeTabController.swift in Sources */,
 				5EB75615260BCBF400A3E252 /* PrintSettingController.swift in Sources */,
 				5EE9F93225F53C2300DA1D40 /* KeychainItemAccessibility.swift in Sources */,
