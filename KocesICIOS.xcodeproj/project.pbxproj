@@ -93,6 +93,9 @@
 		5E38839A2D53A29D00E14D49 /* ProductRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883992D53A29D00E14D49 /* ProductRegisterViewController.swift */; };
 		5E38839C2D53A2B700E14D49 /* ProductModifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */; };
 		5E38839F2D5A28BC00E14D49 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E38839E2D5A28B400E14D49 /* Product.swift */; };
+		5E3883A12D5E2A8D00E14D49 /* PaymentSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883A02D5E2A8900E14D49 /* PaymentSettingViewController.swift */; };
+		5E3883A32D5E2CDB00E14D49 /* CatSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883A22D5E2CD500E14D49 /* CatSettingViewController.swift */; };
+		5E3883A52D5E2F7900E14D49 /* BTSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3883A42D5E2F7700E14D49 /* BTSettingViewController.swift */; };
 		5E4C092F2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4C092E2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift */; };
 		5E4EE6A625F09F580020A5E5 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4EE6A525F09F580020A5E5 /* TermsViewController.swift */; };
 		5E59D0B9261EEBA2008FFA53 /* SwiftUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E59D0B8261EEBA2008FFA53 /* SwiftUIButton.swift */; };
@@ -239,6 +242,9 @@
 		5E3883992D53A29D00E14D49 /* ProductRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRegisterViewController.swift; sourceTree = "<group>"; };
 		5E38839B2D53A2B700E14D49 /* ProductModifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModifyViewController.swift; sourceTree = "<group>"; };
 		5E38839E2D5A28B400E14D49 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		5E3883A02D5E2A8900E14D49 /* PaymentSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSettingViewController.swift; sourceTree = "<group>"; };
+		5E3883A22D5E2CD500E14D49 /* CatSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatSettingViewController.swift; sourceTree = "<group>"; };
+		5E3883A42D5E2F7700E14D49 /* BTSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSettingViewController.swift; sourceTree = "<group>"; };
 		5E4C092E2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptEasyPaySwiftUI.swift; sourceTree = "<group>"; };
 		5E4EE6A525F09F580020A5E5 /* TermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsViewController.swift; sourceTree = "<group>"; };
 		5E59D0B8261EEBA2008FFA53 /* SwiftUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIButton.swift; sourceTree = "<group>"; };
@@ -456,6 +462,9 @@
 				393FC74A2D5C3B780045269B /* NetworkViewController.swift */,
 				393FC74C2D5C3FE30045269B /* AppInfoViewController.swift */,
 				393FC74E2D5C5A6F0045269B /* PrintViewController.swift */,
+				5E3883A02D5E2A8900E14D49 /* PaymentSettingViewController.swift */,
+				5E3883A22D5E2CD500E14D49 /* CatSettingViewController.swift */,
+				5E3883A42D5E2F7700E14D49 /* BTSettingViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -883,6 +892,7 @@
 				5EB7561A260BCC3600A3E252 /* InfoSettingController.swift in Sources */,
 				393FC7492D5B48CE0045269B /* ProductHomeViewController.swift in Sources */,
 				3BB0995425AE5CC6005C877D /* define.swift in Sources */,
+				5E3883A52D5E2F7900E14D49 /* BTSettingViewController.swift in Sources */,
 				3F16E945263ACD9300E57042 /* KaKaoPaySdk.swift in Sources */,
 				3B9FAEA825D0019000E736D0 /* TradeListTableCell.swift in Sources */,
 				393FC7472D5AE3CE0045269B /* CustomPresentationController.swift in Sources */,
@@ -892,6 +902,7 @@
 				5EA8688225E34ED30023289B /* TabBarController.swift in Sources */,
 				5EBA9A77265E0969007B422F /* CatAnimationViewController.swift in Sources */,
 				5EE9F93A25F53C4900DA1D40 /* KeychainWrapper.swift in Sources */,
+				5E3883A32D5E2CDB00E14D49 /* CatSettingViewController.swift in Sources */,
 				3B9FAEA325D0016400E736D0 /* TradelistController.swift in Sources */,
 				5EAF5C1E25ED324200EDAC0D /* ImageSaveAlbum.swift in Sources */,
 				5E38839F2D5A28BC00E14D49 /* Product.swift in Sources */,
@@ -899,6 +910,7 @@
 				5E38839A2D53A29D00E14D49 /* ProductRegisterViewController.swift in Sources */,
 				3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */,
 				3B085D5925DFDB63000FE047 /* TaxController.swift in Sources */,
+				5E3883A12D5E2A8D00E14D49 /* PaymentSettingViewController.swift in Sources */,
 				5E01D85B25B1665800DB32B7 /* ListenerDelegatePattern.swift in Sources */,
 				5E11D16B25A73A4F00178305 /* NetworkSettingController.swift in Sources */,
 				3FC953C42652C2A200F3508D /* KeyboardButton.swift in Sources */,

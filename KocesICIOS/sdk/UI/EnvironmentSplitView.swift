@@ -383,11 +383,23 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
 
-    private lazy var devicesettingVC: DeviceSettingController = {
+    private lazy var btsettingVC: BTSettingViewController = {
         // Load Storyboard
         let storyboard = getMainStoryBoard()
         // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "DeviceSettingController") as! DeviceSettingController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "BTSettingViewController") as! BTSettingViewController
+
+        // Add View Controller as Child View Controller
+        self.add(asChildViewController: viewController)
+
+        return viewController
+    }()
+    
+    private lazy var catsettingVC: CatSettingViewController = {
+        // Load Storyboard
+        let storyboard = getMainStoryBoard()
+        // Instantiate View Controller
+        var viewController = storyboard.instantiateViewController(withIdentifier: "CatSettingViewController") as! CatSettingViewController
 
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
@@ -435,11 +447,11 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
    
-    private lazy var TaxSettingVC: TaxController = {
+    private lazy var PaymentSettingVC: PaymentSettingViewController = {
         let storyboard = getMainStoryBoard()
 
         // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "TaxController") as! TaxController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "PaymentSettingViewController") as! PaymentSettingViewController
 
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
@@ -512,11 +524,12 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private func initController() {
         remove(asChildViewController: networkVC)
-        remove(asChildViewController: devicesettingVC)
+        remove(asChildViewController: btsettingVC)
+        remove(asChildViewController: catsettingVC)
         remove(asChildViewController: infoVC)
         remove(asChildViewController: printVC)
         remove(asChildViewController: storesettingVC)
-        remove(asChildViewController: TaxSettingVC)
+        remove(asChildViewController: PaymentSettingVC)
         remove(asChildViewController: ProductSettingVC)
         remove(asChildViewController: qnaVC)
         
@@ -525,11 +538,12 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     public func disapearRemove() {
         remove(asChildViewController: networkVC)
-        remove(asChildViewController: devicesettingVC)
+        remove(asChildViewController: btsettingVC)
+        remove(asChildViewController: catsettingVC)
         remove(asChildViewController: infoVC)
         remove(asChildViewController: printVC)
         remove(asChildViewController: storesettingVC)
-        remove(asChildViewController: TaxSettingVC)
+        remove(asChildViewController: PaymentSettingVC)
         remove(asChildViewController: ProductSettingVC)
         remove(asChildViewController: qnaVC)
         selectedIndexPath = nil
@@ -557,13 +571,13 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
             add(asChildViewController: storesettingVC)
             break
         case EnvironmentSplit.TAX.rawValue:
-            add(asChildViewController: TaxSettingVC)
+            add(asChildViewController: PaymentSettingVC)
             break
         case EnvironmentSplit.BT.rawValue:
-            add(asChildViewController: devicesettingVC)
+            add(asChildViewController: btsettingVC)
             break
         case EnvironmentSplit.CAT.rawValue:
-            add(asChildViewController: devicesettingVC)
+            add(asChildViewController: catsettingVC)
             break
         case EnvironmentSplit.PRINT.rawValue:
             add(asChildViewController: printVC)
