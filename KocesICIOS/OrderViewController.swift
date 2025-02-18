@@ -329,15 +329,44 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: - Payment Button Actions
     @objc func cardButtonTapped() {
         print("카드결제 버튼 클릭")
+        let storyboard:UIStoryboard? = getStoryBoard()
+        let controller = (storyboard!.instantiateViewController(identifier: "CreditController")) as CreditController
+        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .formSheet
+        navController.transitioningDelegate = controller  // 또는 별도로 지정
+        self.present(navController, animated: true, completion: nil)
     }
     @objc func cashButtonTapped() {
         print("현금결제 버튼 클릭")
+        let storyboard:UIStoryboard? = getStoryBoard()
+        let controller = (storyboard!.instantiateViewController(identifier: "CashController")) as CashController
+        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .automatic
+        navController.transitioningDelegate = controller  // 또는 별도로 지정
+        self.present(navController, animated: true, completion: nil)
     }
     @objc func easyButtonTapped() {
         print("간편결제 버튼 클릭")
+        let storyboard:UIStoryboard? = getStoryBoard()
+        let controller = (storyboard!.instantiateViewController(identifier: "EasyPayController")) as EasyPayController
+        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .automatic
+        navController.transitioningDelegate = controller  // 또는 별도로 지정
+        self.present(navController, animated: true, completion: nil)
     }
     @objc func otherButtonTapped() {
         print("기타결제 버튼 클릭")
+    }
+    
+    func getStoryBoard() -> UIStoryboard? {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIStoryboard(name: "Main", bundle: Bundle.main)
+        } else {
+            return UIStoryboard(name: "pad", bundle: Bundle.main)
+        }
     }
     
     // MARK: - Total 계산 및 UI 업데이트

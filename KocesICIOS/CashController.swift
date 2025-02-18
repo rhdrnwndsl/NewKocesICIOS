@@ -6,7 +6,7 @@
 
 import UIKit
 import SwiftUI
-class CashController: UIViewController {
+class CashController: UIViewController, UIViewControllerTransitioningDelegate {
     enum Target:Int {
         case Person
         case Business
@@ -78,10 +78,54 @@ class CashController: UIViewController {
         initRes()
     }
     
-    func initRes()
-    {
-        //네비게이션 바의 배경색 rgb 변경
-        UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
+    @objc private func exitButtonTapped() {
+        // 모달로 present된 경우 dismiss 처리
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func setupNavigationBar() {
+        // 왼쪽에 커스텀 백 버튼 생성: "chevron.backward" 이미지 + "BACK" 텍스트
+        let backButton = UIButton(type: .system)
+        if let backImage = UIImage(systemName: "chevron.backward") {
+            backButton.setImage(backImage, for: .normal)
+        }
+        // 이미지와 텍스트 사이에 약간의 공백을 주기 위해 앞에 공백 추가
+        backButton.setTitle(" Back", for: .normal)
+        
+        // 아이콘과 텍스트 모두 흰색으로 설정
+        backButton.tintColor = define.txt_blue
+        backButton.setTitleColor(define.txt_blue, for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
+        // 크기 조정
+        backButton.sizeToFit()
+        backButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
+        
+        // 커스텀 버튼을 좌측 바 버튼 아이템으로 설정
+        let leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        // 중앙 타이틀 설정
+        navigationItem.title = "현금결제"
+        
+        // 네비게이션바의 배경 및 타이틀 색상 설정 (모든 텍스트 흰색, 배경 검정)
+        if let navBar = navigationController?.navigationBar {
+            navBar.barTintColor = .black
+            navBar.backgroundColor = .black
+            navBar.tintColor = .white
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
+    }
+  
+    func initRes(){
+        // 앱 UI 설정값에 따라 분기처리
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+        if appUISetting == define.UIMethod.Product.rawValue {
+            setupNavigationBar()
+        } else {
+            //네비게이션 바의 배경색 rgb 변경
+            UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
+        }
 
         mCashTxtFieldTaxFree.placeholder = "금액을 입력해주세요"
 //        mCashTxtFieldTaxFree.text = ""

@@ -159,16 +159,17 @@ class SignatureController: UIViewController {
         let button = JButton(type: .system)
         button.setTitle("취소", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 24)
-        button.addTarget(SignatureController.self, action: #selector(handleSave(_:event:)), for: .touchUpInside)
+//        button.addTarget(SignatureController.self, action: #selector(handleSave(_:event:)), for: .touchUpInside)
         return button
     }()
     
-    @objc fileprivate func handleSave(_ sender: UIButton, event: UIEvent) {
-        let touch: UITouch = (event.allTouches?.first)!
-        if (touch.tapCount != 1) {
-            // do action.
+    var isSaveBtnClicked = false
+    @objc func handleSave() {
+        guard !isSaveBtnClicked else {
+            print("이미 처리 중입니다.")
             return
         }
+        isSaveBtnClicked = true
         print("save draw")
         moneyLabel.text = ""
         countLabel.text = ""
@@ -177,6 +178,7 @@ class SignatureController: UIViewController {
         self.connectionTimeout = nil
         canvasImage = canvas.save()
         self.dismiss(animated: true) { [self] in
+            isSaveBtnClicked = false
             if canvas.touchScreen {
                 if sdk == "KaKaoPaySdk" {mKakaoSdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
                 else {   mpaySdk.Result_SignPad(signCheck: true, signImage: canvasImage)}
@@ -242,6 +244,9 @@ class SignatureController: UIViewController {
         stackView_Moneylabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         stackView_Moneylabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         stackView_Moneylabel.bottomAnchor.constraint(equalTo: stackView_btn.topAnchor, constant: -30).isActive = true
+        
+        // 버튼 액션 연결 (예시)
+        saveButton.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
     }
     
     override func loadView() {
