@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 
 class PaymentSettingViewController: UIViewController {
-    
+
     // MARK: - 상단 헤더 (결제설정, 저장 버튼)
     private let headerView = UIView()
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.text = "결제설정"
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -27,12 +27,12 @@ class PaymentSettingViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    // MARK: - ScrollView 및 Main StackView
+
+    // MARK: - ScrollView 및 Content StackView (상단 헤더 아래 스크롤)
     private let scrollView = UIScrollView()
     private let contentStackView = UIStackView()
-    
-    // MARK: - Section: 거래방식설정
+
+    // MARK: - Section 1: 거래방식설정
     private let transTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "거래방식설정"
@@ -41,7 +41,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let transUnderline = PaymentSettingViewController.createUnderline()
-    
     private let transContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -59,13 +58,13 @@ class PaymentSettingViewController: UIViewController {
     }()
     private lazy var transSegmented: UISegmentedControl = {
         let seg = UISegmentedControl(items: ["일반거래", "상품거래", "APPTOAPP"])
-        seg.selectedSegmentIndex = 0  // 기본 "일반거래"
+        seg.selectedSegmentIndex = 0 // 기본 "일반거래"
         seg.translatesAutoresizingMaskIntoConstraints = false
         seg.addTarget(self, action: #selector(transSegmentChanged(_:)), for: .valueChanged)
         return seg
     }()
-    
-    // MARK: - Section: 팝업대기시간
+
+    // MARK: - Section 2: 팝업대기시간
     private let popupTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "팝업대기시간"
@@ -74,7 +73,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let popupUnderline = PaymentSettingViewController.createUnderline()
-    
     private let popupContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -83,7 +81,6 @@ class PaymentSettingViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    // 카드대기시간 행
     private let cardWaitLabel: UILabel = {
         let label = UILabel()
         label.text = "카드대기시간"
@@ -99,7 +96,6 @@ class PaymentSettingViewController: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
-    // 서명대기시간 행
     private let signWaitLabel: UILabel = {
         let label = UILabel()
         label.text = "서명대기시간"
@@ -115,8 +111,8 @@ class PaymentSettingViewController: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
-    
-    // MARK: - Section: 부가세설정
+
+    // MARK: - Section 3: 부가세설정
     private let vatTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "부가세설정"
@@ -125,7 +121,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let vatUnderline = PaymentSettingViewController.createUnderline()
-    
     private let vatContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -193,8 +188,8 @@ class PaymentSettingViewController: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
-    
-    // MARK: - Section: 봉사료설정
+
+    // MARK: - Section 4: 봉사료설정
     private let svcTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "봉사료설정"
@@ -203,7 +198,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let svcUnderline = PaymentSettingViewController.createUnderline()
-    
     private let svcContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -271,8 +265,8 @@ class PaymentSettingViewController: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
-    
-    // MARK: - Section: 할부설정
+
+    // MARK: - Section 5: 할부설정
     private let installmentTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "할부설정"
@@ -281,7 +275,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let installmentUnderline = PaymentSettingViewController.createUnderline()
-    
     private let installmentContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -305,8 +298,8 @@ class PaymentSettingViewController: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
-    
-    // MARK: - Section: 무서명설정
+
+    // MARK: - Section 6: 무서명설정
     private let nonSignatureTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "무서명설정"
@@ -315,7 +308,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let nonSignatureUnderline = PaymentSettingViewController.createUnderline()
-    
     private let nonSignatureContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -339,8 +331,8 @@ class PaymentSettingViewController: UIViewController {
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
-    
-    // MARK: - Section: FALLBACK설정
+
+    // MARK: - Section 7: FALLBACK설정
     private let fallbackTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "FALLBACK설정"
@@ -349,7 +341,6 @@ class PaymentSettingViewController: UIViewController {
         return label
     }()
     private let fallbackUnderline = PaymentSettingViewController.createUnderline()
-    
     private let fallbackContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.systemGray5
@@ -371,8 +362,8 @@ class PaymentSettingViewController: UIViewController {
         seg.translatesAutoresizingMaskIntoConstraints = false
         return seg
     }()
-    
-    // MARK: - Section: 하단 버튼 영역
+
+    // MARK: - Header 아래 하단 버튼 영역
     private let buttonStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -393,18 +384,24 @@ class PaymentSettingViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        // 텍스트필드 delegate 설정
         nonSignatureTextField.delegate = self
         installmentMinTextField.delegate = self
         vatRateTextField.delegate = self
         svcRateTextField.delegate = self
         setupUI()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print("ScrollView content size: \(scrollView.contentSize)")
+    }
+
     // MARK: - UI Setup
     private func setupUI() {
         // 상단 헤더 (결제설정, 저장 버튼)
@@ -414,20 +411,43 @@ class PaymentSettingViewController: UIViewController {
         headerStack.alignment = .center
         headerStack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerStack)
-        
-        // scrollView와 mainStackView
+        NSLayoutConstraint.activate([
+            headerStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            headerStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            headerStack.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        finalSaveButton.addTarget(self, action: #selector(finalSaveButtonTapped), for: .touchUpInside)
+
+        // ScrollView 및 Main StackView 설정
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: headerStack.bottomAnchor, constant: 10),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
         contentStackView.axis = .vertical
         contentStackView.spacing = 20
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentStackView)
-        
-        // 각 섹션을 mainStackView에 추가
+        NSLayoutConstraint.activate([
+            contentStackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            contentStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
+        ])
+
         // Section: 거래방식설정
         contentStackView.addArrangedSubview(transTitleLabel)
         contentStackView.addArrangedSubview(transUnderline)
         contentStackView.addArrangedSubview(transContainer)
+        NSLayoutConstraint.activate([
+            transContainer.heightAnchor.constraint(equalToConstant: 40)
+        ])
         let transRow = UIStackView(arrangedSubviews: [transLabel, transSegmented])
         transRow.axis = .horizontal
         transRow.spacing = 10
@@ -435,16 +455,19 @@ class PaymentSettingViewController: UIViewController {
         transRow.translatesAutoresizingMaskIntoConstraints = false
         transContainer.addSubview(transRow)
         NSLayoutConstraint.activate([
-            transRow.topAnchor.constraint(equalTo: transContainer.topAnchor, constant: 10),
+            transRow.topAnchor.constraint(equalTo: transContainer.topAnchor, constant: 5),
             transRow.leadingAnchor.constraint(equalTo: transContainer.leadingAnchor, constant: 10),
             transRow.trailingAnchor.constraint(equalTo: transContainer.trailingAnchor, constant: -10),
-            transRow.heightAnchor.constraint(equalToConstant: 30)
+            transRow.bottomAnchor.constraint(equalTo: transContainer.bottomAnchor, constant: -5)
         ])
-        
+
         // Section: 팝업대기시간
         contentStackView.addArrangedSubview(popupTitleLabel)
         contentStackView.addArrangedSubview(popupUnderline)
         contentStackView.addArrangedSubview(popupContainer)
+        NSLayoutConstraint.activate([
+            popupContainer.heightAnchor.constraint(equalToConstant: 80)
+        ])
         let cardRow = UIStackView(arrangedSubviews: [cardWaitLabel, cardWaitTextField])
         cardRow.axis = .horizontal
         cardRow.spacing = 10
@@ -466,11 +489,14 @@ class PaymentSettingViewController: UIViewController {
             popupStack.trailingAnchor.constraint(equalTo: popupContainer.trailingAnchor, constant: -10),
             popupStack.bottomAnchor.constraint(equalTo: popupContainer.bottomAnchor, constant: -10)
         ])
-        
+
         // Section: 부가세설정
         contentStackView.addArrangedSubview(vatTitleLabel)
         contentStackView.addArrangedSubview(vatUnderline)
         contentStackView.addArrangedSubview(vatContainer)
+        NSLayoutConstraint.activate([
+            vatContainer.heightAnchor.constraint(equalToConstant: 140)
+        ])
         let vatApplyRow = UIStackView(arrangedSubviews: [vatApplyLabel, vatApplySwitch])
         vatApplyRow.axis = .horizontal
         vatApplyRow.spacing = 10
@@ -502,11 +528,14 @@ class PaymentSettingViewController: UIViewController {
             vatStack.trailingAnchor.constraint(equalTo: vatContainer.trailingAnchor, constant: -10),
             vatStack.bottomAnchor.constraint(equalTo: vatContainer.bottomAnchor, constant: -10)
         ])
-        
+
         // Section: 봉사료설정
         contentStackView.addArrangedSubview(svcTitleLabel)
         contentStackView.addArrangedSubview(svcUnderline)
         contentStackView.addArrangedSubview(svcContainer)
+        NSLayoutConstraint.activate([
+            svcContainer.heightAnchor.constraint(equalToConstant: 140)
+        ])
         let svcApplyRow = UIStackView(arrangedSubviews: [svcApplyLabel, svcApplySwitch])
         svcApplyRow.axis = .horizontal
         svcApplyRow.spacing = 10
@@ -538,11 +567,14 @@ class PaymentSettingViewController: UIViewController {
             svcStack.trailingAnchor.constraint(equalTo: svcContainer.trailingAnchor, constant: -10),
             svcStack.bottomAnchor.constraint(equalTo: svcContainer.bottomAnchor, constant: -10)
         ])
-        
+
         // Section: 할부설정
         contentStackView.addArrangedSubview(installmentTitleLabel)
         contentStackView.addArrangedSubview(installmentUnderline)
         contentStackView.addArrangedSubview(installmentContainer)
+        NSLayoutConstraint.activate([
+            installmentContainer.heightAnchor.constraint(equalToConstant: 60)
+        ])
         let installmentRow = UIStackView(arrangedSubviews: [installmentMinLabel, installmentMinTextField])
         installmentRow.axis = .horizontal
         installmentRow.spacing = 10
@@ -555,11 +587,14 @@ class PaymentSettingViewController: UIViewController {
             installmentRow.trailingAnchor.constraint(equalTo: installmentContainer.trailingAnchor, constant: -10),
             installmentRow.bottomAnchor.constraint(equalTo: installmentContainer.bottomAnchor, constant: -10)
         ])
-        
+
         // Section: 무서명설정
         contentStackView.addArrangedSubview(nonSignatureTitleLabel)
         contentStackView.addArrangedSubview(nonSignatureUnderline)
         contentStackView.addArrangedSubview(nonSignatureContainer)
+        NSLayoutConstraint.activate([
+            nonSignatureContainer.heightAnchor.constraint(equalToConstant: 60)
+        ])
         let nonSignatureRow = UIStackView(arrangedSubviews: [nonSignatureLabel, nonSignatureTextField])
         nonSignatureRow.axis = .horizontal
         nonSignatureRow.spacing = 10
@@ -572,11 +607,14 @@ class PaymentSettingViewController: UIViewController {
             nonSignatureRow.trailingAnchor.constraint(equalTo: nonSignatureContainer.trailingAnchor, constant: -10),
             nonSignatureRow.bottomAnchor.constraint(equalTo: nonSignatureContainer.bottomAnchor, constant: -10)
         ])
-        
+
         // Section: FALLBACK설정
         contentStackView.addArrangedSubview(fallbackTitleLabel)
         contentStackView.addArrangedSubview(fallbackUnderline)
         contentStackView.addArrangedSubview(fallbackContainer)
+        NSLayoutConstraint.activate([
+            fallbackContainer.heightAnchor.constraint(equalToConstant: 60)
+        ])
         let fallbackRow = UIStackView(arrangedSubviews: [fallbackUsageLabel, fallbackSegmented])
         fallbackRow.axis = .horizontal
         fallbackRow.spacing = 10
@@ -589,18 +627,19 @@ class PaymentSettingViewController: UIViewController {
             fallbackRow.trailingAnchor.constraint(equalTo: fallbackContainer.trailingAnchor, constant: -10),
             fallbackRow.bottomAnchor.constraint(equalTo: fallbackContainer.bottomAnchor, constant: -10)
         ])
-        
+
         // Section: 하단 버튼 영역
-        buttonStack.addArrangedSubview(testButton)
-        buttonStack.addArrangedSubview(saveButton)
         contentStackView.addArrangedSubview(buttonStack)
-        testButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        saveButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        buttonStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        buttonStack.addArrangedSubview(testButton)
+        buttonStack.addArrangedSubview(finalSaveButton)
+        testButton.addTarget(self, action: #selector(testButtonTapped), for: .touchUpInside)
+        finalSaveButton.addTarget(self, action: #selector(finalSaveButtonTapped), for: .touchUpInside)
     }
-    
+
     // MARK: - Action Methods
     @objc func transSegmentChanged(_ sender: UISegmentedControl) {
-        // 거래방식이 "상품거래" 또는 "APPTOAPP"인 경우 부가세설정, 봉사료설정 숨김
+        // 거래방식이 "상품거래" 또는 "APPTOAPP"인 경우 부가세설정, 봉사료설정을 숨김
         if sender.selectedSegmentIndex == 0 {
             vatContainer.isHidden = false
             svcContainer.isHidden = false
@@ -609,11 +648,11 @@ class PaymentSettingViewController: UIViewController {
             svcContainer.isHidden = true
         }
     }
-    
+
     @objc func vatSwitchChanged(_ sender: UISwitch) {
         updateVATVisibility()
     }
-    
+
     func updateVATVisibility() {
         let show = vatApplySwitch.isOn
         vatModeLabel.isHidden = !show
@@ -623,11 +662,11 @@ class PaymentSettingViewController: UIViewController {
         vatRateLabel.isHidden = !show
         vatRateTextField.isHidden = !show
     }
-    
+
     @objc func svcSwitchChanged(_ sender: UISwitch) {
         updateSVCVisibility()
     }
-    
+
     func updateSVCVisibility() {
         let show = svcApplySwitch.isOn
         svcModeLabel.isHidden = !show
@@ -637,23 +676,23 @@ class PaymentSettingViewController: UIViewController {
         svcRateLabel.isHidden = !show
         svcRateTextField.isHidden = !show
     }
-    
+
     @objc func testButtonTapped() {
         print("테스트 버튼 클릭")
     }
-    
-    @objc func saveButtonTapped() {
-        print("저장 버튼 클릭")
+
+    @objc func finalSaveButtonTapped() {
+        print("최종 저장 버튼 클릭 - 결제설정 저장")
         // 저장 로직 구현
     }
 }
 
 // MARK: - UITextFieldDelegate
 extension PaymentSettingViewController: UITextFieldDelegate {
-    // 필요 시 구현
+    // 필요한 경우 구현
 }
 
-// Helper: Underline 생성
+// MARK: - Helper: Underline 생성 및 Row 생성
 extension PaymentSettingViewController {
     static func createUnderline() -> UIView {
         let view = UIView()
@@ -661,5 +700,43 @@ extension PaymentSettingViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    static func createRowLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+    
+    static func createRowValueLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+    
+    static func createInputRow(labelText: String, valueText: String) -> UIStackView {
+        let label = createRowLabel(text: labelText)
+        let valueLabel = createRowValueLabel(text: valueText)
+        let stack = UIStackView(arrangedSubviews: [label, valueLabel])
+        stack.axis = .horizontal
+        stack.spacing = 10
+        stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }
+    
+    static func createActionButton(title: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.1)
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
 }
-
