@@ -418,12 +418,12 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         return viewController
     }()
  
-    private lazy var printVC: PrintSettingController = {
+    private lazy var printVC: PrintViewController = {
         // Load Storyboard
         let storyboard = getMainStoryBoard()
 
         // Instantiate View Controller
-        var viewController = storyboard.instantiateViewController(withIdentifier: "PrintSettingController") as! PrintSettingController
+        var viewController = storyboard.instantiateViewController(withIdentifier: "PrintViewController") as! PrintViewController
 
         // Add View Controller as Child View Controller
         self.add(asChildViewController: viewController)
