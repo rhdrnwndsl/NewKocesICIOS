@@ -37,6 +37,8 @@
 		398C70882D1A759A00630612 /* NumberKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C70872D1A759A00630612 /* NumberKeyButton.swift */; };
 		398C708A2D1A75C400630612 /* NumberPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C70892D1A75C400630612 /* NumberPad.swift */; };
 		3990D9192B15B54A00699930 /* Aes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3990D9182B15B54A00699930 /* Aes.swift */; };
+		39A84E432D6316E90014C59A /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A84E422D6316E90014C59A /* OrderViewController.swift */; };
+		39A84E452D632B490014C59A /* BasketItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A84E442D632B490014C59A /* BasketItem.swift */; };
 		39AC031B2BB53121005AD71F /* sign2.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 39AC03172BB53120005AD71F /* sign2.bmp */; };
 		39AC031C2BB53121005AD71F /* sign1.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 39AC03182BB53121005AD71F /* sign1.bmp */; };
 		39AC031D2BB53121005AD71F /* sign3.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 39AC03192BB53121005AD71F /* sign3.bmp */; };
@@ -176,6 +178,8 @@
 		398C70872D1A759A00630612 /* NumberKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberKeyButton.swift; sourceTree = "<group>"; };
 		398C70892D1A75C400630612 /* NumberPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPad.swift; sourceTree = "<group>"; };
 		3990D9182B15B54A00699930 /* Aes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aes.swift; sourceTree = "<group>"; };
+		39A84E422D6316E90014C59A /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
+		39A84E442D632B490014C59A /* BasketItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketItem.swift; sourceTree = "<group>"; };
 		39AC03172BB53120005AD71F /* sign2.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = sign2.bmp; sourceTree = "<group>"; };
 		39AC03182BB53121005AD71F /* sign1.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = sign1.bmp; sourceTree = "<group>"; };
 		39AC03192BB53121005AD71F /* sign3.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = sign3.bmp; sourceTree = "<group>"; };
@@ -378,6 +382,7 @@
 				393FC73B2D5199B80045269B /* ExtensionUIView.swift */,
 				393FC7412D57AD440045269B /* ProductListCell.swift */,
 				393FC7462D5AE3CE0045269B /* CustomPresentationController.swift */,
+				39A84E442D632B490014C59A /* BasketItem.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -465,6 +470,7 @@
 				5E3883A02D5E2A8900E14D49 /* PaymentSettingViewController.swift */,
 				5E3883A22D5E2CD500E14D49 /* CatSettingViewController.swift */,
 				5E3883A42D5E2F7700E14D49 /* BTSettingViewController.swift */,
+				39A84E422D6316E90014C59A /* OrderViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -858,6 +864,7 @@
 				5EC6FA8726B1691300D59DCE /* CashCancelController.swift in Sources */,
 				3BD895292595A4DE00083682 /* MainViewController.swift in Sources */,
 				3B845FBA25AD9D210077FF16 /* KocesSdk.swift in Sources */,
+				39A84E432D6316E90014C59A /* OrderViewController.swift in Sources */,
 				3FF9E3E5268DB5AF008188AC /* TaxCalculator.swift in Sources */,
 				5E4C092F2640329D00429D3A /* ReceiptEasyPaySwiftUI.swift in Sources */,
 				3B9BD6D025F6570D00549B94 /* BMImage.swift in Sources */,
@@ -906,6 +913,7 @@
 				3B9FAEA325D0016400E736D0 /* TradelistController.swift in Sources */,
 				5EAF5C1E25ED324200EDAC0D /* ImageSaveAlbum.swift in Sources */,
 				5E38839F2D5A28BC00E14D49 /* Product.swift in Sources */,
+				39A84E452D632B490014C59A /* BasketItem.swift in Sources */,
 				5ED5B16826148EF500EFF7A2 /* CustomAlertController.swift in Sources */,
 				5E38839A2D53A29D00E14D49 /* ProductRegisterViewController.swift in Sources */,
 				3970486F2D22847C00B2BB5C /* SettingItem.swift in Sources */,

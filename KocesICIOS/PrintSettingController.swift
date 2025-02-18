@@ -280,12 +280,11 @@ class PrintSettingController:UIViewController {
         let 엔터 = define.PENTER
 //        var Contents:[String] = Array()
         
-        let _p:[UInt8] = [
-        0x32, 0x30, 0x32, 0x34, 0x31, 0x32, 0x32, 0x37, 0x39, 0x35, 0x31, 0x30, 0x35, 0xE2, 0x80, 0xAF, 0x41, 0x4D
-        ]
+//        let _p:[UInt8] = [
+//        0x32, 0x30, 0x32, 0x34, 0x31, 0x32, 0x32, 0x37, 0x39, 0x35, 0x31, 0x30, 0x35, 0xE2, 0x80, 0xAF, 0x41, 0x4D
+//        ]
         
         var str = (Utils.PrintCenter(Center: "< 테 스 트 >") + define.PENTER)
-        str += Utils.UInt8ArrayToStr(UInt8Array: _p) + 엔터
         str += 오른쪽 + " 한국신용카드결제(주) " + 엔터
         str += dddd(_bold: " 신용매출 ") + 엔터
         str += Setting.shared.getDefaultUserData(_key: define.STORE_NAME) + 엔터

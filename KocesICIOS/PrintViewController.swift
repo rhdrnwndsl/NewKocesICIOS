@@ -671,14 +671,13 @@ class PrintViewController: UIViewController, UITextFieldDelegate, UITextViewDele
         let 오른쪽 = define.PRIGHT
         let 엔터 = define.PENTER
  
-        let _p:[UInt8] = [
-        0x32, 0x30, 0x32, 0x34, 0x31, 0x32, 0x32, 0x37, 0x39, 0x35, 0x31, 0x30, 0x35, 0xE2, 0x80, 0xAF, 0x41, 0x4D
-        ]
+//        let _p:[UInt8] = [
+//        0x32, 0x30, 0x32, 0x34, 0x31, 0x32, 0x32, 0x37, 0x39, 0x35, 0x31, 0x30, 0x35, 0xE2, 0x80, 0xAF, 0x41, 0x4D
+//        ]
         
-        var str = (Utils.PrintCenter(Center: " 테 스 트 ") + define.PENTER)
-        str += Utils.UInt8ArrayToStr(UInt8Array: _p) + 엔터
+        var str = (Utils.PrintCenter(Center: "< 테 스 트 >") + define.PENTER)
         str += 오른쪽 + " 한국신용카드결제(주) " + 엔터
-//        str +=  define.PBOLDSTART + " 신용매출 " + define.PBOLDEND + 엔터
+        str += define.PBOLDSTART + " 신용매출 " + define.PBOLDEND + 엔터
         str += Setting.shared.getDefaultUserData(_key: define.STORE_NAME) + 엔터
         str += Setting.shared.getDefaultUserData(_key: define.STORE_OWNER) + 엔터
         str += "사업자 번호 :" + Setting.shared.getDefaultUserData(_key: define.STORE_BSN) + 엔터

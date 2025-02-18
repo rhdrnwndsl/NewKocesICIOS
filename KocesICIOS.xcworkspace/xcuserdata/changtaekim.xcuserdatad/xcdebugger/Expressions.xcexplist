@@ -35,7 +35,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "KocesSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:MacAddr:DirectData:CallbackListener:):KocesSdk.swift">
+         contextName = "ReceiptEasyPaySwiftUI.PrintReceiptInit():ReceiptEasyPaySwiftUI.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Tax">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "CashCancelController.clicked_btn_cancel(_:forEvent:):CashCancelController.swift">
@@ -112,6 +117,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "OrderViewController.tableView(_:cellForRowAt:):OrderViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "selectedProducts.values.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "sqlite.DBUpdate():sqlite.swift">
          <PersistentStrings>
             <PersistentString
@@ -183,13 +196,13 @@
                value = "Secu_Key.count">
             </PersistentString>
             <PersistentString
-               value = "Utils.utf8toHangul(str: _Secu_Key)">
+               value = "Utils.UInt8ArrayToStr(UInt8Array: _Secu_Key)">
             </PersistentString>
             <PersistentString
                value = "Secu_Key">
             </PersistentString>
             <PersistentString
-               value = "Utils.UInt8ArrayToStr(UInt8Array: _Secu_Key)">
+               value = "Utils.utf8toHangul(str: _Secu_Key)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -259,13 +272,13 @@
          contextName = "TabBarController.tabBar(_:didSelect:):TabBarController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "item.title">
+               value = "originalViewControllers[i].nibBundle">
             </PersistentString>
             <PersistentString
                value = "originalViewControllers[i]">
             </PersistentString>
             <PersistentString
-               value = "originalViewControllers[i].nibBundle">
+               value = "item.title">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -276,10 +289,10 @@
                value = "data[&quot;CardNo&quot;]">
             </PersistentString>
             <PersistentString
-               value = "data[&quot;PcCard&quot;]">
+               value = "data[&quot;PcCoupon&quot;]">
             </PersistentString>
             <PersistentString
-               value = "data[&quot;PcCoupon&quot;]">
+               value = "data[&quot;PcCard&quot;]">
             </PersistentString>
             <PersistentString
                value = "data[&quot;PcPoint&quot;]">
@@ -331,7 +344,7 @@
          contextName = "firmwareController.responseData(_resData:):firmwareController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "File_Path_Name">
+               value = "mTmIcNo">
             </PersistentString>
             <PersistentString
                value = "updateSize">
@@ -352,7 +365,7 @@
                value = "multipadSerialNum">
             </PersistentString>
             <PersistentString
-               value = "mTmIcNo">
+               value = "File_Path_Name">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -430,13 +443,13 @@
          contextName = "PrintSettingController.testPrint():PrintSettingController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Utils.UInt8ArrayToStr(UInt8Array: _p)">
+               value = "_p">
             </PersistentString>
             <PersistentString
                value = "Bundle.main.url(forResource: &quot;sign1&quot;, withExtension: &quot;bmp&quot;)">
             </PersistentString>
             <PersistentString
-               value = "_p">
+               value = "Utils.UInt8ArrayToStr(UInt8Array: _p)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -645,12 +658,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ReceiptEasyPaySwiftUI.PrintReceiptInit():ReceiptEasyPaySwiftUI.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "Tax">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "KocesSdk.StoreDownload(Command:Tid:Date:PosVer:Etc:Length:PosCheckData:BSN:Serial:PosData:MacAddr:DirectData:CallbackListener:):KocesSdk.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

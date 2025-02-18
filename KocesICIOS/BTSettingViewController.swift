@@ -395,7 +395,7 @@ class BTSettingViewController: UIViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
-extension BTSettingViewController: UITextFieldDelegate {
-    // 필요한 텍스트필드 delegate 메서드 구현
-}
+//// MARK: - UITextFieldDelegate
+//extension BTSettingViewController: UITextFieldDelegate {
+//    // 필요한 텍스트필드 delegate 메서드 구현
+//}

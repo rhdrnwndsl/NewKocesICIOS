@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-// 장바구니 항목 모델
-struct BasketItem {
-    var product: Product
-    var quantity: Int
-}
 
 // MARK: - ProductHomeViewController
 
@@ -345,14 +340,27 @@ class ProductHomeViewController: UIViewController {
         let totalPayment = basket.values.reduce(0) { $0 + ($1.product.price * $1.quantity) }
         print("결제금액: \(totalPayment)")
         // 결제 버튼 클릭 시 다음 화면으로 전환(로그 남김)
+        var storyboard:UIStoryboard? = getStoryBoard()
+        let controller = (storyboard!.instantiateViewController(identifier: "OrderViewController")) as OrderViewController
+        controller.basketItems = Array(self.basket.values)
+        controller.navigationItem.title = "주문결제"    //2021-08-19 수정사항 169.B
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func updateBasketSummary() {
         let totalItems = basket.count
         let totalQuantity = basket.values.reduce(0) { $0 + $1.quantity }
-        let totalPayment = basket.values.reduce(0) { $0 + ($1.product.price * $1.quantity) }
+        let totalPayment = basket.values.reduce(0) { $0 + ((Int($1.product.totalPrice) ?? 0) * $1.quantity) }
         basketSummaryLabel.text = "상품 수: \(totalItems), 수량 합계: \(totalQuantity)"
         paymentButton.setTitle("결제금액: \(totalPayment)", for: .normal)
+    }
+    
+    func getStoryBoard() -> UIStoryboard? {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIStoryboard(name: "Main", bundle: Bundle.main)
+        } else {
+            return UIStoryboard(name: "pad", bundle: Bundle.main)
+        }
     }
 }
 
