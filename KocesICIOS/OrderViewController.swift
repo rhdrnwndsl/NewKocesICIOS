@@ -9,17 +9,43 @@ import Foundation
 import UIKit
 import SwiftUI
 
-class OrderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PayResultDelegate, UITabBarControllerDelegate {
+class OrderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PayResultDelegate, UITabBarControllerDelegate, CatResultDelegate {
+    func onResult(CatState _state: payStatus, Result _message: Dictionary<String, String>) {
+        Utils.CatAnimationViewInitClear()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if _state == .OK {
+                let alertController = UIAlertController(title: "[주문거래]", message: "거래가 정상적으로 완료되었습니다", preferredStyle: UIAlertController.Style.alert)
+                let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default){_ in
+                    self.tabBarController?.delegate = self
+                }
+                alertController.addAction(okButton)
+                self.present(alertController, animated: true, completion: nil)
+            } else {
+        
+                var _msg = _message["Message"] ?? _message["ERROR"] ?? "거래실패"
+                if _msg.replacingOccurrences(of: " ", with: "") == "" {
+                    _msg = "응답 데이터 이상"
+                }
+                let alertController = UIAlertController(title: "[주문거래]", message: _msg, preferredStyle: UIAlertController.Style.alert)
+                let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default){_ in
+                    self.tabBarController?.delegate = self
+                }
+                alertController.addAction(okButton)
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+    
     func onPaymentResult(payTitle _status: payStatus, payResult _message: Dictionary<String, String>) {
         // 카드애니메이션뷰 컨트롤러가 여전히 떠있으니 해당 뷰를 지운다
         Utils.CardAnimationViewControllerClear()
         
         var _totalString:String = ""    //메세지
-        var _title:String = "[카드거래]"          //타이틀
+        var _title:String = "[주문거래]"          //타이틀
         var keyCount:Int = 0
         switch _message["TrdType"] {
         case Command.CMD_IC_OK_RES:
-            _title = "[카드거래]"
+            _title = "[주문거래]"
             for (key,value) in _message {
                 if _message.count - 1 == keyCount {
                     _totalString += key + "=" + value
@@ -31,7 +57,7 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
             break
         case Command.CMD_IC_CANCEL_RES:
-            _title = "[카드거래]"
+            _title = "[주문거래]"
             for (key,value) in _message {
                 if _message.count - 1 == keyCount {
                     _totalString += key + "=" + value
@@ -401,31 +427,81 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     // MARK: - Payment Button Actions
     @objc func cardButtonTapped() {
         print("카드결제 버튼 클릭")
-        let storyboard:UIStoryboard? = getStoryBoard()
-//        let controller = (storyboard!.instantiateViewController(identifier: "CreditController")) as CreditController
-        
-        guard let controller = storyboard?.instantiateViewController(withIdentifier: "CreditController") as? CreditController else { return }
+        let _deviceCheck:Bool = Utils.getIsCAT() ? false:true
+        let total = _deviceCheck ? Int(taxResult["Money"] ?? 0) + Int(taxResult["VAT"] ?? 0) + Int(taxResult["SVC"] ?? 0):Int(taxResult["Money"] ?? 0) + Int(taxResult["VAT"] ?? 0) + Int(taxResult["SVC"] ?? 0) + Int(taxResult["TXF"] ?? 0)
+        if total >= Int(Setting.shared.getDefaultUserData(_key: define.INSTALLMENT_MINVALUE))! {
+            // 할부거래를 하러 들어간다
+            let storyboard:UIStoryboard? = getStoryBoard()
+            guard let controller = storyboard?.instantiateViewController(withIdentifier: "CreditController") as? CreditController else { return }
+            controller.mTotalMoney = total
+                  // B가 dismiss될 때 호출될 클로저 설정
+            controller.onDismiss = { [self] tid, money, tax, serviceCharge, txf, installment, cancelInfo, mchData, kocesTradeCode, compCode, mStoreName, mStoreAddr, mStoreNumber, mStorePhone, mStoreOwner in
+                // 전달받은 값을 사용하여 필요한 작업을 수행합니다.
+                print("TID: \(tid)")
+                print("Money: \(money)")
+                print("Tax: \(tax)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                    if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+                        self.catlistener = CatResult()
+                        self.catlistener?.delegate = self
+                        self.mCatSdk.PayCredit(TID: tid, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(installment), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: mStoreName, StoreAddr: mStoreAddr, StoreNumber: mStoreNumber, StorePhone: mStorePhone, StoreOwner: mStoreOwner,CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                    } else {
+                        self.paylistener = payResult()
+                        self.paylistener?.delegate = self
+                        // ... 나머지 값들 처리
+                        self.mpaySdk.CreditIC(Tid: tid, Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: String(installment), OriDate: "", CancenInfo: cancelInfo, mchData: mchData, KocesTreadeCode: kocesTradeCode, CompCode: compCode, SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+                    }
+                  
+                }
               
-              // B가 dismiss될 때 호출될 클로저 설정
-        controller.onDismiss = { [self] tid, money, tax, serviceCharge, txf, installment, cancelInfo, mchData, kocesTradeCode, compCode, mStoreName, mStoreAddr, mStoreNumber, mStorePhone, mStoreOwner in
-            // 전달받은 값을 사용하여 필요한 작업을 수행합니다.
-            print("TID: \(tid)")
-            print("Money: \(money)")
-            print("Tax: \(tax)")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.paylistener = payResult()
-                paylistener?.delegate = self
-                // ... 나머지 값들 처리
-                mpaySdk.CreditIC(Tid: tid, Money: money, Tax: tax, ServiceCharge: serviceCharge, TaxFree: txf, InstallMent: installment, OriDate: "", CancenInfo: cancelInfo, mchData: mchData, KocesTreadeCode: kocesTradeCode, CompCode: compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
             }
-          
+       
+            // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
+            let navController = UINavigationController(rootViewController: controller)
+            navController.modalPresentationStyle = .formSheet
+            navController.transitioningDelegate = controller  // 또는 별도로 지정
+            self.present(navController, animated: true, completion: nil)
+        } else {
+            // 그냥 여기서 거래를 진행한다
+            if Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" {
+                TidAlertBox(title: "거래하실 가맹점을 선택해 주세요") { [self](BSN,TID,NUM,PHONE,OWNER,ADDR) in
+                    if TID == "" {
+                        AlertBox(title: "거래를 종료합니다.", message: "", text: "확인")
+                        return
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                        if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+                            self.catlistener = CatResult()
+                            self.catlistener?.delegate = self
+                            self.mCatSdk.PayCredit(TID: TID, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                        } else {
+                            self.paylistener = payResult()
+                            self.paylistener?.delegate = self
+                            // ... 나머지 값들 처리
+                            self.mpaySdk.CreditIC(Tid: TID, Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: "0", OriDate: "", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER)
+                        }
+                      
+                    }
+                }
+                return
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                    if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+                        self.catlistener = CatResult()
+                        self.catlistener?.delegate = self
+                        self.mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                    } else {
+                        self.paylistener = payResult()
+                        self.paylistener?.delegate = self
+                        // ... 나머지 값들 처리
+                        self.mpaySdk.CreditIC(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: "0", OriDate: "", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+                    }
+                  
+                }
+            }
+            
         }
-   
-        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
-        let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .formSheet
-        navController.transitioningDelegate = controller  // 또는 별도로 지정
-        self.present(navController, animated: true, completion: nil)
+        
     }
     @objc func cashButtonTapped() {
         print("현금결제 버튼 클릭")
@@ -569,6 +645,432 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
         let item = basketItems[indexPath.row]
         cell.textLabel?.text = "\(item.product.name)    \(item.quantity)    \(item.product.price)원"
         return cell
+    }
+    
+    func AlertBox(title : String, message : String, text : String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: text, style: UIAlertAction.Style.cancel, handler: nil)
+        alertController.addAction(okButton)
+        return self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func TidAlertBox(title _title:String, callback: @escaping (_ BSN:String, _ TID:String, _ NUM:String, _ PHONE:String, _ OWNER:String, _ ADDR:String)->Void) {
+
+        let alertController = UIAlertController(title: _title, message: nil, preferredStyle: .alert)
+        
+        let widthConstraints = alertController.view.constraints.filter({ return $0.firstAttribute == .width })
+        alertController.view.removeConstraints(widthConstraints)
+        // Here you can enter any width that you want
+        let newWidth = UIScreen.main.bounds.width * 0.90
+        // Adding constraint for alert base view
+        let widthConstraint = NSLayoutConstraint(item: alertController.view,
+                                                 attribute: .width,
+                                                 relatedBy: .equal,
+                                                 toItem: nil,
+                                                 attribute: .notAnAttribute,
+                                                 multiplier: 1,
+                                                 constant: newWidth)
+        alertController.view.addConstraint(widthConstraint)
+        let firstContainer = alertController.view.subviews[0]
+        // Finding first child width constraint
+        let constraint = firstContainer.constraints.filter({ return $0.firstAttribute == .width && $0.secondItem == nil })
+        firstContainer.removeConstraints(constraint)
+        // And replacing with new constraint equal to alert.view width constraint that we setup earlier
+        alertController.view.addConstraint(NSLayoutConstraint(item: firstContainer,
+                                                        attribute: .width,
+                                                        relatedBy: .equal,
+                                                        toItem: alertController.view,
+                                                        attribute: .width,
+                                                        multiplier: 1.0,
+                                                        constant: 0))
+        // Same for the second child with width constraint with 998 priority
+        let innerBackground = firstContainer.subviews[0]
+        let innerConstraints = innerBackground.constraints.filter({ return $0.firstAttribute == .width && $0.secondItem == nil })
+        innerBackground.removeConstraints(innerConstraints)
+        firstContainer.addConstraint(NSLayoutConstraint(item: innerBackground,
+                                                        attribute: .width,
+                                                        relatedBy: .equal,
+                                                        toItem: firstContainer,
+                                                        attribute: .width,
+                                                        multiplier: 1.0,
+                                                        constant: 0))
+
+        var _tid0:String = ""
+        var _store0:String = ""
+        var _num0:String = ""
+        var _phone0:String = ""
+        var _owner0:String = ""
+        var _addr0:String = ""
+        var _tid1:String = ""
+        var _store1:String = ""
+        var _num1:String = ""
+        var _phone1:String = ""
+        var _owner1:String = ""
+        var _addr1:String = ""
+        var _tid2:String = ""
+        var _store2:String = ""
+        var _num2:String = ""
+        var _phone2:String = ""
+        var _owner2:String = ""
+        var _addr2:String = ""
+        var _tid3:String = ""
+        var _store3:String = ""
+        var _num3:String = ""
+        var _phone3:String = ""
+        var _owner3:String = ""
+        var _addr3:String = ""
+        var _tid4:String = ""
+        var _store4:String = ""
+        var _num4:String = ""
+        var _phone4:String = ""
+        var _owner4:String = ""
+        var _addr4:String = ""
+        var _tid5:String = ""
+        var _store5:String = ""
+        var _num5:String = ""
+        var _phone5:String = ""
+        var _owner5:String = ""
+        var _addr5:String = ""
+        
+        var _tid6:String = ""
+        var _store6:String = ""
+        var _num6:String = ""
+        var _phone6:String = ""
+        var _owner6:String = ""
+        var _addr6:String = ""
+        
+        var _tid7:String = ""
+        var _store7:String = ""
+        var _num7:String = ""
+        var _phone7:String = ""
+        var _owner7:String = ""
+        var _addr7:String = ""
+        
+        var _tid8:String = ""
+        var _store8:String = ""
+        var _num8:String = ""
+        var _phone8:String = ""
+        var _owner8:String = ""
+        var _addr8:String = ""
+        
+        var _tid9:String = ""
+        var _store9:String = ""
+        var _num9:String = ""
+        var _phone9:String = ""
+        var _owner9:String = ""
+        var _addr9:String = ""
+        
+        var _tid10:String = ""
+        var _store10:String = ""
+        var _num10:String = ""
+        var _phone10:String = ""
+        var _owner10:String = ""
+        var _addr10:String = ""
+        for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
+            if key.contains(define.STORE_TID) {
+                if Utils.getIsCAT() {
+                    if key == define.CAT_STORE_TID {
+                        if (value as! String) != "" {
+                            _tid0 = value as! String
+                            _store0 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME) != "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "0").replacingOccurrences(of: " ", with: "")
+                            _num0 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN) != "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "0").replacingOccurrences(of: " ", with: "")
+                            _phone0 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE) != "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "0").replacingOccurrences(of: " ", with: "")
+                            _owner0 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER) != "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "0").replacingOccurrences(of: " ", with: "")
+                            _addr0 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR) != "" ? Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR):Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "0")
+                            
+                        }
+                    } else if key == define.CAT_STORE_TID + "1" {
+                        if (value as! String) != "" {
+                            _tid1 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store1 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "1").replacingOccurrences(of: " ", with: "")
+                            _num1 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "1").replacingOccurrences(of: " ", with: "")
+                            _phone1 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "1").replacingOccurrences(of: " ", with: "")
+                            _owner1 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "1").replacingOccurrences(of: " ", with: "")
+                            _addr1 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "1")
+                        }
+                    } else if key == define.CAT_STORE_TID + "2" {
+                        if (value as! String) != "" {
+                            _tid2 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store2 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "2").replacingOccurrences(of: " ", with: "")
+                            _num2 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "2").replacingOccurrences(of: " ", with: "")
+                            _phone2 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "2").replacingOccurrences(of: " ", with: "")
+                            _owner2 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "2").replacingOccurrences(of: " ", with: "")
+                            _addr2 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "2")
+                        }
+                    } else if key == define.CAT_STORE_TID + "3" {
+                        if (value as! String) != "" {
+                            _tid3 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store3 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "3").replacingOccurrences(of: " ", with: "")
+                            _num3 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "3").replacingOccurrences(of: " ", with: "")
+                            _phone3 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "3").replacingOccurrences(of: " ", with: "")
+                            _owner3 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "3").replacingOccurrences(of: " ", with: "")
+                            _addr3 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "3")
+                        }
+                    } else if key == define.CAT_STORE_TID + "4" {
+                        if (value as! String) != "" {
+                            _tid4 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store4 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "4").replacingOccurrences(of: " ", with: "")
+                            _num4 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "4").replacingOccurrences(of: " ", with: "")
+                            _phone4 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "4").replacingOccurrences(of: " ", with: "")
+                            _owner4 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "4").replacingOccurrences(of: " ", with: "")
+                            _addr4 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "4")
+                        }
+                    } else if key == define.CAT_STORE_TID + "5" {
+                        if (value as! String) != "" {
+                            _tid5 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store5 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "5").replacingOccurrences(of: " ", with: "")
+                            _num5 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "5").replacingOccurrences(of: " ", with: "")
+                            _phone5 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "5").replacingOccurrences(of: " ", with: "")
+                            _owner5 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "5").replacingOccurrences(of: " ", with: "")
+                            _addr5 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "5")
+                        }
+                    } else if key == define.CAT_STORE_TID + "6" {
+                        if (value as! String) != "" {
+                            _tid6 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store6 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "6").replacingOccurrences(of: " ", with: "")
+                            _num6 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "6").replacingOccurrences(of: " ", with: "")
+                            _phone6 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "6").replacingOccurrences(of: " ", with: "")
+                            _owner6 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "6").replacingOccurrences(of: " ", with: "")
+                            _addr6 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "6")
+                        }
+                    } else if key == define.CAT_STORE_TID + "7" {
+                        if (value as! String) != "" {
+                            _tid7 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store7 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "7").replacingOccurrences(of: " ", with: "")
+                            _num7 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "7").replacingOccurrences(of: " ", with: "")
+                            _phone7 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "7").replacingOccurrences(of: " ", with: "")
+                            _owner7 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "7").replacingOccurrences(of: " ", with: "")
+                            _addr7 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "7")
+                        }
+                    } else if key == define.CAT_STORE_TID + "8" {
+                        if (value as! String) != "" {
+                            _tid8 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store8 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "8").replacingOccurrences(of: " ", with: "")
+                            _num8 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "8").replacingOccurrences(of: " ", with: "")
+                            _phone8 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "8").replacingOccurrences(of: " ", with: "")
+                            _owner8 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "8").replacingOccurrences(of: " ", with: "")
+                            _addr8 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "8")
+                        }
+                    } else if key == define.CAT_STORE_TID + "9" {
+                        if (value as! String) != "" {
+                            _tid9 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store9 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "9").replacingOccurrences(of: " ", with: "")
+                            _num9 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "9").replacingOccurrences(of: " ", with: "")
+                            _phone9 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "9").replacingOccurrences(of: " ", with: "")
+                            _owner9 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "9").replacingOccurrences(of: " ", with: "")
+                            _addr9 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "9")
+                        }
+                    } else if key == define.CAT_STORE_TID + "10" {
+                        if (value as! String) != "" {
+                            _tid10 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store10 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME + "10").replacingOccurrences(of: " ", with: "")
+                            _num10 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN + "10").replacingOccurrences(of: " ", with: "")
+                            _phone10 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE + "10").replacingOccurrences(of: " ", with: "")
+                            _owner10 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER + "10").replacingOccurrences(of: " ", with: "")
+                            _addr10 = Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR + "10")
+                        }
+                    }
+                } else {
+                    if key == define.STORE_TID {
+                        if (value as! String) != "" {
+                            _tid0 = value as! String
+                            _store0 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_NAME).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "0").replacingOccurrences(of: " ", with: "")
+                            _num0 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_BSN).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "0").replacingOccurrences(of: " ", with: "")
+                            _phone0 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_PHONE).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "0").replacingOccurrences(of: " ", with: "")
+                            _owner0 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_OWNER).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "0").replacingOccurrences(of: " ", with: "")
+                            _addr0 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_ADDR):Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "0")
+                        }
+                    } else if key == define.STORE_TID + "1" {
+                        if (value as! String) != "" {
+                            _tid1 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store1 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "1").replacingOccurrences(of: " ", with: "")
+                            _num1 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "1").replacingOccurrences(of: " ", with: "")
+                            _phone1 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "1").replacingOccurrences(of: " ", with: "")
+                            _owner1 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "1").replacingOccurrences(of: " ", with: "")
+                            _addr1 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "1")
+                        }
+                    } else if key == define.STORE_TID + "2" {
+                        if (value as! String) != "" {
+                            _tid2 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store2 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "2").replacingOccurrences(of: " ", with: "")
+                            _num2 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "2").replacingOccurrences(of: " ", with: "")
+                            _phone2 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "2").replacingOccurrences(of: " ", with: "")
+                            _owner2 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "2").replacingOccurrences(of: " ", with: "")
+                            _addr2 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "2")
+                        }
+                    } else if key == define.STORE_TID + "3" {
+                        if (value as! String) != "" {
+                            _tid3 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store3 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "3").replacingOccurrences(of: " ", with: "")
+                            _num3 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "3").replacingOccurrences(of: " ", with: "")
+                            _phone3 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "3").replacingOccurrences(of: " ", with: "")
+                            _owner3 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "3").replacingOccurrences(of: " ", with: "")
+                            _addr3 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "3")
+                        }
+                    } else if key == define.STORE_TID + "4" {
+                        if (value as! String) != "" {
+                            _tid4 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store4 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "4").replacingOccurrences(of: " ", with: "")
+                            _num4 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "4").replacingOccurrences(of: " ", with: "")
+                            _phone4 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "4").replacingOccurrences(of: " ", with: "")
+                            _owner4 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "4").replacingOccurrences(of: " ", with: "")
+                            _addr4 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "4")
+                        }
+                    } else if key == define.STORE_TID + "5" {
+                        if (value as! String) != "" {
+                            _tid5 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store5 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "5").replacingOccurrences(of: " ", with: "")
+                            _num5 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "5").replacingOccurrences(of: " ", with: "")
+                            _phone5 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "5").replacingOccurrences(of: " ", with: "")
+                            _owner5 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "5").replacingOccurrences(of: " ", with: "")
+                            _addr5 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "5")
+                        }
+                    } else if key == define.STORE_TID + "6" {
+                        if (value as! String) != "" {
+                            _tid6 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store6 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "6").replacingOccurrences(of: " ", with: "")
+                            _num6 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "6").replacingOccurrences(of: " ", with: "")
+                            _phone6 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "6").replacingOccurrences(of: " ", with: "")
+                            _owner6 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "6").replacingOccurrences(of: " ", with: "")
+                            _addr6 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "6")
+                        }
+                    } else if key == define.STORE_TID + "7" {
+                        if (value as! String) != "" {
+                            _tid7 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store7 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "7").replacingOccurrences(of: " ", with: "")
+                            _num7 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "7").replacingOccurrences(of: " ", with: "")
+                            _phone7 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "7").replacingOccurrences(of: " ", with: "")
+                            _owner7 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "7").replacingOccurrences(of: " ", with: "")
+                            _addr7 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "7")
+                        }
+                    } else if key == define.STORE_TID + "8" {
+                        if (value as! String) != "" {
+                            _tid8 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store8 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "8").replacingOccurrences(of: " ", with: "")
+                            _num8 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "8").replacingOccurrences(of: " ", with: "")
+                            _phone8 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "8").replacingOccurrences(of: " ", with: "")
+                            _owner8 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "8").replacingOccurrences(of: " ", with: "")
+                            _addr8 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "8")
+                        }
+                    } else if key == define.STORE_TID + "9" {
+                        if (value as! String) != "" {
+                            _tid9 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store9 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "9").replacingOccurrences(of: " ", with: "")
+                            _num9 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "9").replacingOccurrences(of: " ", with: "")
+                            _phone9 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "9").replacingOccurrences(of: " ", with: "")
+                            _owner9 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "9").replacingOccurrences(of: " ", with: "")
+                            _addr9 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "9")
+                        }
+                    } else if key == define.STORE_TID + "10" {
+                        if (value as! String) != "" {
+                            _tid10 = (value as! String).replacingOccurrences(of: " ", with: "")
+                            _store10 = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "10").replacingOccurrences(of: " ", with: "")
+                            _num10 = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "10").replacingOccurrences(of: " ", with: "")
+                            _phone10 = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "10").replacingOccurrences(of: " ", with: "")
+                            _owner10 = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "10").replacingOccurrences(of: " ", with: "")
+                            _addr10 = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "10")
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        if _tid0 != "" {
+            let ok0 = UIAlertAction(title:  "1. " + _store0 + ", " + _tid0, style: .default, handler: { (Action) in
+                callback(_store0,_tid0,_num0,_phone0,_owner0,_addr0)
+            })
+            ok0.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok0)
+        }
+        
+        if _tid1 != "" {
+            let ok1 = UIAlertAction(title: "2. " + _store1 + ", " + _tid1 , style: .default, handler: { (Action) in
+                callback(_store1,_tid1,_num1,_phone1,_owner1,_addr1)
+            })
+            ok1.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok1)
+        }
+        
+        if _tid2 != "" {
+            let ok2 = UIAlertAction(title: "3. " + _store2 + ", " + _tid2 , style: .default, handler: { (Action) in
+                callback(_store2,_tid2,_num2,_phone2,_owner2,_addr2)
+            })
+            ok2.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok2)
+        }
+        
+        if _tid3 != "" {
+            let ok3 = UIAlertAction(title: "4. " + _store3 + ", " + _tid3 , style: .default, handler: { (Action) in
+                callback(_store3,_tid3,_num3,_phone3,_owner3,_addr3)
+            })
+            ok3.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok3)
+        }
+        
+        if _tid4 != "" {
+            let ok4 = UIAlertAction(title: "5. " + _store4 + ", " + _tid4 , style: .default, handler: { (Action) in
+                callback(_store4,_tid4,_num4,_phone4,_owner4,_addr4)
+            })
+            ok4.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok4)
+        }
+        
+        if _tid5 != "" {
+            let ok5 = UIAlertAction(title: "6. " + _store5 + ", " + _tid5 , style: .default, handler: { (Action) in
+                callback(_store5,_tid5,_num5,_phone5,_owner5,_addr5)
+            })
+            ok5.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok5)
+        }
+        
+        if _tid6 != "" {
+            let ok6 = UIAlertAction(title: "7. " + _store6 + ", " + _tid6 , style: .default, handler: { (Action) in
+                callback(_store6,_tid6,_num6,_phone6,_owner6,_addr6)
+            })
+            ok6.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok6)
+        }
+        
+        if _tid7 != "" {
+            let ok7 = UIAlertAction(title: "8. " + _store7 + ", " + _tid7 , style: .default, handler: { (Action) in
+                callback(_store7,_tid7,_num7,_phone7,_owner7,_addr7)
+            })
+            ok7.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok7)
+        }
+        
+        if _tid8 != "" {
+            let ok8 = UIAlertAction(title: "9. " + _store8 + ", " + _tid8 , style: .default, handler: { (Action) in
+                callback(_store8,_tid8,_num8,_phone8,_owner8,_addr8)
+            })
+            ok8.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok8)
+        }
+        
+        if _tid9 != "" {
+            let ok9 = UIAlertAction(title: "10. " + _store9 + ", " + _tid9 , style: .default, handler: { (Action) in
+                callback(_store9,_tid9,_num9,_phone9,_owner9,_addr9)
+            })
+            ok9.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok9)
+        }
+        
+        if _tid10 != "" {
+            let ok10 = UIAlertAction(title: "11. " + _store10 + ", " + _tid10 , style: .default, handler: { (Action) in
+                callback(_store10,_tid10,_num10,_phone10,_owner10,_addr10)
+            })
+            ok10.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+            alertController.addAction(ok10)
+        }
+        
+        let cancel = UIAlertAction(title: "취소", style: UIAlertAction.Style.cancel, handler: { (Action) in
+            callback("","","","","","")
+        })
+//        cancel.setValue(messageAttrString, forKey: "attributedMessage")
+        alertController.addAction(cancel)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 

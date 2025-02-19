@@ -200,6 +200,26 @@ class CreditController: UIViewController, UIViewControllerTransitioningDelegate 
             mCreditTxtFieldSvc.backgroundColor = define.layout_border_lightgrey
             mCreditTxtFieldTaxFree.backgroundColor = define.layout_border_lightgrey
         }
+        
+        
+        if appUISetting == define.UIMethod.Product.rawValue {
+            mStackView_Money.isHidden = true
+            mStackView_Money.alpha = 0.0
+            mStackView_Txf.isHidden = true
+            mStackView_Txf.alpha = 0.0
+            mCreditTxtFieldSvc.isHidden = true
+            mCreditTxtFieldSvc.alpha = 0.0
+            mCreditTxtSvc.isHidden = true
+            mCreditTxtSvc.alpha = 0.0
+            mStack_Svc.isHidden = true
+            mStack_Svc.alpha = 0.0
+            isTouch = ""
+            mCreditInstallMentGroup.isHidden = false
+            mCreditInstallMentGroup.alpha = 1.0
+            mCreditTxtTotalMoney.text = Utils.PrintMoney(Money: "\(mTotalMoney)")
+        } else {
+            
+        }
     }
    
 
@@ -1292,11 +1312,32 @@ extension CreditController: NumberPadDelegate {
                             return
                         }
                         _tid = TID
-    //                    let creditMoney = Utils.leftPad(str: String(mMoney), fillChar: "0", length: 10)
+                        
+                        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                        if appUISetting == define.UIMethod.Product.rawValue {
+                            let result = "B에서 전달한 결과값"
+                            onDismiss?( _tid, String(mMoney), mTaxMoney, mSvcMoney, mTaxFreeMoney, String(mInstallMent),
+                                        "", "", "", "",
+                                        BSN,  ADDR, NUM, PHONE, OWNER)
+                            dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        
                         mCatSdk.PayCredit(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(mInstallMent), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
                     }
                     return
                 }
+                
+                let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                if appUISetting == define.UIMethod.Product.rawValue {
+                    let result = "B에서 전달한 결과값"
+                    onDismiss?( Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), String(mMoney), mTaxMoney, mSvcMoney, mTaxFreeMoney, String(mInstallMent),
+                                "", "", "", "",
+                                Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME),  Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER))
+                    dismiss(animated: true, completion: nil)
+                    return
+                }
+                
                 mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(mInstallMent), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
             } else {
                 AlertBox(title: "에러", message: "연결 가능한 단말기가 존재하지 않습니다", text: "확인" )
