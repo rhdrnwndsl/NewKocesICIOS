@@ -7,8 +7,69 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
-class OrderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class OrderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PayResultDelegate, UITabBarControllerDelegate {
+    func onPaymentResult(payTitle _status: payStatus, payResult _message: Dictionary<String, String>) {
+        // 카드애니메이션뷰 컨트롤러가 여전히 떠있으니 해당 뷰를 지운다
+        Utils.CardAnimationViewControllerClear()
+        
+        var _totalString:String = ""    //메세지
+        var _title:String = "[카드거래]"          //타이틀
+        var keyCount:Int = 0
+        switch _message["TrdType"] {
+        case Command.CMD_IC_OK_RES:
+            _title = "[카드거래]"
+            for (key,value) in _message {
+                if _message.count - 1 == keyCount {
+                    _totalString += key + "=" + value
+                }
+                else{
+                    _totalString += key + "=" + value + "\n"
+                }
+                keyCount += 1
+            }
+            break
+        case Command.CMD_IC_CANCEL_RES:
+            _title = "[카드거래]"
+            for (key,value) in _message {
+                if _message.count - 1 == keyCount {
+                    _totalString += key + "=" + value
+                }
+                else{
+                    _totalString += key + "=" + value + "\n"
+                }
+                keyCount += 1
+            }
+            break
+        default:
+            break
+        }
+        
+        
+        if _status == .OK {
+            let controller = UIHostingController(rootView: ReceiptSwiftUI())
+            controller.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "신용", 전표번호: String(sqlite.instance.getTradeList().count))
+            navigationController?.pushViewController(controller, animated: true)
+        }
+        else {
+       
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                var _msg = _message["Message"] ?? _message["ERROR"] ?? "거래실패"
+                if _msg.replacingOccurrences(of: " ", with: "") == "" {
+                    _msg = "응답 데이터 이상"
+                }
+                let alertController = UIAlertController(title: _title, message: _msg, preferredStyle: UIAlertController.Style.alert)
+                let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default){_ in
+                    self.tabBarController?.delegate = self
+                }
+                alertController.addAction(okButton)
+                self.present(alertController, animated: true, completion: nil)
+            }
+        
+        }
+    }
+    
     
     // MARK: - Data (외부에서 전달받음)
     var basketItems: [BasketItem] = [] // ProductHomeViewController에서 전달받은 장바구니 항목들
@@ -26,8 +87,14 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     private let rightBottomContainer = UIView()
     
     // 세금 계산을 위한
-    let mTaxCalc = TaxCalculator.Instance
     var taxResult:[String:Int] = [:]  //결과값
+    let mTaxCalc = TaxCalculator.Instance
+    
+    var mpaySdk:PaySdk = PaySdk()
+    var mKocesSdk:KocesSdk = KocesSdk.instance
+    var mCatSdk:CatSdk = CatSdk.instance
+    var paylistener: payResult?
+    var catlistener:CatResult?
     
     // 좌측 상단: 선택 상품 목록 (테이블뷰)
     private let productTableView: UITableView = {
@@ -135,6 +202,11 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
         productTableView.dataSource = self
         productTableView.delegate = self
         
+   
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         updateSummary()
     }
     
@@ -330,7 +402,25 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     @objc func cardButtonTapped() {
         print("카드결제 버튼 클릭")
         let storyboard:UIStoryboard? = getStoryBoard()
-        let controller = (storyboard!.instantiateViewController(identifier: "CreditController")) as CreditController
+//        let controller = (storyboard!.instantiateViewController(identifier: "CreditController")) as CreditController
+        
+        guard let controller = storyboard?.instantiateViewController(withIdentifier: "CreditController") as? CreditController else { return }
+              
+              // B가 dismiss될 때 호출될 클로저 설정
+        controller.onDismiss = { [self] tid, money, tax, serviceCharge, txf, installment, cancelInfo, mchData, kocesTradeCode, compCode, mStoreName, mStoreAddr, mStoreNumber, mStorePhone, mStoreOwner in
+            // 전달받은 값을 사용하여 필요한 작업을 수행합니다.
+            print("TID: \(tid)")
+            print("Money: \(money)")
+            print("Tax: \(tax)")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.paylistener = payResult()
+                paylistener?.delegate = self
+                // ... 나머지 값들 처리
+                mpaySdk.CreditIC(Tid: tid, Money: money, Tax: tax, ServiceCharge: serviceCharge, TaxFree: txf, InstallMent: installment, OriDate: "", CancenInfo: cancelInfo, mchData: mchData, KocesTreadeCode: kocesTradeCode, CompCode: compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+            }
+          
+        }
+   
         // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .formSheet
@@ -421,11 +511,12 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                 _txf = n.price * quantity
                 _svc = (Int(n.svcWon) ?? 0) * quantity
                 _vat = (Int(n.vatWon) ?? 0) * quantity
-                taxvalue = mTaxCalc.TaxCalcProduct(금액: 0, 비과세금액: _money, 봉사료액: _svc, 봉사료자동수동: n.autoSVC, 부가세자동수동: n.autoVAT, 봉사료율: n.svcRate, 부가세율: n.vatRate, 봉사료포함미포함: n.includeSVC, 부가세포함미포함: n.includeVAT, 봉사료사용미사용: n.useSVC, 부가세사용미사용: n.useVAT, 부가세액: _vat, BleUse: _deviceCheck)
+                taxvalue = mTaxCalc.TaxCalcProduct(금액: 0, 비과세금액: _txf, 봉사료액: _svc, 봉사료자동수동: n.autoSVC, 부가세자동수동: n.autoVAT, 봉사료율: n.svcRate, 부가세율: n.vatRate, 봉사료포함미포함: n.includeSVC, 부가세포함미포함: n.includeVAT, 봉사료사용미사용: n.useSVC, 부가세사용미사용: n.useVAT, 부가세액: _vat, BleUse: _deviceCheck)
                 conMoney += taxvalue["Money"] ?? 0
                 conVAT += taxvalue["VAT"] ?? 0
                 conSVC += taxvalue["SVC"] ?? 0
                 conTXF += taxvalue["TXF"] ?? 0
+    
             }
             
             _count = _count + 1

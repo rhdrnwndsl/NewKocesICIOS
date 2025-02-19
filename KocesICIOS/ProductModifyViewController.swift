@@ -674,8 +674,8 @@ class ProductModifyViewController: UIViewController, UIImagePickerControllerDele
         svcAmountTextField.text = product?.svcWon
         
         usageSegmented.selectedSegmentIndex = product?.isUse ?? 1
-        
-        productImageView.image = decodeBitmapImage(from: product?.imgString ?? "")
+//        product?.image
+        productImageView.image = product?.image
         
         defaultImageSegmented.selectedSegmentIndex = product?.isImgUse ?? 1
         updateTaxViewsVisibility()

@@ -7,6 +7,10 @@
 import UIKit
 import SwiftUI
 class CreditController: UIViewController, UIViewControllerTransitioningDelegate {
+    // A로부터 전달받을 클로저 (결과값 타입은 String 예시)
+    var onDismiss: ((_ _Tid:String,_ _money:String,_ _tax:Int,_ _serviceCharge:Int,_ _txf:Int,_ _installment:String,
+                     _ _cancelInfo:String,_ _mchData:String,_ _kocesTradeCode:String,_ _compCode:String,
+                     _ _mStoreName:String, _ _mStoreAddr:String,_ _mStoreNumber:String,_ _mStorePhone:String,_ _mStoreOwner:String) -> Void)?
     
     var mpaySdk:PaySdk = PaySdk()
     var mKocesSdk:KocesSdk = KocesSdk.instance
@@ -441,13 +445,27 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
 
     }
     
+
+    
     func startPayment(Tid _Tid:String,Money _money:String,Tax _tax:Int,ServiceCharge _serviceCharge:Int,TaxFree _txf:Int,InstallMent _installment:String,
                       CancenInfo _cancelInfo:String,mchData _mchData:String,KocesTreadeCode _kocesTradeCode:String,CompCode _compCode:String,
                       StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String) {
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+        if appUISetting == define.UIMethod.Product.rawValue {
+            let result = "B에서 전달한 결과값"
+            onDismiss?( _Tid, _money, _tax, _serviceCharge, _txf, _installment,
+                        _cancelInfo, _mchData, _kocesTradeCode, _compCode,
+                        _mStoreName,  _mStoreAddr, _mStoreNumber, _mStorePhone, _mStoreOwner)
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
         paylistener = payResult()
         paylistener?.delegate = self
 
         mpaySdk.CreditIC(Tid: _Tid, Money: _money, Tax: _tax, ServiceCharge: _serviceCharge, TaxFree: _txf, InstallMent: _installment, OriDate: "", CancenInfo: _cancelInfo, mchData: _mchData, KocesTreadeCode: _kocesTradeCode, CompCode: _compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: _mStoreName,StoreAddr: _mStoreAddr,StoreNumber: _mStoreNumber,StorePhone: _mStorePhone,StoreOwner: _mStoreOwner)
+        
+       
     }
 
     func onResult(CatState _state: payStatus, Result _message: Dictionary<String, String>) {

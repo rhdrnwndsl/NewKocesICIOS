@@ -1153,7 +1153,6 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
         }
         let mainTabBarController = storyboard!.instantiateViewController(identifier: "TabBar") as? TabBarController
         mainTabBarController?.modalPresentationStyle = .fullScreen
-
         if 뷰컨트롤러 == "신용" {
             mainTabBarController?.selectedIndex = 0
             controller?.present(mainTabBarController!, animated: true, completion: nil)

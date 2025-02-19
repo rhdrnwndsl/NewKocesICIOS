@@ -223,33 +223,42 @@ class CardAnimationViewController: UIViewController {
         if KocesSdk.instance.bleIsConnected() {
             KocesSdk.instance.DeviceInit(VanCode: "99")
         }
-        
-        let nextVC = UIHostingController(rootView: ReceiptSwiftUI())
-        if String(describing: paylistener).contains("Credit") {
-            nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "신용", 전표번호: String(sqlite.instance.getTradeList().count))
-        } else  {
-            nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "현금", 전표번호: String(sqlite.instance.getTradeList().count))
+        if let mainTabBarController = storyboard?.instantiateViewController(identifier: "TabBar") as? TabBarController {
+            DispatchQueue.main.async {[self] in
+                let nextVC = UIHostingController(rootView: ReceiptSwiftUI())
+                if String(describing: paylistener).contains("Credit") {
+                    nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "신용", 전표번호: String(sqlite.instance.getTradeList().count))
+                } else  {
+                    nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "현금", 전표번호: String(sqlite.instance.getTradeList().count))
+                }
+              
+                nextVC.modalPresentationStyle = .fullScreen
+                self.connectionTimeout?.invalidate()
+                self.connectionTimeout = nil
+                mpaySdk.Clear()
+                present(nextVC, animated: true, completion: nil)
+            }
         }
-      
-        nextVC.modalPresentationStyle = .fullScreen
-        self.connectionTimeout?.invalidate()
-        self.connectionTimeout = nil
-        mpaySdk.Clear()
-        present(nextVC, animated: true, completion: nil)
+
+       
     }
     
     public func GoToReceiptEasyPaySwiftUI() {
         if KocesSdk.instance.bleIsConnected() {
             KocesSdk.instance.DeviceInit(VanCode: "99")
         }
-        
-        let nextVC = UIHostingController(rootView: ReceiptEasyPaySwiftUI())
-        nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "간편결제", 전표번호: String(sqlite.instance.getTradeList().count))
-        nextVC.modalPresentationStyle = .fullScreen
-        self.connectionTimeout?.invalidate()
-        self.connectionTimeout = nil
-        mpaySdk.Clear()
-        present(nextVC, animated: true, completion: nil)
+        if let mainTabBarController = storyboard?.instantiateViewController(identifier: "TabBar") as? TabBarController {
+            DispatchQueue.main.async {[self] in
+                let nextVC = UIHostingController(rootView: ReceiptEasyPaySwiftUI())
+                nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "간편결제", 전표번호: String(sqlite.instance.getTradeList().count))
+                nextVC.modalPresentationStyle = .fullScreen
+                self.connectionTimeout?.invalidate()
+                self.connectionTimeout = nil
+                mpaySdk.Clear()
+                present(nextVC, animated: true, completion: nil)
+            }
+        }
+  
     }
     
 }

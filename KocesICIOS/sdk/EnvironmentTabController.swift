@@ -134,7 +134,6 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
         } else {
             rootView.backToMainView()
         }
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -2226,8 +2226,59 @@ class sqlite {
         }
         
         // 4) 파라미터 바인딩
+//        for (index, value) in bindValues.enumerated() {
+//            sqlite3_bind_text(queryStatement, Int32(index + 1), value, -1, nil)
+//        }
+        
+        // 한 줄짜리 유틸 함수로 빼도 좋지만, 여기서는 직접 바인딩
+        let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+
         for (index, value) in bindValues.enumerated() {
-            sqlite3_bind_text(queryStatement, Int32(index + 1), value, -1, nil)
+            let position = Int32(index + 1)
+            
+            switch value {
+            case let stringValue as String:
+                if sqlite3_bind_text(queryStatement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding string failed: \(errMsg)")
+                    return result
+                }
+            case let intValue as Int:
+                if sqlite3_bind_int(queryStatement, position, Int32(intValue)) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding int failed: \(errMsg)")
+                    return result
+                }
+            default:
+                // 필요한 경우 Double, etc. 로 확장 가능
+                let stringValue = "\(value)"
+                if sqlite3_bind_text(queryStatement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding unknown type failed: \(errMsg)")
+                    return result
+                }
+            }
         }
         
         // 5) step
@@ -2246,131 +2297,565 @@ class sqlite {
         return result
     }
 
-    /// 기간/거래타입/등등을 한꺼번에 조회하는 예시
-    /// (실제 요구사항에 따라 함수명을 다르게 지정)
+    /// 기간/거래타입 등 조건으로 거래 내역을 조회하는 함수
     func getTradeListByFilter(
-        tid: String?,
+        tid: String,
         fromDate: String?,
         toDate: String?,
-        tradeMethods: [String]?  // 예: ["KAKAO", "WECHAT", ...] => LIKE '%KAKAO%', etc.
+        tradeMethods: [String]?
     ) -> [DBTradeResult] {
         var result = [DBTradeResult]()
         var statement: OpaquePointer? = nil
-        defer { sqlite3_finalize(statement) }
-        
-        // 기본 쿼리
-        var query = "SELECT * FROM \(define.DB_Trade) WHERE 1=1"
         var bindValues: [String] = []
+        var whereClauses: [String] = []
         
-        // 1) TID 조건 (tid != nil 이고, 빈 문자열이 아닐 때)
-        if let t = tid, !t.isEmpty {
-            query += " AND (Tid = ? OR Tid = '')"
-            bindValues.append(t)
-        } else {
-            // 여러 TID가 필요하다면, 위 예시처럼 [TID1, TID2, ...] 배열을 만든 뒤
-            // OR 구문으로 붙일 수 있습니다.
+        // TID 조건: tid가 비어있지 않으면 (Tid = ? OR Tid = '')
+        if !tid.isEmpty {
+            whereClauses.append("(Tid = ? OR Tid = '')")
+            bindValues.append(tid)
         }
         
-        // 2) 날짜 범위 조건 (fromDate, toDate)
-        //    AuDate를 long으로 캐스팅하여 비교한다는 가정
-        //    cast(AuDate as long) >= ? AND cast(AuDate as long) <= ?
+        // 날짜 범위 조건
         if let fd = fromDate, !fd.isEmpty,
            let td = toDate, !td.isEmpty {
-            query += " AND (cast(AuDate as long) >= ? AND cast(AuDate as long) <= ?)"
+            whereClauses.append("(AuDate >= ? AND AuDate <= ?)")
             bindValues.append(fd)
             bindValues.append(td)
         }
         
-        // 3) 거래타입 (LIKE) 조건
-        //    예: tradeMethods = ["KAKAO", "Zero", ...]
-        //    => (Trade LIKE ? OR Trade LIKE ? OR ...)
+        // 거래타입 조건: 각 항목에 대해 LIKE 조건을 추가
         if let tm = tradeMethods, !tm.isEmpty {
-            let orLikeClause = tm.map { _ in "(Trade LIKE ?)" }.joined(separator: " OR ")
-            query += " AND (\(orLikeClause))"
-            // bindValues 에 "%KAKAO%" 같은 형태로 추가
+            let methodClause = tm.map { _ in "Trade LIKE ?" }.joined(separator: " OR ")
+            whereClauses.append("(\(methodClause))")
             for method in tm {
                 bindValues.append("%\(method)%")
             }
         }
         
-        // ORDER BY
-        query += " ORDER BY id DESC"
+        let whereClause = whereClauses.isEmpty ? "" : "WHERE " + whereClauses.joined(separator: " AND ")
         
-        // prepare
+        let query = """
+            SELECT *
+            FROM \(define.DB_Trade)
+            \(whereClause)
+            ORDER BY id DESC
+        """
+        
         guard sqlite3_prepare_v2(db_point, query, -1, &statement, nil) == SQLITE_OK else {
             debugPrint("getTradeListByFilter - prepare failed")
             return result
         }
         
-        // bind
-        for (index, val) in bindValues.enumerated() {
-            sqlite3_bind_text(statement, Int32(index + 1), val, -1, nil)
+//        for (index, value) in bindValues.enumerated() {
+//            sqlite3_bind_text(statement, Int32(index + 1), value, -1, nil)
+//        }
+        
+        // 한 줄짜리 유틸 함수로 빼도 좋지만, 여기서는 직접 바인딩
+        let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+
+        for (index, value) in bindValues.enumerated() {
+            let position = Int32(index + 1)
+            
+            switch value {
+            case let stringValue as String:
+                if sqlite3_bind_text(statement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding string failed: \(errMsg)")
+                    return result
+                }
+            case let intValue as Int:
+                if sqlite3_bind_int(statement, position, Int32(intValue)) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding int failed: \(errMsg)")
+                    return result
+                }
+            default:
+                // 필요한 경우 Double, etc. 로 확장 가능
+                let stringValue = "\(value)"
+                if sqlite3_bind_text(statement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding unknown type failed: \(errMsg)")
+                    return result
+                }
+            }
         }
         
-        // step
         while sqlite3_step(statement) == SQLITE_ROW {
             let row = mapDBTradeResult(statement!)
             result.append(row)
         }
+        
+        defer { sqlite3_finalize(statement) }
         return result
+    }
+
+
+    /// 기간별 거래 내역 조회 함수 (TID가 빈 경우 날짜 조건만 적용)
+    func getTradeListPeriod(Tid _tid: String = "", from _fdate: String, to _tdate: String) -> [DBTradeResult] {
+        let fromDate = _fdate + "000000"
+        let toDate = _tdate + "235959"
+        return getTradeListByFilter(tid: _tid, fromDate: fromDate, toDate: toDate, tradeMethods: nil)
     }
     
     ///거래 내역 기간별 조회
-    func getTradeListPeriod(Tid _tid:String = "", from _fdate:String,to _tdate:String ) -> [DBTradeResult] {
-        let fromDate:String = _fdate + "000000"
-        let toDate:String = _tdate +  "235959"
-      
-        return getTradeListByFilter(tid: _tid, fromDate: fromDate, toDate: toDate, tradeMethods: [])
-    }
+//    func getTradeListPeriod(Tid _tid:String = "", from _fdate:String,to _tdate:String ) -> [DBTradeResult] {
+//        var result:[DBTradeResult] = Array()
+//        let fromDate:String = _fdate + "000000"
+//        let toDate:String = _tdate +  "235959"
+//        
+//        var queryStatementString = ""
+//        if _tid != "" {
+//            queryStatementString = "SELECT * FROM \(define.DB_Trade) where (Tid = '\(_tid)' OR Tid = '')  AND (cast(AuDate as long) > \(fromDate)) AND (cast(AuDate as long) < \(toDate)) ORDER BY id DESC"
+//        }
+//        else {
+//            queryStatementString = "SELECT * FROM \(define.DB_Trade) where (cast(AuDate as long) > \(fromDate)) AND (cast(AuDate as long) < \(toDate)) ORDER BY id DESC"
+//        }
+//        
+//
+//        var queryStatement: OpaquePointer? = nil
+//        guard sqlite3_prepare_v2(db_point, queryStatementString, EOF, &queryStatement, nil) == SQLITE_OK else {
+//            debugPrint("SELECT statement could not be prepared")
+//            return result
+//        }
+//        
+//        // 실행 및 결과 매핑
+//        while sqlite3_step(queryStatement) == SQLITE_ROW {
+//            let row = mapDBTradeResult(queryStatement!)
+//            result.append(row)
+//        }
+//
+//        sqlite3_finalize(queryStatement)
+//        return result
+//    }
     
-    /// 거래 내역 중 기간별 특정내역만 가져 오는 함수 - 거래내역 조회에서 사용
-    /// - Returns: DbTradeResult 배열
-    func getTradeListParsingData(Tid _tid:String = "", 결제구분 _trade:define.TradeMethod, from _fdate:String,to _tdate:String) -> [DBTradeResult] {
-        var fromDate:String = ""
+    func getTradeListParsingData(Tid _tid: String = "",
+                                   결제구분 _trade: define.TradeMethod,
+                                   from _fdate: String,
+                                   to _tdate: String) -> [DBTradeResult] {
+        var fromDate: String = ""
         if !_fdate.isEmpty {
             fromDate = _fdate + "000000"
         }
-        var toDate:String = ""
+        var toDate: String = ""
         if !_tdate.isEmpty {
-            toDate = _tdate +  "235959"
+            toDate = _tdate + "235959"
         }
-        var _tradeMethods: [String] = []
+        
+        var result: [DBTradeResult] = []
+        var queryStatementString = ""
+        var bindValues: [String] = []
+        
+        // 분기별 쿼리 작성
         if _trade == define.TradeMethod.EasyPay {
-            _tradeMethods = [
-                define.TradeMethod.Kakao.rawValue,
-                define.TradeMethod.Zero.rawValue,
-                define.TradeMethod.Wechat.rawValue,
-                define.TradeMethod.Ali.rawValue,
-                define.TradeMethod.AppCard.rawValue,
-                define.TradeMethod.EmvQr.rawValue,
-                define.TradeMethod.CAT_App.rawValue,
-                define.TradeMethod.CAT_We.rawValue,
-                define.TradeMethod.CAT_Ali.rawValue,
-                define.TradeMethod.CAT_Zero.rawValue,
-                define.TradeMethod.CAT_Payco.rawValue,
-                define.TradeMethod.CAT_Kakao.rawValue
-            ]
-        } else if _trade == define.TradeMethod.Credit {
-            _tradeMethods = [
-                define.TradeMethod.Credit.rawValue,
-                define.TradeMethod.CAT_Credit.rawValue
-            ]
-        } else if _trade == define.TradeMethod.Cash  {
-            _tradeMethods = [
-                define.TradeMethod.Cash.rawValue,
-                define.TradeMethod.CAT_Cash.rawValue
-            ]
-        } else if _trade == define.TradeMethod.CAT_CashIC {
-            _tradeMethods = [
-                define.TradeMethod.CAT_CashIC.rawValue
-            ]
+            if _tdate.isEmpty {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(define.TradeMethod.Kakao.rawValue)
+                    bindValues.append(define.TradeMethod.Zero.rawValue)
+                    bindValues.append(define.TradeMethod.Wechat.rawValue)
+                    bindValues.append(define.TradeMethod.Ali.rawValue)
+                    bindValues.append(define.TradeMethod.AppCard.rawValue)
+                    bindValues.append(define.TradeMethod.EmvQr.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_App.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_We.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Ali.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Zero.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Payco.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Kakao.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(define.TradeMethod.Kakao.rawValue)
+                    bindValues.append(define.TradeMethod.Zero.rawValue)
+                    bindValues.append(define.TradeMethod.Wechat.rawValue)
+                    bindValues.append(define.TradeMethod.Ali.rawValue)
+                    bindValues.append(define.TradeMethod.AppCard.rawValue)
+                    bindValues.append(define.TradeMethod.EmvQr.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_App.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_We.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Ali.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Zero.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Payco.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Kakao.rawValue)
+                }
+            } else {  // _tdate is not empty
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (AuDate >= ? AND AuDate <= ?)
+                    AND (
+                      (Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ?)
+                      OR
+                      (Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ?)
+                    )
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    // 첫 그룹 (6개)
+                    bindValues.append(define.TradeMethod.Kakao.rawValue)
+                    bindValues.append(define.TradeMethod.Zero.rawValue)
+                    bindValues.append(define.TradeMethod.Wechat.rawValue)
+                    bindValues.append(define.TradeMethod.Ali.rawValue)
+                    bindValues.append(define.TradeMethod.AppCard.rawValue)
+                    bindValues.append(define.TradeMethod.EmvQr.rawValue)
+                    // 두 번째 그룹 (6개)
+                    bindValues.append(define.TradeMethod.CAT_App.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_We.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Ali.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Zero.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Payco.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Kakao.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (AuDate >= ? AND AuDate <= ?)
+                    AND (
+                      (Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ?)
+                      OR
+                      (Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ? OR Trade LIKE ?)
+                    )
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.Kakao.rawValue)
+                    bindValues.append(define.TradeMethod.Zero.rawValue)
+                    bindValues.append(define.TradeMethod.Wechat.rawValue)
+                    bindValues.append(define.TradeMethod.Ali.rawValue)
+                    bindValues.append(define.TradeMethod.AppCard.rawValue)
+                    bindValues.append(define.TradeMethod.EmvQr.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_App.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_We.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Ali.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Zero.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Payco.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Kakao.rawValue)
+                }
+            }
         } else if _trade == define.TradeMethod.NULL {
-            _tradeMethods = []
+            if _tdate.isEmpty {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                } else {
+                    queryStatementString = "SELECT * FROM \(define.DB_Trade) ORDER BY id DESC"
+                }
+            } else {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (AuDate >= ? AND AuDate <= ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (AuDate >= ? AND AuDate <= ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                }
+            }
+        } else if _trade == define.TradeMethod.Credit {
+            if _tdate.isEmpty {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(define.TradeMethod.Credit.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Credit.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(define.TradeMethod.Credit.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Credit.rawValue)
+                }
+            } else {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.Credit.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Credit.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.Credit.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Credit.rawValue)
+                }
+            }
+        } else if _trade == define.TradeMethod.Cash {
+            if _tdate.isEmpty {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(define.TradeMethod.Cash.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Cash.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(define.TradeMethod.Cash.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Cash.rawValue)
+                }
+            } else {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.Cash.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Cash.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ? OR Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.Cash.rawValue)
+                    bindValues.append(define.TradeMethod.CAT_Cash.rawValue)
+                }
+            }
+        } else if _trade == define.TradeMethod.CAT_CashIC {
+            if _tdate.isEmpty {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(define.TradeMethod.CAT_CashIC.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(define.TradeMethod.CAT_CashIC.rawValue)
+                }
+            } else {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.CAT_CashIC.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(define.TradeMethod.CAT_CashIC.rawValue)
+                }
+            }
         } else {
-            // 포인트, 멤버십을 추가한다
+            // 그 외의 경우
+            if _tdate.isEmpty {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(_trade.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_trade.rawValue)
+                }
+            } else {
+                if _tid != "" {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (Tid = ? OR Tid = '')
+                    AND (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(_tid)
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(_trade.rawValue)
+                } else {
+                    queryStatementString = """
+                    SELECT * FROM \(define.DB_Trade)
+                    WHERE (AuDate >= ? AND AuDate <= ?)
+                    AND (Trade LIKE ?)
+                    ORDER BY id DESC
+                    """
+                    bindValues.append(fromDate)
+                    bindValues.append(toDate)
+                    bindValues.append(_trade.rawValue)
+                }
+            }
         }
+        
+        var queryStatement: OpaquePointer? = nil
+        guard sqlite3_prepare_v2(db_point, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK else {
+            debugPrint("SELECT statement could not be prepared")
+            return result
+        }
+        
+        // 바인딩 처리
+//        for (index, value) in bindValues.enumerated() {
+//            sqlite3_bind_text(queryStatement, Int32(index + 1), (value as NSString).utf8String, -1, nil)
+//        }
+        
+        // 한 줄짜리 유틸 함수로 빼도 좋지만, 여기서는 직접 바인딩
+        let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
-        return getTradeListByFilter(tid: _tid, fromDate: fromDate, toDate: toDate, tradeMethods: _tradeMethods)
+        for (index, value) in bindValues.enumerated() {
+            let position = Int32(index + 1)
+            
+            switch value {
+            case let stringValue as String:
+                if sqlite3_bind_text(queryStatement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding string failed: \(errMsg)")
+                    return result
+                }
+            case let intValue as Int:
+                if sqlite3_bind_int(queryStatement, position, Int32(intValue)) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding int failed: \(errMsg)")
+                    return result
+                }
+            default:
+                // 필요한 경우 Double, etc. 로 확장 가능
+                let stringValue = "\(value)"
+                if sqlite3_bind_text(queryStatement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding unknown type failed: \(errMsg)")
+                    return result
+                }
+            }
+        }
+        
+        
+        // 쿼리 실행 및 결과 매핑
+        while sqlite3_step(queryStatement) == SQLITE_ROW {
+            let row = mapDBTradeResult(queryStatement!)
+            result.append(row)
+        }
+        
+        sqlite3_finalize(queryStatement)
+        return result
     }
     
     /// 마지막 거래 내역 데이터 가져 오는 함수
@@ -2426,8 +2911,58 @@ class sqlite {
         }
         
         // bind
-        for (index, val) in bindValues.enumerated() {
-            sqlite3_bind_text(statement, Int32(index + 1), val, -1, nil)
+//        for (index, val) in bindValues.enumerated() {
+//            sqlite3_bind_text(statement, Int32(index + 1), val, -1, nil)
+//        }
+        // 한 줄짜리 유틸 함수로 빼도 좋지만, 여기서는 직접 바인딩
+        let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+
+        for (index, value) in bindValues.enumerated() {
+            let position = Int32(index + 1)
+            
+            switch value {
+            case let stringValue as String:
+                if sqlite3_bind_text(statement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding string failed: \(errMsg)")
+                    return result
+                }
+            case let intValue as Int:
+                if sqlite3_bind_int(statement, position, Int32(intValue)) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding int failed: \(errMsg)")
+                    return result
+                }
+            default:
+                // 필요한 경우 Double, etc. 로 확장 가능
+                let stringValue = "\(value)"
+                if sqlite3_bind_text(statement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding unknown type failed: \(errMsg)")
+                    return result
+                }
+            }
         }
         
         // step
@@ -2785,9 +3320,60 @@ class sqlite {
         
         // 5) 실제 바인딩 (SQLite에서는 문자열은 text로 바인딩)
         //    bindValues.count == 58 이어야 함
+//        for (index, value) in bindValues.enumerated() {
+//            let position = Int32(index + 1)
+//            sqlite3_bind_text(insertStatement, position, value, -1, nil)
+//        }
+        
+        // 한 줄짜리 유틸 함수로 빼도 좋지만, 여기서는 직접 바인딩
+        let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
+
         for (index, value) in bindValues.enumerated() {
             let position = Int32(index + 1)
-            sqlite3_bind_text(insertStatement, position, value, -1, nil)
+            
+            switch value {
+            case let stringValue as String:
+                if sqlite3_bind_text(insertStatement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding string failed: \(errMsg)")
+                    return
+                }
+            case let intValue as Int:
+                if sqlite3_bind_int(insertStatement, position, Int32(intValue)) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding int failed: \(errMsg)")
+                    return
+                }
+            default:
+                // 필요한 경우 Double, etc. 로 확장 가능
+                let stringValue = "\(value)"
+                if sqlite3_bind_text(insertStatement, position, stringValue, -1, SQLITE_TRANSIENT) != SQLITE_OK {
+                    var errMsg: String
+                    if let cString = sqlite3_errmsg(db_point) {
+                        // cString 이 nil 이 아닐 경우
+                        errMsg = String(cString: cString)
+                    } else {
+                        // cString 이 nil 일 경우
+                        errMsg = "No error message"
+                    }
+                    print("Binding unknown type failed: \(errMsg)")
+                    return
+                }
+            }
         }
         
         // 6) 실행

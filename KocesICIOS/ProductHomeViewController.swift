@@ -51,7 +51,6 @@ class ProductHomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         // Landscape 전용으로 사용 (supportedInterfaceOrientations 재정의)
-        
         setupUI()
         loadData()
         updateLeftSide()

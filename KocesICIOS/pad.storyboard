@@ -6927,7 +6927,7 @@
                             <constraint firstItem="lFt-KJ-Eh9" firstAttribute="trailing" secondItem="Tyh-ly-TO2" secondAttribute="trailing" id="iv8-WP-dMT"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="4Fa-Ey-13w"/>
+                    <navigationItem key="navigationItem" title="매출정보" largeTitleDisplayMode="always" id="4Fa-Ey-13w"/>
                     <connections>
                         <outlet property="viewContainer" destination="Tyh-ly-TO2" id="SX0-a4-FzC"/>
                     </connections>
@@ -11113,6 +11113,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ztZ-KL-de3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="11953" y="3633"/>
+        </scene>
+        <!--Sales Calendar View Controller-->
+        <scene sceneID="4TQ-BZ-rXb">
+            <objects>
+                <viewController storyboardIdentifier="SalesCalendarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QjF-q2-6Hp" customClass="SalesCalendarViewController" customModule="KocesICIOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="haM-Gm-cy6">
+                        <rect key="frame" x="0.0" y="0.0" width="1080" height="810"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Qgq-qQ-HLV"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ygu-Vh-ost" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="12740" y="3668"/>
         </scene>
         <!--Order View Controller-->
         <scene sceneID="UDa-l2-xKG">

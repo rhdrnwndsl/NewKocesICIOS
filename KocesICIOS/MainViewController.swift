@@ -356,10 +356,20 @@ class MainViewController: UIViewController, UITabBarControllerDelegate {
     }
     
     func moveSalesInquiry() {
-        var storyboard:UIStoryboard? = getStoryBoard()
-        let controller = (storyboard!.instantiateViewController(identifier: "CalendarViewController")) as CalendarViewController
-        controller.navigationItem.title = "매출정보"    //2021-08-19 수정사항 169.B
-        navigationController?.pushViewController(controller, animated: true)
+//        var storyboard:UIStoryboard? = getStoryBoard()
+//        let controller = (storyboard!.instantiateViewController(identifier: "CalendarViewController")) as CalendarViewController
+//        controller.navigationItem.title = "매출정보"    //2021-08-19 수정사항 169.B
+//        navigationController?.pushViewController(controller, animated: true)
+//        var storyboard:UIStoryboard? = getStoryBoard()
+//        let controller = (storyboard!.instantiateViewController(identifier: "SalesCalendarViewController")) as SalesCalendarViewController
+//        controller.navigationItem.title = "매출정보"    //2021-08-19 수정사항 169.B
+//        navigationController?.pushViewController(controller, animated: true)
+        
+        let storyboard = getStoryBoard()
+        if let controller = storyboard?.instantiateViewController(withIdentifier: "SalesCalendarViewController") as? SalesCalendarViewController {
+            controller.navigationItem.title = "매출정보"
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func easyPay(){

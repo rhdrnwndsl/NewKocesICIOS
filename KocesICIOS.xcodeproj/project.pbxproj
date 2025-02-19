@@ -39,6 +39,7 @@
 		3990D9192B15B54A00699930 /* Aes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3990D9182B15B54A00699930 /* Aes.swift */; };
 		39A84E432D6316E90014C59A /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A84E422D6316E90014C59A /* OrderViewController.swift */; };
 		39A84E452D632B490014C59A /* BasketItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A84E442D632B490014C59A /* BasketItem.swift */; };
+		39A84E472D654FC10014C59A /* SalesCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A84E462D654FC10014C59A /* SalesCalendarViewController.swift */; };
 		39AC031B2BB53121005AD71F /* sign2.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 39AC03172BB53120005AD71F /* sign2.bmp */; };
 		39AC031C2BB53121005AD71F /* sign1.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 39AC03182BB53121005AD71F /* sign1.bmp */; };
 		39AC031D2BB53121005AD71F /* sign3.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 39AC03192BB53121005AD71F /* sign3.bmp */; };
@@ -180,6 +181,7 @@
 		3990D9182B15B54A00699930 /* Aes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aes.swift; sourceTree = "<group>"; };
 		39A84E422D6316E90014C59A /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
 		39A84E442D632B490014C59A /* BasketItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketItem.swift; sourceTree = "<group>"; };
+		39A84E462D654FC10014C59A /* SalesCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCalendarViewController.swift; sourceTree = "<group>"; };
 		39AC03172BB53120005AD71F /* sign2.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = sign2.bmp; sourceTree = "<group>"; };
 		39AC03182BB53121005AD71F /* sign1.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = sign1.bmp; sourceTree = "<group>"; };
 		39AC03192BB53121005AD71F /* sign3.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = sign3.bmp; sourceTree = "<group>"; };
@@ -471,6 +473,7 @@
 				5E3883A22D5E2CD500E14D49 /* CatSettingViewController.swift */,
 				5E3883A42D5E2F7700E14D49 /* BTSettingViewController.swift */,
 				39A84E422D6316E90014C59A /* OrderViewController.swift */,
+				39A84E462D654FC10014C59A /* SalesCalendarViewController.swift */,
 			);
 			path = KocesICIOS;
 			sourceTree = "<group>";
@@ -888,6 +891,7 @@
 				5ED74D11266B76FB0087F652 /* LogFile.swift in Sources */,
 				393FC7402D57AD100045269B /* ProductListViewController.swift in Sources */,
 				3BA07E9F25A8B79E0095B0C3 /* initProc.swift in Sources */,
+				39A84E472D654FC10014C59A /* SalesCalendarViewController.swift in Sources */,
 				393FC7342D4CB6D30045269B /* QnaViewController.swift in Sources */,
 				5EF60E06263D5397007DD0CC /* ScannerViewController.swift in Sources */,
 				3B35AC9625AA2AFA0049651D /* Command.swift in Sources */,
