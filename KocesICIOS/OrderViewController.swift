@@ -505,11 +505,41 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     @objc func cashButtonTapped() {
         print("현금결제 버튼 클릭")
+        
+        let _deviceCheck:Bool = Utils.getIsCAT() ? false:true
+        let total = _deviceCheck ? Int(taxResult["Money"] ?? 0) + Int(taxResult["VAT"] ?? 0) + Int(taxResult["SVC"] ?? 0):Int(taxResult["Money"] ?? 0) + Int(taxResult["VAT"] ?? 0) + Int(taxResult["SVC"] ?? 0) + Int(taxResult["TXF"] ?? 0)
+        // 할부거래를 하러 들어간다
         let storyboard:UIStoryboard? = getStoryBoard()
-        let controller = (storyboard!.instantiateViewController(identifier: "CashController")) as CashController
+        guard let controller = storyboard?.instantiateViewController(withIdentifier: "CashController") as? CashController else { return }
+        controller.mTotalMoney = total
+              // B가 dismiss될 때 호출될 클로저 설정
+        controller.onDismiss = { [self] tid, insyn, usernum, mStoreName, mStoreAddr, mStoreNumber, mStorePhone, mStoreOwner in
+            // 전달받은 값을 사용하여 필요한 작업을 수행합니다.
+            print("TID: \(tid)")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+                    self.catlistener = CatResult()
+                    self.catlistener?.delegate = self
+                    self.mCatSdk.CashRecipt(TID: tid, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: usernum, 개인법인구분: insyn, 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: mStoreName, StoreAddr: mStoreAddr, StoreNumber: mStoreNumber, StorePhone: mStorePhone, StoreOwner: mStoreOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                } else {
+                    self.paylistener = payResult()
+                    self.paylistener?.delegate = self
+                    // ... 나머지 값들 처리
+                    if usernum == "" {
+                        self.mpaySdk.CashRecipt(Tid: tid, Money: String(taxResult["Money"] ?? 0), Tax: taxResult["VAT"] ?? 0, ServiceCharge: taxResult["SVC"] ?? 0, TaxFree: taxResult["TXF"] ?? 0, PrivateOrBusiness: Int(insyn) ?? 0, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: "", ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+                    } else {
+                        self.mpaySdk.CashReciptDirectInput(CancelReason: "", Tid: tid, AuDate: "", AuNo: "", Num: usernum, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(taxResult["Money"] ?? 0), TaxAmt: String(taxResult["VAT"] ?? 0), SvcAmt: String(taxResult["SVC"] ?? 0), TaxFreeAmt: String(taxResult["TXF"] ?? 0), InsYn: insyn, kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+                    }
+                   
+                }
+              
+            }
+          
+        }
+   
         // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .automatic
+        navController.modalPresentationStyle = .formSheet
         navController.transitioningDelegate = controller  // 또는 별도로 지정
         self.present(navController, animated: true, completion: nil)
     }

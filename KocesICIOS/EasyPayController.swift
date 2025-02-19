@@ -41,17 +41,17 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
     var mTaxMoney:Int = 0       //세금
     var mSvcMoney:Int = 0   //봉사료
     var mTaxFreeMoney:Int = 0   //비과세
-    var mInstallMent:Int = 0    //할부개월
-    let mInstallMentArray = ["2","3","4","5","6","7","8","9","10",
-                             "11","12","13","14","15","16","17","18","19","20",
-                             "21","22","23","24","25","26","27","28","29","30",
-                             "31","32","33","34","35","36","37","38","39","40",
-                             "41","42","43","44","45","46","47","48","49","50",
-                             "51","52","53","54","55","56","57","58","59","60",
-                             "61","62","63","64","65","66","67","68","69","70",
-                             "71","72","73","74","75","76","77","78","79","80",
-                             "81","82","83","84","85","86","87","88","89","90",
-                             "91","92","93","94","95","96","97","98","99"]
+//    var mInstallMent:Int = 0    //할부개월
+//    let mInstallMentArray = ["2","3","4","5","6","7","8","9","10",
+//                             "11","12","13","14","15","16","17","18","19","20",
+//                             "21","22","23","24","25","26","27","28","29","30",
+//                             "31","32","33","34","35","36","37","38","39","40",
+//                             "41","42","43","44","45","46","47","48","49","50",
+//                             "51","52","53","54","55","56","57","58","59","60",
+//                             "61","62","63","64","65","66","67","68","69","70",
+//                             "71","72","73","74","75","76","77","78","79","80",
+//                             "81","82","83","84","85","86","87","88","89","90",
+//                             "91","92","93","94","95","96","97","98","99"]
     
     @IBOutlet weak var numberPad: NumberPad!
     
@@ -122,17 +122,19 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
             UISetting.navigationTitleSetting(navigationBar: navigationController?.navigationBar ?? UINavigationBar())
         }
 
-//        mEasyPayTxtFieldMoney.text = ""
+
         mEasyPayTxtFieldMoney.placeholder = "금액을 입력해주세요"
         mEasyPayTxtFieldTaxFree.placeholder = "금액을 입력해주세요"
-//        mEasyPayTxtFieldTaxFree.text = ""
-        createInstallMentTargetPickerView()
-        dismissPickerView()
+
+//        createInstallMentTargetPickerView()
+//        dismissPickerView()
         mEasyPayTxtFieldInstallMent.tintColor = .clear
         mEasyPayTxtFieldInstallMent.textAlignment = .right
         mEasyPayTxtFieldMoney.textAlignment = .right
         mEasyPayTxtFieldTaxFree.textAlignment = .right
         mEasyPayTxtFieldSvc.textAlignment = .right
+        mEasyPayInstallMentGroup.alpha = 0.0
+        mEasyPayInstallMentGroup.isHidden = true
         mEasyPayInstallMentGroup.alpha = 0.0
         mEasyPayInstallMentMenu.selectedSegmentIndex = 0
 
@@ -331,11 +333,11 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
                         return
                     }
                     _tid = TID
-                    mCatSdk.EasyRecipt(TrdType: "A10", TID: _tid, Qr: "", 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: String(mInstallMent), 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                    mCatSdk.EasyRecipt(TrdType: "A10", TID: _tid, Qr: "", 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
                 }
                 return
             }
-            mCatSdk.EasyRecipt(TrdType: "A10", TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), Qr: "", 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: String(mInstallMent), 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER), CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+            mCatSdk.EasyRecipt(TrdType: "A10", TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), Qr: "", 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER), CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
 
         } else {
 //            if mMultiStoreUse.isOn {
@@ -346,11 +348,11 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
                         return
                     }
                     _tid = TID
-                    startPayment(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTaxFreeMoney, InstallMent: String(mInstallMent), CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "",StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
+                    startPayment(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTaxFreeMoney, InstallMent: "0", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "",StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
                 }
                 return
             }
-            startPayment(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTaxFreeMoney, InstallMent: String(mInstallMent), CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "",StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+            startPayment(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTaxFreeMoney, InstallMent: "0", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "",StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
         }
     }
     
@@ -379,14 +381,14 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
         
     }
     
-    func dismissPickerView() {
-            let toolBar = UIToolbar()
-            toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: "선택", style: .plain, target: self, action: #selector (EasyPayController.HidePickerView))
-            toolBar.setItems([button], animated: true)
-            toolBar.isUserInteractionEnabled = true
-        mEasyPayTxtFieldInstallMent.inputAccessoryView = toolBar
-    }
+//    func dismissPickerView() {
+//            let toolBar = UIToolbar()
+//            toolBar.sizeToFit()
+//        let button = UIBarButtonItem(title: "선택", style: .plain, target: self, action: #selector (EasyPayController.HidePickerView))
+//            toolBar.setItems([button], animated: true)
+//            toolBar.isUserInteractionEnabled = true
+//        mEasyPayTxtFieldInstallMent.inputAccessoryView = toolBar
+//    }
     
     /**
      금액 설정해서 체크 해야 할게 많아서 금액만 가져오는 부분 따로 처리
@@ -396,7 +398,7 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
         mTaxFreeMoney = Int(mEasyPayTxtFieldTaxFree.text!.replacingOccurrences(of: ",", with: "")) ?? 0
         mTaxMoney = Int(mEasyPayTxtTax.text!.replacingOccurrences(of: ",", with: "")) ?? 0 ?? 0
         mSvcMoney = Int(mEasyPayTxtSvc.text!.replacingOccurrences(of: ",", with: "")) ?? 0 ?? 0 //강제로 숫자만 입력하게 되어 있지만 MAC에서 강제로 영문이나 기타 문자등을 입력한 경우에 대비하여 옆에 같이 처리 한다
-        mInstallMent = mEasyPayInstallMentMenu.selectedSegmentIndex == 1 ? Int(mEasyPayTxtFieldInstallMent.text!) ?? 0 : 0 //할부설정의 경우에만 할부 개월 수를 설정한다.
+//        mInstallMent = mEasyPayInstallMentMenu.selectedSegmentIndex == 1 ? Int(mEasyPayTxtFieldInstallMent.text!) ?? 0 : 0 //할부설정의 경우에만 할부 개월 수를 설정한다.
     }
     
     /**
@@ -419,12 +421,6 @@ class EasyPayController: UIViewController, UIViewControllerTransitioningDelegate
             return false
         }
        
-        //나쁜 의도로 할부 설정을 하고 나서 금액을 수정해서 신용결제를 요청하는 경우가 발생할 수 있기 때문에
-//        if (mTotalMoney - mTaxFreeMoney) <= Setting.shared.InstallMentMinimum && mEasyPayInstallMentMenu.selectedSegmentIndex == 1 {
-//            //이런 경우를 의도적으로 만들면 나쁜 사람
-//            AlertBox(title: "에러", message: "할부 최소금액은 \(Setting.shared.InstallMentMinimum + 1)원 이상입니다.", text: "확인" )
-//            return false
-//        }
         //2020-06-21 할부 계산은 원금은 기준으로 하고 비과세를 뺀 금액으로 하지 않는다. kim.jy
         if (mTotalMoney) < Int(Setting.shared.getDefaultUserData(_key: define.INSTALLMENT_MINVALUE))! && mEasyPayInstallMentMenu.selectedSegmentIndex == 1 {
             //이런 경우를 의도적으로 만들면 나쁜 사람
@@ -677,7 +673,7 @@ extension EasyPayController: PayResultDelegate ,CatResultDelegate {
     }
 }
 
-extension EasyPayController:UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UITabBarControllerDelegate{
+extension EasyPayController:UITextFieldDelegate, UITabBarControllerDelegate{
     //탭바로 다른 탭 이동시 네비게이션은 초기로 이동한다
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         self.navigationController?.popViewController(animated: false)
@@ -688,31 +684,31 @@ extension EasyPayController:UITextFieldDelegate, UIPickerViewDelegate, UIPickerV
     }
 
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return mInstallMentArray.count
-    }
+//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//        return mInstallMentArray.count
+//    }
 
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return mInstallMentArray[row]
-    }
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        return mInstallMentArray[row]
+//    }
 
 
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        mEasyPayTxtFieldInstallMent.text = mInstallMentArray[row]
-    }
+//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        mEasyPayTxtFieldInstallMent.text = mInstallMentArray[row]
+//    }
     
-    func createInstallMentTargetPickerView() {
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        mEasyPayTxtFieldInstallMent.inputView = pickerView
-        mEasyPayTxtFieldInstallMent.text = mInstallMentArray[0]
-    }
-    
-    @objc func HidePickerView()
-    {
-        mEasyPayTxtFieldInstallMent.resignFirstResponder()
-    }
+//    func createInstallMentTargetPickerView() {
+//        let pickerView = UIPickerView()
+//        pickerView.delegate = self
+//        mEasyPayTxtFieldInstallMent.inputView = pickerView
+//        mEasyPayTxtFieldInstallMent.text = mInstallMentArray[0]
+//    }
+//    
+//    @objc func HidePickerView()
+//    {
+//        mEasyPayTxtFieldInstallMent.resignFirstResponder()
+//    }
     
     func AlertBox(title : String, message : String, text : String) {
             let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
