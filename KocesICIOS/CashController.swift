@@ -1351,7 +1351,7 @@ extension CashController : NumberPadDelegate {
         guard let number = key else {
             return
         }
-
+        let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
         switch number {
         case .delete:
             switch isTouch {
@@ -1516,7 +1516,12 @@ extension CashController : NumberPadDelegate {
                 TxtUpdate(IsNext: true)
                 break
             case "Number":
-                TxtUpdate(IsNext: true)
+            
+                if appUISetting == define.UIMethod.Product.rawValue {
+                    isTouch = ""
+                } else {
+                    TxtUpdate(IsNext: true)
+                }
                 break
             default:
                 break
@@ -1608,7 +1613,7 @@ extension CashController : NumberPadDelegate {
                             _tid = TID
                             let Number:String = mCashTextFieldNumber.text ?? ""
                             
-                            let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                           
                             if appUISetting == define.UIMethod.Product.rawValue {
                                 let result = "B에서 전달한 결과값"
                                 onDismiss?( _tid, String(mCashReciptTarget+1),Number, BSN, ADDR, NUM, PHONE,
@@ -1624,7 +1629,7 @@ extension CashController : NumberPadDelegate {
                     //여기에 캣으로 보낼전문 구성
                     //2020-05-26 tlswlsdn 위에 보면 다이렉트로 서버요청을 하는(번호입력부분), msr 읽는 부분 두군데에 넣으면 됩니다
                     let Number:String = mCashTextFieldNumber.text ?? ""
-                    let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                 
                     if appUISetting == define.UIMethod.Product.rawValue {
                         let result = "B에서 전달한 결과값"
                         onDismiss?( Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), String(mCashReciptTarget+1),Number, Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE),Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER))
@@ -1643,7 +1648,7 @@ extension CashController : NumberPadDelegate {
                             }
                             _tid = TID
                             
-                            let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                         
                             if appUISetting == define.UIMethod.Product.rawValue {
                                 let result = "B에서 전달한 결과값"
                                 onDismiss?( _tid, String(mCashReciptTarget+1), mCashTextFieldNumber.text ?? "", BSN, ADDR, NUM, PHONE,
@@ -1657,7 +1662,7 @@ extension CashController : NumberPadDelegate {
                         return
                     }
                     
-                    let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+               
                     if appUISetting == define.UIMethod.Product.rawValue {
                         let result = "B에서 전달한 결과값"
                         onDismiss?( Setting.shared.getDefaultUserData(_key: define.STORE_TID), String(mCashReciptTarget+1),mCashTextFieldNumber.text ?? "", Setting.shared.getDefaultUserData(_key: define.STORE_NAME), Setting.shared.getDefaultUserData(_key: define.STORE_ADDR), Setting.shared.getDefaultUserData(_key: define.STORE_BSN), Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
@@ -1690,7 +1695,7 @@ extension CashController : NumberPadDelegate {
                                 return
                             }
                             _tid = TID
-                            let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+                      
                             if appUISetting == define.UIMethod.Product.rawValue {
                                 let result = "B에서 전달한 결과값"
                                 onDismiss?( _tid, String(mCashReciptTarget+1),"", BSN, ADDR, NUM, PHONE,
@@ -1702,8 +1707,7 @@ extension CashController : NumberPadDelegate {
                         }
                         return
                     }
-                    
-                    let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
+             
                     if appUISetting == define.UIMethod.Product.rawValue {
                         let result = "B에서 전달한 결과값"
                         onDismiss?( Setting.shared.getDefaultUserData(_key: define.STORE_TID), String(mCashReciptTarget+1),"", Setting.shared.getDefaultUserData(_key: define.STORE_NAME), Setting.shared.getDefaultUserData(_key: define.STORE_ADDR), Setting.shared.getDefaultUserData(_key: define.STORE_BSN), Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
@@ -1723,7 +1727,6 @@ extension CashController : NumberPadDelegate {
                     //2020-05-26 tlswlsdn 위에 보면 다이렉트로 서버요청을 하는(번호입력부분), msr 읽는 부분 두군데에 넣으면 됩니다
                     let Number:String = mCashTextFieldNumber.text ?? ""
 
-                    let appUISetting = Setting.shared.getDefaultUserData(_key: define.APP_UI_CHECK)
                     if appUISetting == define.UIMethod.Product.rawValue {
                         let result = "B에서 전달한 결과값"
                         onDismiss?( Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), String(mCashReciptTarget+1),"", Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE),Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER))
