@@ -92,7 +92,7 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
     
     @State var isCheckCardOrQr = false   //멤버십/포인트 에서 사용하는 카드/바코드 선택 false=card true=qr
     
-    mutating func setData(영수증데이터 _receipt:DBTradeResult, 뷰컨트롤러 _controller:String, 전표번호 _dbNumber:String){
+    mutating func setData(영수증데이터 _receipt:DBTradeResult, 상품영수증데이터 _productList:[DBProductTradeResult] = [], 뷰컨트롤러 _controller:String, 전표번호 _dbNumber:String){
         mTradeResult = _receipt
         tradeType = _receipt.getTrade()
         CancelInfo = _receipt.getCancel()

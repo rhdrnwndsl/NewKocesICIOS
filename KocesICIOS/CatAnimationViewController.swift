@@ -202,10 +202,12 @@ class CatAnimationViewController: UIViewController {
     public func GoToReceiptSwiftUI() {
         DispatchQueue.main.async {[self] in
             let nextVC = UIHostingController(rootView: ReceiptSwiftUI())
+            let lastTradeData = sqlite.instance.getTradeLastData()
+            
             if String(describing: self.catlistener).contains("Credit") {
-                nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "신용", 전표번호: String(sqlite.instance.getTradeList().count))
+                nextVC.rootView.setData(영수증데이터: lastTradeData, 상품영수증데이터: sqlite.instance.getProductTradeAllList(pNum: lastTradeData.getProductNum()) ?? [],뷰컨트롤러: "신용", 전표번호: String(sqlite.instance.getTradeList().count))
             } else  {
-                nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "현금", 전표번호: String(sqlite.instance.getTradeList().count))
+                nextVC.rootView.setData(영수증데이터: lastTradeData, 상품영수증데이터: sqlite.instance.getProductTradeAllList(pNum: lastTradeData.getProductNum()) ?? [],뷰컨트롤러: "현금", 전표번호: String(sqlite.instance.getTradeList().count))
             }
           
             nextVC.modalPresentationStyle = .fullScreen
@@ -220,7 +222,9 @@ class CatAnimationViewController: UIViewController {
     public func GoToReceiptEasySwiftUI() {
         DispatchQueue.main.async {[self] in
             let nextVC = UIHostingController(rootView: ReceiptSwiftUI())
-            nextVC.rootView.setData(영수증데이터: sqlite.instance.getTradeLastData(), 뷰컨트롤러: "간편결제", 전표번호: String(sqlite.instance.getTradeList().count))
+            let lastTradeData = sqlite.instance.getTradeLastData()
+            
+            nextVC.rootView.setData(영수증데이터: lastTradeData, 상품영수증데이터: sqlite.instance.getProductTradeAllList(pNum: lastTradeData.getProductNum()) ?? [], 뷰컨트롤러: "간편결제", 전표번호: String(sqlite.instance.getTradeList().count))
             nextVC.modalPresentationStyle = .fullScreen
             self.connectionTimeout?.invalidate()
             self.connectionTimeout = nil

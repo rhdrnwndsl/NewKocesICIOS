@@ -85,7 +85,7 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
     
     @State var scanTimeout:Timer?       //프린트시 타임아웃
     
-    mutating func setData(영수증데이터 _receipt:DBTradeResult, 뷰컨트롤러 _controller:String, 전표번호 _dbNumber:String)
+    mutating func setData(영수증데이터 _receipt:DBTradeResult, 상품영수증데이터 _productList:[DBProductTradeResult] = [], 뷰컨트롤러 _controller:String, 전표번호 _dbNumber:String)
     {
         mTradeResult = _receipt
         tradeType = _receipt.getTrade()
@@ -159,73 +159,7 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
         StoreOwner = _receipt.getStoreOwner().isEmpty ? "":_receipt.getStoreOwner()
         StorePhone = _receipt.getStorePhone().isEmpty ? "":_receipt.getStorePhone()
         StoreAddr = _receipt.getStoreAddr().isEmpty ? "":_receipt.getStoreAddr()
-        
-//        for (key,value) in UserDefaults.standard.dictionaryRepresentation() {
-//            if key == (define.STORE_TID) {
-//                if (value as! String) != "" {
-//                    if (value as! String) == TID {
-//                        BSN = Setting.shared.getDefaultUserData(_key: define.STORE_BSN) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_BSN).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "0").replacingOccurrences(of: " ", with: "")
-//                        
-//                        StoreName = Setting.shared.getDefaultUserData(_key: define.STORE_NAME) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_NAME).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "0").replacingOccurrences(of: " ", with: "")
-//                        
-//                        StoreAddr = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_ADDR).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "0").replacingOccurrences(of: " ", with: "")
-//                        StorePhone = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_PHONE).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "0").replacingOccurrences(of: " ", with: "")
-//                        StoreOwner = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER) != "" ? Setting.shared.getDefaultUserData(_key: define.STORE_OWNER).replacingOccurrences(of: " ", with: ""):Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "0").replacingOccurrences(of: " ", with: "")
-//                    }
-//                }
-//            } else if key == (define.STORE_TID + "1") {
-//                if (value as! String) != "" {
-//                    if (value as! String) == TID {
-//                        StoreName = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "1")
-//                        BSN = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "1")
-//                        StoreAddr = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "1")
-//                        StorePhone = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "1")
-//                        StoreOwner = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "1")
-//                    }
-//                }
-//            } else if key == (define.STORE_TID + "2") {
-//                if (value as! String) != "" {
-//                    if (value as! String) == TID {
-//                        StoreName = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "2")
-//                        BSN = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "2")
-//                        StoreAddr = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "2")
-//                        StorePhone = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "2")
-//                        StoreOwner = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "2")
-//                    }
-//                }
-//            } else if key == (define.STORE_TID + "3") {
-//                if (value as! String) != "" {
-//                    if (value as! String) == TID {
-//                        StoreName = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "3")
-//                        BSN = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "3")
-//                        StoreAddr = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "3")
-//                        StorePhone = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "3")
-//                        StoreOwner = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "3")
-//                    }
-//                }
-//            } else if key == (define.STORE_TID + "4") {
-//                if (value as! String) != "" {
-//                    if (value as! String) == TID {
-//                        StoreName = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "4")
-//                        BSN = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "4")
-//                        StoreAddr = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "4")
-//                        StorePhone = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "4")
-//                        StoreOwner = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "4")
-//                    }
-//                }
-//            } else if key == (define.STORE_TID + "5") {
-//                if (value as! String) != "" {
-//                    if (value as! String) == TID {
-//                        StoreName = Setting.shared.getDefaultUserData(_key: define.STORE_NAME + "5")
-//                        BSN = Setting.shared.getDefaultUserData(_key: define.STORE_BSN + "5")
-//                        StoreAddr = Setting.shared.getDefaultUserData(_key: define.STORE_ADDR + "5")
-//                        StorePhone = Setting.shared.getDefaultUserData(_key: define.STORE_PHONE + "5")
-//                        StoreOwner = Setting.shared.getDefaultUserData(_key: define.STORE_OWNER + "5")
-//                    }
-//                }
-//            }
-//        }
-        
+
         self.paylistener.delegate = self
         self.catlistener.delegate = self
         
@@ -255,25 +189,13 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
             break
         }
         
-//        mKocesKey = _message["TradeNo"] ?? ""
-//        mConfirmNumber = _message["AuNo"] ?? ""
-//        mConfirmDate = _message["TrdDate"] ?? ""
-//
-//        mCashTxtFieldKocesKey.text = mKocesKey
-//        mCashTxtFieldConfirmNum.text = mConfirmNumber
-//        mCashTxtFieldConfirmDate.text = mConfirmDate
-        
         // 카드애니메이션뷰 컨트롤러가 여전히 떠있으니 해당 뷰를 지운다
         Utils.CardAnimationViewControllerClear()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
             //거래상세내역에서 거래내역뷰로 돌아간다
-//            self.mode.wrappedValue.dismiss()
-            
             if _status == .OK {
-//                Utils.customAlertBoxInit(Title: _title, Message: _totalString, LoadingBar: false, GetButton: "확인")
                 Utils.customAlertBoxInit(Title: _title, Message: "정상적으로 취소처리 되었습니다", LoadingBar: false, GetButton: "확인")
-            }
-            else {
+            } else {
                 Utils.customAlertBoxInit(Title: _title, Message: _message["Message"] ?? _message["ERROR"] ?? "거래실패", LoadingBar: false, GetButton: "확인")
             }
         }
@@ -692,8 +614,6 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
         var dateString:String = ""
         if 원거래일자.count >= 6 {
             dateString = String(auchars[0...1]) + "/" + String(auchars[2...3]) + "/" + String(auchars[4...5])
-//            + " " +
-//                String(auchars[6...7]) + ":" + String(auchars[8...9]) + ":" + String(auchars[10...])
         } else {
             dateString = 원거래일자
         }
@@ -788,8 +708,6 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
         let _msg:String = _message["Message"] ?? ""
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
             //거래상세내역에서 거래내역뷰로 돌아간다
-//            self.mode.wrappedValue.dismiss()
-            
             if _msg.contains("프린트") {
                 self.scanTimeout?.invalidate()
                 self.scanTimeout = nil
@@ -1051,13 +969,7 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
         } else {
             _totalMoney = "\(getTotalMoney(_money: Int(Money)!, _tax: Int(Tax)!, _Svc: Int(ServiceCharge)!, _Txf:Int(TaxFree)!))"
         }
-       
-//        printParser(프린트메세지: Utils.PrintPad(leftString: Utils.PrintBold(_bold: "결제금액") , rightString: Utils.PrintBold(_bold: Utils.PrintMoney(Money: _totalMoney) + "원")) + define.PENTER)
         printParser(프린트메세지: Utils.PrintPad(leftString: Utils.PrintBold(_bold: "결제금액") , rightString: Utils.PrintBold(_bold: Utils.PrintMoney(Money: _totalMoney) + "원")) + define.PENTER)
-//        printParser(프린트메세지: Utils.PrintPadBold(leftString: "결제금액" , rightString: Utils.PrintMoney(Money: _totalMoney) + "원") + define.PENTER)
-
-        //응답메시지
-//        printParser(프린트메세지: "응답메세지" + define.PENTER)
         //-------------
         printParser(프린트메세지: Utils.PrintLine(line: "- ") + define.PENTER)
         printParser(프린트메세지: "메세지 " + mMessage + define.PENTER)
@@ -1079,7 +991,6 @@ struct ReceiptEasyPaySwiftUI: View, PayResultDelegate, PrintResultDelegate, CatR
         if !Setting.shared.getDefaultUserData(_key: define.PRINT_LOWLAVEL).isEmpty {
             _totalMsg += (define.PLEFT + Setting.shared.getDefaultUserData(_key: define.PRINT_LOWLAVEL) + define.PENTER)
         }
-//            let prtStr = KocesSdk.instance.PrintParser(파싱할프린트내용: _msg)
         let prtStr = KocesSdk.instance.PrintParser(파싱할프린트내용: _totalMsg)
         //프린트 타임아웃 체크
         printTimeOut()

@@ -693,7 +693,7 @@ extension TradelistController: UITableViewDelegate,UITableViewDataSource, UITabB
             return
         }
         
-        
+        let lastTradeData = self.mDBTradeTableResult![indexPath.row]
         if self.mDBTradeTableResult?[indexPath.row].getTrade() == define.TradeMethod.Kakao.rawValue ||
             self.mDBTradeTableResult?[indexPath.row].getTrade() == define.TradeMethod.Ali.rawValue ||
             self.mDBTradeTableResult?[indexPath.row].getTrade() == define.TradeMethod.AppCard.rawValue ||
@@ -701,11 +701,11 @@ extension TradelistController: UITableViewDelegate,UITableViewDataSource, UITabB
             self.mDBTradeTableResult?[indexPath.row].getTrade() == define.TradeMethod.EmvQr.rawValue ||
             self.mDBTradeTableResult?[indexPath.row].getTrade() == define.TradeMethod.Wechat.rawValue {
             let controller = UIHostingController(rootView: ReceiptEasyPaySwiftUI())
-            controller.rootView.setData(영수증데이터: self.mDBTradeTableResult![indexPath.row], 뷰컨트롤러: "거래내역", 전표번호: String(mDBTradeTableResult![indexPath.row].getid()))
+            controller.rootView.setData(영수증데이터: lastTradeData, 상품영수증데이터: sqlite.instance.getProductTradeAllList(pNum: lastTradeData.getProductNum()) ?? [], 뷰컨트롤러: "거래내역", 전표번호: String(lastTradeData.getid()))
             navigationController?.pushViewController(controller, animated: true)
         } else {
             let controller = UIHostingController(rootView: ReceiptSwiftUI())
-            controller.rootView.setData(영수증데이터: self.mDBTradeTableResult![indexPath.row], 뷰컨트롤러: "거래내역", 전표번호: String(mDBTradeTableResult![indexPath.row].getid()))
+            controller.rootView.setData(영수증데이터: lastTradeData, 상품영수증데이터: sqlite.instance.getProductTradeAllList(pNum: lastTradeData.getProductNum()) ?? [], 뷰컨트롤러: "거래내역", 전표번호: String(lastTradeData.getid()))
             navigationController?.pushViewController(controller, animated: true)
         }
         
