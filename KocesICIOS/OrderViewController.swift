@@ -589,6 +589,57 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     @objc func otherButtonTapped() {
         print("기타결제 버튼 클릭")
+        // 팝업창 구현: UIAlertController에 텍스트필드와 분류 리스트 액션 추가
+        let alert = UIAlertController(title: "기타결제 선택", message: nil, preferredStyle: .alert)
+       
+        // 현금IC 선택
+        alert.addAction(UIAlertAction(title: "현금IC", style: .default, handler: { _ in
+            //CAT상태에서만 사용한다.
+            if KocesSdk.instance.bleState != define.TargetDeviceState.CATCONNECTED {
+                self.AlertBox(title: "에러", message: "CAT 단말기 사용시 거래 가능", text: "확인")
+            } else {
+                // cat 인 경우 실행
+                self.chshICPay()
+                
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func chshICPay() {
+        // 그냥 여기서 거래를 진행한다
+        self.catlistener = CatResult()
+        self.catlistener?.delegate = self
+        if Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" {
+            TidAlertBox(title: "거래하실 가맹점을 선택해 주세요") { [self](BSN,TID,NUM,PHONE,OWNER,ADDR) in
+                if TID == "" {
+                    AlertBox(title: "거래를 종료합니다.", message: "", text: "확인")
+                    return
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                    if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+  
+                        self.mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: TID, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                    } else {
+                        self.AlertBox(title: "에러", message: "CAT 단말기 사용시 거래 가능", text: "확인")
+                    }
+                  
+                }
+            }
+            return
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+        
+                    self.mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                } else {
+                    self.AlertBox(title: "에러", message: "CAT 단말기 사용시 거래 가능", text: "확인")
+                }
+              
+            }
+        }
     }
     
     func getStoryBoard() -> UIStoryboard? {
