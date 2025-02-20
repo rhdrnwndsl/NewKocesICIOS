@@ -611,7 +611,7 @@ class CashICCatController: UIViewController, UIViewControllerTransitioningDelega
     
     func CashIC_Buy(TID _tid:String, StoreName _storeName:String,StoreAddr _storeAddr:String,
                     StoreNumber _storeNumber:String,StorePhone _storePhone:String,StoreOwner _storeOwner:String) {
-        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 간소화거래여부: mSimpleType.isOn == true ? "1":"0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 간소화거래여부: mSimpleType.isOn == true ? "1":"0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
     }
     
     func CashIC_Cancel(TID _tid:String, StoreName _storeName:String,StoreAddr _storeAddr:String,
@@ -620,12 +620,12 @@ class CashICCatController: UIViewController, UIViewControllerTransitioningDelega
         let dateFormat = DateFormatter()    //코드상에 표현될 날짜의 포맷
         dateFormat.locale = Locale(identifier: "en_US_POSIX")
         dateFormat.dateFormat = "yyMMdd"
-        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Cancel, TID: _tid, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAuDatePicker.date), 원승인번호: Utils.rightPad(str: (mAuNumber.text ?? "").replacingOccurrences(of: " ", with: ""), fillChar: " ", length: 13), 간소화거래여부: "0", 카드정보수록여부: mCardDataType.isOn == true ? "1":"0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Cancel, TID: _tid, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAuDatePicker.date), 원승인번호: Utils.rightPad(str: (mAuNumber.text ?? "").replacingOccurrences(of: " ", with: ""), fillChar: " ", length: 13), 간소화거래여부: "0", 카드정보수록여부: mCardDataType.isOn == true ? "1":"0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
     }
     
     func CashIC_Search(TID _tid:String, StoreName _storeName:String,StoreAddr _storeAddr:String,
                        StoreNumber _storeNumber:String,StorePhone _storePhone:String,StoreOwner _storeOwner:String) {
-        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Search, TID: _tid, 거래금액: "0", 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Search, TID: _tid, 거래금액: "0", 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
     }
     
     func CashIC_BuySearch(TID _tid:String, StoreName _storeName:String,StoreAddr _storeAddr:String,
@@ -634,7 +634,7 @@ class CashICCatController: UIViewController, UIViewControllerTransitioningDelega
         let dateFormat = DateFormatter()    //코드상에 표현될 날짜의 포맷
         dateFormat.locale = Locale(identifier: "en_US_POSIX")
         dateFormat.dateFormat = "yyMMdd"
-        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.BuySearch, TID: _tid, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAuDatePicker.date), 원승인번호: Utils.rightPad(str: (mAuNumber.text ?? "").replacingOccurrences(of: " ", with: ""), fillChar: " ", length: 13), 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "",StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner, CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.BuySearch, TID: _tid, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAuDatePicker.date), 원승인번호: Utils.rightPad(str: (mAuNumber.text ?? "").replacingOccurrences(of: " ", with: ""), fillChar: " ", length: 13), 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "",StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner, CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
     }
     
     func CashIC_CancelSearch(TID _tid:String, StoreName _storeName:String,StoreAddr _storeAddr:String,
@@ -643,7 +643,7 @@ class CashICCatController: UIViewController, UIViewControllerTransitioningDelega
         let dateFormat = DateFormatter()    //코드상에 표현될 날짜의 포맷
         dateFormat.locale = Locale(identifier: "en_US_POSIX")
         dateFormat.dateFormat = "yyMMdd"
-        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.CancelSearch, TID: _tid, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAuDatePicker.date), 원승인번호: Utils.rightPad(str: (mAuNumber.text ?? "").replacingOccurrences(of: " ", with: ""), fillChar: " ", length: 13), 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "",StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner, CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+        mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.CancelSearch, TID: _tid, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAuDatePicker.date), 원승인번호: Utils.rightPad(str: (mAuNumber.text ?? "").replacingOccurrences(of: " ", with: ""), fillChar: " ", length: 13), 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "",StoreName: _storeName, StoreAddr: _storeAddr, StoreNumber: _storeNumber, StorePhone: _storePhone, StoreOwner: _storeOwner, CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
     }
     
     

@@ -63,6 +63,9 @@ class KaKaoPaySdk {
     /** 망취소발생하여 거래를 취소했다는 것을 알려주는 내용 */
     var m2TradeCancel:Bool = false
     
+    /** 상품결제 시 사용 */
+    public var mProduct:[BasketItem] = Array()
+    
     func Clear() {
         전문번호 = ""
         _Tid = ""
@@ -103,15 +106,22 @@ class KaKaoPaySdk {
         mStoreOwner = "";
         
         QrKind = "";
+        
+        if mProduct.count > 0 {
+            mProduct.removeAll()
+            mProduct = []
+        }
     }
     
     /**
      일단 카카오페이만 테스트한다. 다른 부분이 들어온다면 공통 처리부분만 만들어두고 나머지를 이후 처리한다
      */
     func EasyPay(Command 전문번호:String,Tid _Tid:String,Date 거래일시: String,PosVer 단말버전:String,Etc 단말추가정보:String,CancelDevine 취소구분:String, AuDate 원거래일자:String, AuNo 원승인번호:String, InputType 입력방법:String, BarCode 바코드번호:String, OTCCardCode OTC카드번호:[UInt8], Money 거래금액:String,Tax 세금:String,ServiceCharge 봉사료:String,TaxFree 비과세:String,Currency 통화코드:String, Installment 할부개월:String, PayType 결제수단:String, CancelMethod 취소종류:String, CancelType 취소타입:String, StoreCode 점포코드:String, PEM _PEM:String, trid _trid:String, CardBIN 카드BIN:String, SearchNumber 조회고유번호:String, WorkingKeyIndex _WorkingKeyIndex:String, SignUse 전자서명사용여부:String, SignPadSerial 사인패드시리얼번호:String, SignData 전자서명데이터:[UInt8], StoreData 가맹점데이터:String, StoreInfo 가맹점추가정보:String, KocesUniNum KOCES거래고유번호:String, payLinstener _paymentlistener:PayResultDelegate,
-                 StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String, QrKind _qrKind:String) {
+                 StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String, QrKind _qrKind:String, Products _products:[BasketItem]) {
         //시작전에 항상 클리어 한다.
         Clear()
+        
+        KaKaoPaySdk.instance.mProduct = _products
         
         KaKaoPaySdk.instance.mStoreName = _mStoreName;
         KaKaoPaySdk.instance.mStoreAddr = _mStoreAddr;
@@ -897,6 +907,8 @@ class KaKaoPaySdk {
             _iscancel = true
         }
         
+        var audateTimeValue = ""
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
             switch _resData["TrdType"] {
             case Command.CMD_KAKAOPAY_RES:
@@ -919,7 +931,7 @@ class KaKaoPaySdk {
                     if !self.mDBAppToApp {
 
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
-                        sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                        audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                     StoreName: KaKaoPaySdk.instance.mStoreName,
                                                     StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                     StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -960,6 +972,11 @@ class KaKaoPaySdk {
                                                     ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                     _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         
+                        for item in mProduct {
+                            // 각 product에 대해 작업 수행
+                            sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.Kakao.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                        }
+                        
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
                             let controller = Utils.topMostViewController() as! CardAnimationViewController
                             controller.GoToReceiptEasyPaySwiftUI()
@@ -995,7 +1012,7 @@ class KaKaoPaySdk {
                     if !self.mDBAppToApp {
 
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
-                        sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                        audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                     StoreName: KaKaoPaySdk.instance.mStoreName,
                                                     StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                     StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1036,6 +1053,11 @@ class KaKaoPaySdk {
                                                     PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                     ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                     _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                        
+                        for item in mProduct {
+                            // 각 product에 대해 작업 수행
+                            sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.Kakao.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                        }
                         
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
                             let controller = Utils.topMostViewController() as! CardAnimationViewController
@@ -1197,7 +1219,7 @@ class KaKaoPaySdk {
                          */
 
                         if Scan_Data_Parser(Scan: KaKaoPaySdk.instance.바코드번호) == define.EasyPayMethod.App_Card.rawValue {
-                            sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                         StoreName: KaKaoPaySdk.instance.mStoreName,
                                                         StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                         StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1224,8 +1246,13 @@ class KaKaoPaySdk {
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.AppCard.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         } else {
-                            sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                         StoreName: KaKaoPaySdk.instance.mStoreName,
                                                         StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                         StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1252,6 +1279,11 @@ class KaKaoPaySdk {
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.EmvQr.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         }
                       
                         
@@ -1293,7 +1325,7 @@ class KaKaoPaySdk {
                          */
 
                         if Scan_Data_Parser(Scan: KaKaoPaySdk.instance.바코드번호) == define.EasyPayMethod.App_Card.rawValue {
-                            sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                         StoreName: KaKaoPaySdk.instance.mStoreName,
                                                         StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                         StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1321,8 +1353,13 @@ class KaKaoPaySdk {
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: "",_emvTradeType:"",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.AppCard.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         } else {
-                            sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                         StoreName: KaKaoPaySdk.instance.mStoreName,
                                                         StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                         StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1350,6 +1387,11 @@ class KaKaoPaySdk {
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.EmvQr.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         }
 
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
@@ -1395,7 +1437,7 @@ class KaKaoPaySdk {
                     if !self.mDBAppToApp {
         
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
-                        sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                        audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                     StoreName: KaKaoPaySdk.instance.mStoreName,
                                                     StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                     StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1438,6 +1480,11 @@ class KaKaoPaySdk {
                                                     ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                     _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         
+                        for item in mProduct {
+                            // 각 product에 대해 작업 수행
+                            sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.Zero.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                        }
+                        
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
                             let controller = Utils.topMostViewController() as! CardAnimationViewController
                             controller.GoToReceiptEasyPaySwiftUI()
@@ -1479,7 +1526,7 @@ class KaKaoPaySdk {
                     if !self.mDBAppToApp {
                  
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
-                        sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
+                        audateTimeValue = sqlite.instance.InsertTrade(Tid: KaKaoPaySdk.instance._Tid,
                                                     StoreName: KaKaoPaySdk.instance.mStoreName,
                                                     StoreAddr: KaKaoPaySdk.instance.mStoreAddr,
                                                     StoreNumber: KaKaoPaySdk.instance.mStoreNumber,
@@ -1522,6 +1569,11 @@ class KaKaoPaySdk {
                                                     PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                     ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                     _icInputType: "",_emvTradeType: "",_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                        
+                        for item in mProduct {
+                            // 각 product에 대해 작업 수행
+                            sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: KaKaoPaySdk.instance._Tid, storeName: KaKaoPaySdk.instance.mStoreName, storeAddr: KaKaoPaySdk.instance.mStoreAddr, storeNumber: KaKaoPaySdk.instance.mStoreNumber, storePhone: KaKaoPaySdk.instance.mStorePhone, storeOwner: KaKaoPaySdk.instance.mStoreOwner, trade: define.TradeMethod.Zero.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                        }
                         
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
                             let controller = Utils.topMostViewController() as! CardAnimationViewController

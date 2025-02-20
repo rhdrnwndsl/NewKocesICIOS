@@ -148,12 +148,12 @@ class CreditCancelController: UIViewController {
                     AlertBox(title: "거래를 종료합니다.", message: "", text: "확인")
                     return
                 }
-                mCatSdk.PayCredit(TID: TID, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAudatePicker.date), 원승인번호: (mAuNumber.text ?? ""), 코세스거래고유번호: "", 할부: "0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener.delegate!)
+                mCatSdk.PayCredit(TID: TID, 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAudatePicker.date), 원승인번호: (mAuNumber.text ?? ""), 코세스거래고유번호: "", 할부: "0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener.delegate!, Products: [])
             }
             return
         }
         //여기에 캣으로 보낼전문 구성
-        mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAudatePicker.date), 원승인번호: (mAuNumber.text ?? ""), 코세스거래고유번호: "", 할부: "0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener.delegate!)
+        mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(money), 세금: "0", 봉사료: "0", 비과세: "0", 원거래일자: dateFormat.string(from: mAudatePicker.date), 원승인번호: (mAuNumber.text ?? ""), 코세스거래고유번호: "", 할부: "0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener.delegate!, Products: [])
     }
     
     func CreditCancel() {
@@ -208,11 +208,11 @@ class CreditCancelController: UIViewController {
                     return
                 }
                 _tid = TID
-                mpaySdk.CreditIC(Tid: _tid, Money: String(money), Tax: 0, ServiceCharge: 0, TaxFree: 0, InstallMent: "0", OriDate: dateFormat.string(from: mAudatePicker.date) + "000000", CancenInfo: mCanCelInfo, mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: paylistener.delegate!,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
+                mpaySdk.CreditIC(Tid: _tid, Money: String(money), Tax: 0, ServiceCharge: 0, TaxFree: 0, InstallMent: "0", OriDate: dateFormat.string(from: mAudatePicker.date) + "000000", CancenInfo: mCanCelInfo, mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: paylistener.delegate!,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, Products: [])
             }
             return
         }
-        mpaySdk.CreditIC(Tid: _tid, Money: String(money), Tax: 0, ServiceCharge: 0, TaxFree: 0, InstallMent: "0", OriDate: dateFormat.string(from: mAudatePicker.date) + "000000", CancenInfo: mCanCelInfo, mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: paylistener.delegate!,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+        mpaySdk.CreditIC(Tid: _tid, Money: String(money), Tax: 0, ServiceCharge: 0, TaxFree: 0, InstallMent: "0", OriDate: dateFormat.string(from: mAudatePicker.date) + "000000", CancenInfo: mCanCelInfo, mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: paylistener.delegate!,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), Products: [])
     }
 
 }

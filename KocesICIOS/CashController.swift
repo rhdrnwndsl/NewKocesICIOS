@@ -456,14 +456,14 @@ class CashController: UIViewController, UIViewControllerTransitioningDelegate {
                         }
                         _tid = TID
                         let Number:String = mCashTextFieldNumber.text ?? ""
-                        mCatSdk.CashRecipt(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                        mCatSdk.CashRecipt(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
                     }
                     return
                 }
                 //여기에 캣으로 보낼전문 구성
                 //2020-05-26 tlswlsdn 위에 보면 다이렉트로 서버요청을 하는(번호입력부분), msr 읽는 부분 두군데에 넣으면 됩니다
                 let Number:String = mCashTextFieldNumber.text ?? ""
-                mCatSdk.CashRecipt(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                mCatSdk.CashRecipt(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
 
             } else {
 //                if mMultiStoreUse.isOn {
@@ -474,11 +474,11 @@ class CashController: UIViewController, UIViewControllerTransitioningDelegate {
                             return
                         }
                         _tid = TID
-                        mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: _tid, AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
+                        mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: _tid, AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, Products: [])
                     }
                     return
                 }
-                mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: _tid, AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+                mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: _tid, AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), Products: [])
             }
 
         }
@@ -503,11 +503,11 @@ class CashController: UIViewController, UIViewControllerTransitioningDelegate {
                             return
                         }
                         _tid = TID
-                        mpaySdk.CashRecipt(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
+                        mpaySdk.CashRecipt(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, Products: [])
                     }
                     return
                 }
-                mpaySdk.CashRecipt(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+                mpaySdk.CashRecipt(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), Products: [])
             } else if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                 if Utils.CheckCatPortIP() != "" {
                     AlertBox(title: "에러", message: Utils.CheckCatPortIP(), text: "확인" )
@@ -519,7 +519,7 @@ class CashController: UIViewController, UIViewControllerTransitioningDelegate {
                 //2020-05-26 tlswlsdn 위에 보면 다이렉트로 서버요청을 하는(번호입력부분), msr 읽는 부분 두군데에 넣으면 됩니다
                 let Number:String = mCashTextFieldNumber.text ?? ""
 
-                mCatSdk.CashRecipt(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                mCatSdk.CashRecipt(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
                 
             } else {
                 AlertBox(title: "에러", message: "연결 가능한 단말기가 존재하지 않습니다", text: "확인" )
@@ -1622,7 +1622,7 @@ extension CashController : NumberPadDelegate {
                                 return
                             }
                             
-                            mCatSdk.CashRecipt(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                            mCatSdk.CashRecipt(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
                         }
                         return
                     }
@@ -1636,7 +1636,7 @@ extension CashController : NumberPadDelegate {
                         dismiss(animated: true, completion: nil)
                         return
                     }
-                    mCatSdk.CashRecipt(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                    mCatSdk.CashRecipt(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
 
                 } else {
     //                if mMultiStoreUse.isOn {
@@ -1657,7 +1657,7 @@ extension CashController : NumberPadDelegate {
                                 return
                             }
                             
-                            mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: _tid, AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
+                            mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: _tid, AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, Products: [])
                         }
                         return
                     }
@@ -1670,7 +1670,7 @@ extension CashController : NumberPadDelegate {
                         return
                     }
                     
-                    mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+                    mpaySdk.CashReciptDirectInput(CancelReason: mCancelReason, Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), AuDate: "", AuNo: "", Num: mCashTextFieldNumber.text!, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(mMoney), TaxAmt: String(mTaxMoney), SvcAmt: String(mSvcMoney), TaxFreeAmt: String(mTxfMoney), InsYn: String(mCashReciptTarget+1), kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), Products: [])
                 }
 
             }
@@ -1703,7 +1703,7 @@ extension CashController : NumberPadDelegate {
                                 dismiss(animated: true, completion: nil)
                                 return
                             }
-                            mpaySdk.CashRecipt(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER)
+                            mpaySdk.CashRecipt(Tid: _tid, Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, Products: [])
                         }
                         return
                     }
@@ -1715,7 +1715,7 @@ extension CashController : NumberPadDelegate {
                         return
                     }
                     
-                    mpaySdk.CashRecipt(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+                    mpaySdk.CashRecipt(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(mMoney), Tax: mTaxMoney, ServiceCharge: mSvcMoney, TaxFree: mTxfMoney, PrivateOrBusiness: mCashReciptTarget+1, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: mCancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), Products: [])
                 } else if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                     if Utils.CheckCatPortIP() != "" {
                         AlertBox(title: "에러", message: Utils.CheckCatPortIP(), text: "확인" )
@@ -1734,7 +1734,7 @@ extension CashController : NumberPadDelegate {
                         return
                     }
                     
-                    mCatSdk.CashRecipt(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                    mCatSdk.CashRecipt(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTxfMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: Number, 개인법인구분: String(mCashReciptTarget+1), 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: [])
                     
                 } else {
                     AlertBox(title: "에러", message: "연결 가능한 단말기가 존재하지 않습니다", text: "확인" )

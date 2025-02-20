@@ -88,7 +88,8 @@ class EnvironmentTabController: UISplitViewController, UISplitViewControllerDele
             SettingSection(
                 title: "가맹점설정",
                 items: [
-                    SettingItem(title: "가맹점정보", hasSwitch: false, detail: "Standard", action: nil),
+//                    SettingItem(title: "가맹점정보", hasSwitch: false, detail: "Standard", action: nil),
+                    SettingItem(title: "결제설정", hasSwitch: false, detail: "Standard", action: nil)
                 ]
             )
             return [

@@ -97,6 +97,9 @@ class CatSdk {
     
     let LOG_RECEIVE_ERROR_PARSING_FAIL:String = "CAT read Data error : 응답데이터 파싱에 실패했습니다"
     
+    /** 상품결제 시 사용 */
+    public var mProduct:[BasketItem] = Array()
+    
     //사용한 데이터 삭제
     func Clear() {
         Tid = ""
@@ -129,6 +132,11 @@ class CatSdk {
         mStoreNumber = "";
         mStorePhone = "";
         mStoreOwner = "";
+        
+        if mProduct.count > 0 {
+            mProduct.removeAll()
+            mProduct = []
+        }
     }
     
     func ConnectPrintServer() -> Bool {
@@ -275,8 +283,11 @@ class CatSdk {
     ///   - _ExtraFiled: <#_ExtraFiled description#>
     ///   - Result: <#Result description#>
     /// - Returns: <#description#>
-    func PayCredit(TID _tid:String,거래금액 _money:String, 세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,원거래일자 _AuDate:String, 원승인번호 _AuNo:String, 코세스거래고유번호 _UniqueNumber:String, 할부 _InstallMent:String, 취소 _Cancel:Bool,가맹점데이터 _MchData:String, 여유필드 _ExtraFiled:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate) {
+    func PayCredit(TID _tid:String,거래금액 _money:String, 세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,원거래일자 _AuDate:String, 원승인번호 _AuNo:String, 코세스거래고유번호 _UniqueNumber:String, 할부 _InstallMent:String, 취소 _Cancel:Bool,가맹점데이터 _MchData:String, 여유필드 _ExtraFiled:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate, Products _products:[BasketItem]) {
         Clear()
+        
+        CatSdk.instance.mProduct = _products
+        
         CatSdk.instance.catlistener = Result
         CatSdk.instance.Tid = _tid
         CatSdk.instance.mStoreName = _storeName
@@ -820,8 +831,11 @@ class CatSdk {
     }
  
     
-    func CashIC(업무구분 _Class:define.CashICBusinessClassification, TID _tid:String,거래금액 _money:String,세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,원거래일자 _AuDate:String,원승인번호 _AuNo:String,간소화거래여부 _directTrade:String,카드정보수록여부 _cardInfo:String,취소 _cancel:Bool,가맹점데이터 _mchData:String,여유필드 _extrafield:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate) {
+    func CashIC(업무구분 _Class:define.CashICBusinessClassification, TID _tid:String,거래금액 _money:String,세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,원거래일자 _AuDate:String,원승인번호 _AuNo:String,간소화거래여부 _directTrade:String,카드정보수록여부 _cardInfo:String,취소 _cancel:Bool,가맹점데이터 _mchData:String,여유필드 _extrafield:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate, Products _products:[BasketItem]) {
         Clear()
+        
+        CatSdk.instance.mProduct = _products
+        
         CatSdk.instance.catlistener = Result
         CatSdk.instance.Tid = _tid
         CatSdk.instance.mStoreName = _storeName;
@@ -1137,8 +1151,11 @@ class CatSdk {
         }
     }
     
-    func CashRecipt(TID _tid:String,거래금액 _money:String, 세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,원거래일자 _AuDate:String, 원승인번호 _AuNo:String, 코세스거래고유번호 _UniqueNumber:String, 할부 _InstallMent:String,고객번호 _id:String,개인법인구분 _pb:String, 취소 _Cancel:Bool,최소사유 _CancelReason:String , 가맹점데이터 _MchData:String, 여유필드 _ExtraFiled:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate) {
+    func CashRecipt(TID _tid:String,거래금액 _money:String, 세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,원거래일자 _AuDate:String, 원승인번호 _AuNo:String, 코세스거래고유번호 _UniqueNumber:String, 할부 _InstallMent:String,고객번호 _id:String,개인법인구분 _pb:String, 취소 _Cancel:Bool,최소사유 _CancelReason:String , 가맹점데이터 _MchData:String, 여유필드 _ExtraFiled:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate, Products _products:[BasketItem]) {
         Clear()
+        
+        CatSdk.instance.mProduct = _products
+        
         CatSdk.instance.catlistener = Result
         CatSdk.instance.Tid = _tid
         CatSdk.instance.mStoreName = _storeName;
@@ -1453,8 +1470,11 @@ class CatSdk {
         }
     }
 
-    func EasyRecipt(TrdType _trdType:String,TID _tid:String,Qr _qr:String,거래금액 _money:String, 세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,EasyKind _easyKind:String,원거래일자 _AuDate:String, 원승인번호 _AuNo:String, 서브승인번호 _subAuNo:String,할부 _InstallMent:String, 가맹점데이터 _MchData:String, 호스트가맹점데이터 _hostMchData:String,코세스거래고유번호 _UniqueNumber:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate) {
+    func EasyRecipt(TrdType _trdType:String,TID _tid:String,Qr _qr:String,거래금액 _money:String, 세금 _tax:String,봉사료 _svc:String,비과세 _txf:String,EasyKind _easyKind:String,원거래일자 _AuDate:String, 원승인번호 _AuNo:String, 서브승인번호 _subAuNo:String,할부 _InstallMent:String, 가맹점데이터 _MchData:String, 호스트가맹점데이터 _hostMchData:String,코세스거래고유번호 _UniqueNumber:String, StoreName _storeName:String, StoreAddr _storeAddr:String, StoreNumber _storeNumber:String, StorePhone _storePhone:String, StoreOwner _storeOwner:String, CompletionCallback Result:CatResultDelegate, Products _products:[BasketItem]) {
         Clear()
+        
+        CatSdk.instance.mProduct = _products
+        
         CatSdk.instance.catlistener = Result
         CatSdk.instance.TrdType = _trdType;
         CatSdk.instance.QrBarcode = _qr;
@@ -2470,9 +2490,11 @@ class CatSdk {
         (_recv["TrdDate"] ?? "") +
         (_recv["AuNo"] ?? "")
         
+        var audateTimeValue = ""
+        
         switch _recv["ResponseNo"]! {
         case "E15":
-            sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
+            audateTimeValue = sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
                                         StoreName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName,
                                         StoreAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr,
                                         StoreNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber,
@@ -2503,10 +2525,16 @@ class CatSdk {
                                         PcKind: _recv["PcKind"] ?? "", PcCoupon: _recv["PcCoupon"] ?? "", PcPoint: _recv["PcPoint"] ?? "", PcCard: _recv["PcCard"] ?? "",
                                         ProductNum: productNum,_ddc: _recv["DDCYn"] ?? "",_edc: _recv["EDCYn"] ?? "",
                                         _icInputType: "",_emvTradeType: "",_pointCode: _recv["PtResCode"] ?? "",_serviceName: _recv["PtResService"] ?? "",_earnPoint: _recv["PtResEarnPoint"] ?? "",_usePoint: _recv["PtResUsePoint"] ?? "",_totalPoint: _recv["PtResTotalPoint"] ?? "",_percent:  _recv["PtResPercentPoint"] ?? "",_userName: _recv["PtResUserName"] ?? "",_pointStoreNumber: _recv["PtResStoreNumber"] ?? "",_MemberCardTypeText: _recv["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _recv["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _recv["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _recv["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _recv["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _recv["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _recv["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _recv["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _recv["MemberStoreNoText"] ?? "")
+            
+            for item in mProduct {
+                // 각 product에 대해 작업 수행
+                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid, storeName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName, storeAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr, storeNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber, storePhone: CatSdk.instance.mStorePhone == "" ? "":CatSdk.instance.mStorePhone, storeOwner: CatSdk.instance.mStoreOwner == "" ? "":CatSdk.instance.mStoreOwner, trade: _신용현금.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: _취소여부.rawValue, auDate: _recv["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+            }
+        
             break
         case "E25":
             _취소여부  = define.TradeMethod.Cancel
-            sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
+            audateTimeValue = sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
                                         StoreName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName,
                                         StoreAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr,
                                         StoreNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber,
@@ -2537,6 +2565,11 @@ class CatSdk {
                                         PcKind: _recv["PcKind"] ?? "", PcCoupon: _recv["PcCoupon"] ?? "", PcPoint: _recv["PcPoint"] ?? "", PcCard: _recv["PcCard"] ?? "",
                                         ProductNum: productNum,_ddc: _recv["DDCYn"] ?? "",_edc: _recv["EDCYn"] ?? "",
                                         _icInputType: "",_emvTradeType: "",_pointCode: _recv["PtResCode"] ?? "",_serviceName: _recv["PtResService"] ?? "",_earnPoint: _recv["PtResEarnPoint"] ?? "",_usePoint: _recv["PtResUsePoint"] ?? "",_totalPoint: _recv["PtResTotalPoint"] ?? "",_percent:  _recv["PtResPercentPoint"] ?? "",_userName: _recv["PtResUserName"] ?? "",_pointStoreNumber: _recv["PtResStoreNumber"] ?? "",_MemberCardTypeText: _recv["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _recv["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _recv["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _recv["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _recv["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _recv["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _recv["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _recv["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _recv["MemberStoreNoText"] ?? "")
+            
+            for item in mProduct {
+                // 각 product에 대해 작업 수행
+                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid, storeName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName, storeAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr, storeNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber, storePhone: CatSdk.instance.mStorePhone == "" ? "":CatSdk.instance.mStorePhone, storeOwner: CatSdk.instance.mStoreOwner == "" ? "":CatSdk.instance.mStoreOwner, trade: _신용현금.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: _취소여부.rawValue, auDate: _recv["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+            }
             break
         case "E35":
             DisConnectServer()
@@ -2624,9 +2657,11 @@ class CatSdk {
         Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO) +
         (_recv["TrdDate"] ?? "") +
         (_recv["AuNo"] ?? "")
+        
+        var audateTimeValue = ""
 
         if _recv["CardKind"]! == "3" || _recv["CardKind"]! == "4" {
-            sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
+            audateTimeValue = sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
                                         StoreName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName,
                                         StoreAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr,
                                         StoreNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber,
@@ -2657,8 +2692,14 @@ class CatSdk {
                                         PcKind: _recv["PcKind"] ?? "", PcCoupon: _recv["PcCoupon"] ?? "", PcPoint: _recv["PcPoint"] ?? "", PcCard: _recv["PcCard"] ?? "",
                                         ProductNum: productNum,_ddc: _recv["DDCYn"] ?? "",_edc: _recv["EDCYn"] ?? "",
                                         _icInputType: "",_emvTradeType: "",_pointCode: _recv["PtResCode"] ?? "",_serviceName: _recv["PtResService"] ?? "",_earnPoint: _recv["PtResEarnPoint"] ?? "",_usePoint: _recv["PtResUsePoint"] ?? "",_totalPoint: _recv["PtResTotalPoint"] ?? "",_percent:  _recv["PtResPercentPoint"] ?? "",_userName: _recv["PtResUserName"] ?? "",_pointStoreNumber: _recv["PtResStoreNumber"] ?? "",_MemberCardTypeText: _recv["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _recv["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _recv["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _recv["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _recv["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _recv["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _recv["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _recv["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _recv["MemberStoreNoText"] ?? "")
+            
+            for item in mProduct {
+                // 각 product에 대해 작업 수행
+                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid, storeName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName, storeAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr, storeNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber, storePhone: CatSdk.instance.mStorePhone == "" ? "":CatSdk.instance.mStorePhone, storeOwner: CatSdk.instance.mStoreOwner == "" ? "":CatSdk.instance.mStoreOwner, trade: _신용현금.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: _취소여부.rawValue, auDate: _recv["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+            }
+            
         } else {
-            sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
+            audateTimeValue = sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
                                         StoreName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName,
                                         StoreAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr,
                                         StoreNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber,
@@ -2689,6 +2730,12 @@ class CatSdk {
                                         PcKind: _recv["PcKind"] ?? "", PcCoupon: _recv["PcCoupon"] ?? "", PcPoint: _recv["PcPoint"] ?? "", PcCard: _recv["PcCard"] ?? "",
                                         ProductNum: productNum,_ddc: _recv["DDCYn"] ?? "",_edc: _recv["EDCYn"] ?? "",
                                         _icInputType: "",_emvTradeType: "",_pointCode: _recv["PtResCode"] ?? "",_serviceName: _recv["PtResService"] ?? "",_earnPoint: _recv["PtResEarnPoint"] ?? "",_usePoint: _recv["PtResUsePoint"] ?? "",_totalPoint: _recv["PtResTotalPoint"] ?? "",_percent:  _recv["PtResPercentPoint"] ?? "",_userName: _recv["PtResUserName"] ?? "",_pointStoreNumber: _recv["PtResStoreNumber"] ?? "",_MemberCardTypeText: _recv["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _recv["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _recv["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _recv["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _recv["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _recv["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _recv["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _recv["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _recv["MemberStoreNoText"] ?? "")
+            
+            for item in mProduct {
+                // 각 product에 대해 작업 수행
+                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid, storeName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName, storeAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr, storeNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber, storePhone: CatSdk.instance.mStorePhone == "" ? "":CatSdk.instance.mStorePhone, storeOwner: CatSdk.instance.mStoreOwner == "" ? "":CatSdk.instance.mStoreOwner, trade: _신용현금.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: _취소여부.rawValue, auDate: _recv["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+            }
+            
         }
         DisConnectServer()
         if String(describing: Utils.topMostViewController()).contains("CatAnimationViewController") {
@@ -2724,9 +2771,11 @@ class CatSdk {
         (_recv["TrdDate"] ?? "") +
         (_recv["AuNo"] ?? "")
         
+        var audateTimeValue = ""
+        
         switch _recv["ResponseNo"]! {
         case "C15":
-            sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
+            audateTimeValue = sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
                                         StoreName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName,
                                         StoreAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr,
                                         StoreNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber,
@@ -2758,10 +2807,13 @@ class CatSdk {
                                         ProductNum: productNum,_ddc: _recv["DDCYn"] ?? "",_edc: _recv["EDCYn"] ?? "",
                                         _icInputType: "",_emvTradeType: "",_pointCode: _recv["PtResCode"] ?? "",_serviceName: _recv["PtResService"] ?? "",_earnPoint: _recv["PtResEarnPoint"] ?? "",_usePoint: _recv["PtResUsePoint"] ?? "",_totalPoint: _recv["PtResTotalPoint"] ?? "",_percent:  _recv["PtResPercentPoint"] ?? "",_userName: _recv["PtResUserName"] ?? "",_pointStoreNumber: _recv["PtResStoreNumber"] ?? "",_MemberCardTypeText: _recv["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _recv["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _recv["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _recv["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _recv["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _recv["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _recv["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _recv["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _recv["MemberStoreNoText"] ?? "")
             
-            
+            for item in mProduct {
+                // 각 product에 대해 작업 수행
+                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid, storeName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName, storeAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr, storeNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber, storePhone: CatSdk.instance.mStorePhone == "" ? "":CatSdk.instance.mStorePhone, storeOwner: CatSdk.instance.mStoreOwner == "" ? "":CatSdk.instance.mStoreOwner, trade: define.TradeMethod.CAT_CashIC.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _recv["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+            }
             break
         case "C25":
-            sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
+            audateTimeValue = sqlite.instance.InsertTrade(Tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid,
                                         StoreName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName,
                                         StoreAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr,
                                         StoreNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber,
@@ -2793,6 +2845,10 @@ class CatSdk {
                                         ProductNum: productNum,_ddc: _recv["DDCYn"] ?? "",_edc: _recv["EDCYn"] ?? "",
                                         _icInputType: "",_emvTradeType: "",_pointCode: _recv["PtResCode"] ?? "",_serviceName: _recv["PtResService"] ?? "",_earnPoint: _recv["PtResEarnPoint"] ?? "",_usePoint: _recv["PtResUsePoint"] ?? "",_totalPoint: _recv["PtResTotalPoint"] ?? "",_percent:  _recv["PtResPercentPoint"] ?? "",_userName: _recv["PtResUserName"] ?? "",_pointStoreNumber: _recv["PtResStoreNumber"] ?? "",_MemberCardTypeText: _recv["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _recv["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _recv["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _recv["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _recv["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _recv["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _recv["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _recv["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _recv["MemberStoreNoText"] ?? "")
             
+            for item in mProduct {
+                // 각 product에 대해 작업 수행
+                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: CatSdk.instance.Tid == "" ? _recv["TermID"]!:CatSdk.instance.Tid, storeName: CatSdk.instance.mStoreName == "" ? "":CatSdk.instance.mStoreName, storeAddr: CatSdk.instance.mStoreAddr == "" ? "":CatSdk.instance.mStoreAddr, storeNumber: CatSdk.instance.mStoreNumber == "" ? "":CatSdk.instance.mStoreNumber, storePhone: CatSdk.instance.mStorePhone == "" ? "":CatSdk.instance.mStorePhone, storeOwner: CatSdk.instance.mStoreOwner == "" ? "":CatSdk.instance.mStoreOwner, trade: define.TradeMethod.CAT_CashIC.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _recv["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+            }
             break
         case "C35":
             DisConnectServer()

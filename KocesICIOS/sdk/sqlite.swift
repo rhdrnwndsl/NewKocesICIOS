@@ -1541,7 +1541,7 @@ class sqlite {
         _MemberAfterMemberPointText: String,
         _MemberOptionCodeText: String,
         _MemberStoreNoText: String
-    ) {
+    ) -> String {
         // 1) 취소 거래인지 확인
         //    - 취소라면 기존 거래가 있는지 검색해서 업데이트할지, 아니면 Insert 할지 결정
         var audateTimeValue = ""   // OriAuDateTime에 들어갈 값
@@ -1632,7 +1632,7 @@ class sqlite {
                     _MemberOptionCodeText: _MemberOptionCodeText,
                     _MemberStoreNoText: _MemberStoreNoText
                 )
-                return
+                return audateTimeValue
             }
         }
 
@@ -1663,7 +1663,7 @@ class sqlite {
 
         guard sqlite3_prepare_v2(db_point, query, -1, &insertStatement, nil) == SQLITE_OK else {
             debugPrint("Failed to prepare trade INSERT statement.")
-            return
+            return audateTimeValue
         }
 
         // Bind할 값 (순서 중요!)
@@ -1702,7 +1702,7 @@ class sqlite {
                         errMsg = "No error message"
                     }
                     print("Binding string failed: \(errMsg)")
-                    return
+                    return audateTimeValue
                 }
             case let intValue as Int:
                 if sqlite3_bind_int(insertStatement, position, Int32(intValue)) != SQLITE_OK {
@@ -1715,7 +1715,7 @@ class sqlite {
                         errMsg = "No error message"
                     }
                     print("Binding int failed: \(errMsg)")
-                    return
+                    return audateTimeValue
                 }
             default:
                 // 필요한 경우 Double, etc. 로 확장 가능
@@ -1730,7 +1730,7 @@ class sqlite {
                         errMsg = "No error message"
                     }
                     print("Binding unknown type failed: \(errMsg)")
-                    return
+                    return audateTimeValue
                 }
             }
         }
@@ -1750,6 +1750,8 @@ class sqlite {
         } else {
             debugPrint("Failed to insert trade.")
         }
+        
+        return audateTimeValue
     }
     
     // 기존 거래가 있는지 확인하는 함수

@@ -65,14 +65,6 @@ class PaySdk
     var mCompCode:String = ""
     /** 망취소 발생시 카운트함 -> 현금쪽은 망취소 발생하여 해당 내역을 다시 수신하면 거래성공으로 간주해버리기때문에 */
 //    var mEotCancel:Int = 0    해당 변수는 kocesSdk 내부에 선언해두었다
-    
-    /** 포인트거래 시 전문번호 */
-    var  mPointCompName:String = "";
-    var  mPointComdPasswdYN:String = "";
-    var  mPointTrdType:String = "";
-    var  mPointQrNo:String = "";
-
-    var  mPointPassWd:String = "";
 
     /** 거래 시 사용되는 데이터 */
     var mTmicno:[UInt8] = Array()
@@ -112,9 +104,17 @@ class PaySdk
     var m2TradeCancel:Bool = false
     
     var mDeley = 0.5
-    /** ApptoAppActivity 또는 PaymentActivity 로 데이터를 보내기 위한 리스너 */
-    //리스너 부분은 일단 패스 차후에 구현
-    // private SerialInterface.PaymentListener mPaymentListener;
+    
+    /** 포인트거래 시 전문번호 */
+    var  mPointCompName:String = "";
+    var  mPointComdPasswdYN:String = "";
+    var  mPointTrdType:String = "";
+    var  mPointQrNo:String = "";
+
+    var  mPointPassWd:String = "";
+    
+    /** 상품결제 시 사용 */
+    public var mProduct:[BasketItem] = Array()
 
     /**
      * PaymentSdk 생성
@@ -129,8 +129,7 @@ class PaySdk
     
    
     /** 사용되는 변수들 초기화 */
-    func Clear()
-    {
+    func Clear(){
         PaySdk.instance.mMoney = 0;
         PaySdk.instance.mInstallment = 0;
         PaySdk.instance.mPrivateBusinessType = 0
@@ -181,8 +180,7 @@ class PaySdk
         for i in 0 ..< PaySdk.instance.mEncryptInfo.count {
             PaySdk.instance.mEncryptInfo[i] = 0x00
         }
-        
-        //PaySdk.instance.mTmicno = []
+
         PaySdk.instance.mEncryptInfo = []
         PaySdk.instance.mKsn_track2data = []
         PaySdk.instance.mIcreqData = []
@@ -217,22 +215,26 @@ class PaySdk
         PaySdk.instance.mStoreNumber = "";
         PaySdk.instance.mStorePhone = "";
         PaySdk.instance.mStoreOwner = "";
+        
+        if mProduct.count > 0 {
+            mProduct.removeAll()
+            mProduct = []
+        }
+        
+        /** 포인트거래 시 전문번호 */
+        PaySdk.instance.mPointTrdType = "";
+        PaySdk.instance.mPointQrNo = "";
+        PaySdk.instance.mPointCompName = "";
+        PaySdk.instance.mPointComdPasswdYN = "";
+        PaySdk.instance.mPointPassWd = "";
     }
 
-    /** 사용하지 않음 */
-    func Reset()
-    {
-
-    }
-    
     /** 현재 뷰컨트롤러 확인한다 */
     func CurrentViewController() -> String {
         let topController: UIViewController = Utils.topMostViewController()!
         let topControllerName: String = String(describing: topController.self)
         return topControllerName
-//        if topControllerName.contains("Credit") {
-//            debugPrint(topControllerName)
-//        }
+
     }
     
     /**
@@ -255,12 +257,13 @@ class PaySdk
      * @param _KocesTradeUnique 코세스거래고유번호
      * @param _Target 장치가 카드리더기=1 사인패드=2 멀티사인패드=3 멀티서명패드=4
      */
-    func CashRecipt(Tid _Tid:String,Money _money:String,Tax _tax:Int,ServiceCharge _serviceCharge:Int,TaxFree _taxfree:Int,PrivateOrBusiness _privateorbusiness:Int,ReciptIndex _reciptIndex:String,CancelInfo _CancelInfo:String,OriDate _oriDate:String,InputMethod _InputMethod:String,CancelReason _cancelReason:String
-                    ,ptCardCode _ptCardCode:String,ptAcceptNum _ptAcceptNum:String,BusinessData _BusinessData:String,Bangi _bangi:String,KocesTradeUnique _KocesTradeUnique:String,payLinstener _paymentlistener:PayResultDelegate,
-                    StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String)
+    func CashRecipt(Tid _Tid:String,Money _money:String,Tax _tax:Int,ServiceCharge _serviceCharge:Int,TaxFree _taxfree:Int,PrivateOrBusiness _privateorbusiness:Int,ReciptIndex _reciptIndex:String,CancelInfo _CancelInfo:String,OriDate _oriDate:String,InputMethod _InputMethod:String,CancelReason _cancelReason:String,ptCardCode _ptCardCode:String,ptAcceptNum _ptAcceptNum:String,BusinessData _BusinessData:String,Bangi _bangi:String,KocesTradeUnique _KocesTradeUnique:String,payLinstener _paymentlistener:PayResultDelegate,
+                    StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String, Products _products:[BasketItem])
     {
         //시작전에 항상 클리어 한다.
         Clear()
+        
+        PaySdk.instance.mProduct = _products
         
         PaySdk.instance.mStoreName = _mStoreName;
         PaySdk.instance.mStoreAddr = _mStoreAddr;
@@ -351,10 +354,12 @@ class PaySdk
      */
     func CreditIC(Tid _Tid:String,Money _money:String,Tax _tax:Int,ServiceCharge _serviceCharge:Int,TaxFree _txf:Int,InstallMent _installment:String,OriDate _oriDate:String,
                   CancenInfo _cancelInfo:String,mchData _mchData:String,KocesTreadeCode _kocesTradeCode:String,CompCode _compCode:String,SignDraw _signDraw:String,FallBackUse _fallBackUse:String,payLinstener _paymentlistener:PayResultDelegate,
-                  StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String)
+                  StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String, Products _products:[BasketItem])
     {
         //시작전에 항상 클리어 한다.
         Clear()
+        
+        PaySdk.instance.mProduct = _products
         
         PaySdk.instance.mStoreName = _mStoreName;
         PaySdk.instance.mStoreAddr = _mStoreAddr;
@@ -2009,10 +2014,12 @@ class PaySdk
         * @param _kocesNumber 코세스거래고유번호
         */
     func CashReciptDirectInput(CancelReason _CancelReason:String,Tid _Tid:String, AuDate _AuDate:String, AuNo _AuNo:String, Num _num:String, Command _Command:String, MchData _MchData:String, TrdAmt _TrdAmt:String, TaxAmt _TaxAmt:String, SvcAmt _SvcAmt:String, TaxFreeAmt _TaxFreeAmt:String, InsYn _InsYn:String,kocesNumber _kocesNumber:String,payLinstener _paymentlistener:PayResultDelegate,
-                               StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String)
+                               StoreName _mStoreName:String, StoreAddr _mStoreAddr:String,StoreNumber _mStoreNumber:String,StorePhone _mStorePhone:String,StoreOwner _mStoreOwner:String, Products _products:[BasketItem])
     {
         //시작전에 항상 클리어 한다.
         Clear()
+        
+        PaySdk.instance.mProduct = _products
         
         PaySdk.instance.mStoreName = _mStoreName;
         PaySdk.instance.mStoreAddr = _mStoreAddr;
@@ -2259,6 +2266,7 @@ class PaySdk
         (_resData["TrdDate"] ?? "") +
         (_resData["AuNo"] ?? "")
  
+        var audateTimeValue = ""
         
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley) { [self] in
             switch _resData["TrdType"] {
@@ -2302,7 +2310,7 @@ class PaySdk
                         }
                 
 
-                        sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                        audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                     StoreName: PaySdk.instance.mStoreName,
                                                     StoreAddr: PaySdk.instance.mStoreAddr,
                                                     StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2328,6 +2336,11 @@ class PaySdk
                                                     PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                     ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                     _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                        
+                        for item in mProduct {
+                            // 각 product에 대해 작업 수행
+                            sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: PaySdk.instance.mTid, storeName: PaySdk.instance.mStoreName, storeAddr: PaySdk.instance.mStoreAddr, storeNumber: PaySdk.instance.mStoreNumber, storePhone: PaySdk.instance.mStorePhone, storeOwner: PaySdk.instance.mStoreOwner, trade: define.TradeMethod.Cash.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                        }
        
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
                             let controller = Utils.topMostViewController() as! CardAnimationViewController
@@ -2377,7 +2390,7 @@ class PaySdk
                             _현금영수증발급형태 = define.TradeMethod.CashDirect
                         }
                         
-                        sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                        audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                     StoreName: PaySdk.instance.mStoreName,
                                                     StoreAddr: PaySdk.instance.mStoreAddr,
                                                     StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2404,6 +2417,11 @@ class PaySdk
                                                     PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                     ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                     _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                        
+                        for item in mProduct {
+                            // 각 product에 대해 작업 수행
+                            sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: PaySdk.instance.mTid, storeName: PaySdk.instance.mStoreName, storeAddr: PaySdk.instance.mStoreAddr, storeNumber: PaySdk.instance.mStoreNumber, storePhone: PaySdk.instance.mStorePhone, storeOwner: PaySdk.instance.mStoreOwner, trade: define.TradeMethod.Cash.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                        }
 
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
                             let controller = Utils.topMostViewController() as! CardAnimationViewController
@@ -2443,6 +2461,9 @@ class PaySdk
         Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO) +
         (_resData["TrdDate"] ?? "") +
         (_resData["AuNo"] ?? "")
+        
+        var audateTimeValue = ""
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley) { [self] in
             switch _resData["TrdType"] {
             case Command.CMD_IC_OK_RES:
@@ -2469,7 +2490,7 @@ class PaySdk
                      
                         if _resData["CardKind"]! == "3" || _resData["CardKind"]! == "4"  {
 
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2496,8 +2517,13 @@ class PaySdk
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: PaySdk.instance.mTid, storeName: PaySdk.instance.mStoreName, storeAddr: PaySdk.instance.mStoreAddr, storeNumber: PaySdk.instance.mStoreNumber, storePhone: PaySdk.instance.mStorePhone, storeOwner: PaySdk.instance.mStoreOwner, trade: define.TradeMethod.Credit.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2524,6 +2550,11 @@ class PaySdk
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: PaySdk.instance.mTid, storeName: PaySdk.instance.mStoreName, storeAddr: PaySdk.instance.mStoreAddr, storeNumber: PaySdk.instance.mStoreNumber, storePhone: PaySdk.instance.mStorePhone, storeOwner: PaySdk.instance.mStoreOwner, trade: define.TradeMethod.Credit.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.NoCancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         }
 
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
@@ -2563,7 +2594,7 @@ class PaySdk
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
                     
                         if _resData["CardKind"]! == "3" || _resData["CardKind"]! == "4" {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2591,8 +2622,13 @@ class PaySdk
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: PaySdk.instance.mTid, storeName: PaySdk.instance.mStoreName, storeAddr: PaySdk.instance.mStoreAddr, storeNumber: PaySdk.instance.mStoreNumber, storePhone: PaySdk.instance.mStorePhone, storeOwner: PaySdk.instance.mStoreOwner, trade: define.TradeMethod.Credit.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2620,6 +2656,11 @@ class PaySdk
                                                         PcKind: _resData["PcKind"] ?? "", PcCoupon: _resData["PcCoupon"] ?? "", PcPoint: _resData["PcPoint"] ?? "", PcCard: _resData["PcCard"] ?? "",
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
+                            
+                            for item in mProduct {
+                                // 각 product에 대해 작업 수행
+                                sqlite.instance.insertProductTradeDetail(productNum: productNum, tid: PaySdk.instance.mTid, storeName: PaySdk.instance.mStoreName, storeAddr: PaySdk.instance.mStoreAddr, storeNumber: PaySdk.instance.mStoreNumber, storePhone: PaySdk.instance.mStorePhone, storeOwner: PaySdk.instance.mStoreOwner, trade: define.TradeMethod.Credit.rawValue, code: item.product.code, name: item.product.name, category: item.product.category, price: item.product.totalPrice, count: String(item.quantity), isCombine: "1", isCancel: define.TradeMethod.Cancel.rawValue, auDate: _resData["TrdDate"]!.replacingOccurrences(of: " ", with: ""), oriAuDateTime: audateTimeValue)
+                            }
                         }
 
                         if String(describing: Utils.topMostViewController()).contains("CardAnimationViewController") {
@@ -2678,6 +2719,9 @@ class PaySdk
         Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO) +
         (_resData["TrdDate"] ?? "") +
         (_resData["AuNo"] ?? "")
+        
+        var audateTimeValue = ""
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley) { [self] in
             switch _resData["TrdType"] {
             case Command.CMD_POINT_EARN_RES:
@@ -2705,7 +2749,7 @@ class PaySdk
                         var _cardKind = _resData["CardKind"] ?? ""
                         if _cardKind == "3" || _cardKind == "4"  {
 
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2733,7 +2777,7 @@ class PaySdk
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2798,7 +2842,7 @@ class PaySdk
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
                         var _cardKind = _resData["CardKind"] ?? ""
                         if _cardKind == "3" || _cardKind == "4" {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2827,7 +2871,7 @@ class PaySdk
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2899,7 +2943,7 @@ class PaySdk
                         var _cardKind = _resData["CardKind"] ?? ""
                         if _cardKind == "3" || _cardKind == "4"  {
 
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2927,7 +2971,7 @@ class PaySdk
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -2991,7 +3035,7 @@ class PaySdk
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
                         var _cardKind = _resData["CardKind"] ?? ""
                         if _cardKind == "3" || _cardKind == "4" {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -3020,7 +3064,7 @@ class PaySdk
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -3103,6 +3147,9 @@ class PaySdk
         Setting.shared.getDefaultUserData(_key: define.LOGIN_POS_NO) +
         (_resData["TrdDate"] ?? "") +
         (_resData["AuNo"] ?? "")
+        
+        var audateTimeValue = ""
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + mDeley) { [self] in
             switch _resData["TrdType"] {
         
@@ -3130,7 +3177,7 @@ class PaySdk
                         var _cardKind = _resData["CardKind"] ?? ""
                         if _cardKind == "3" || _cardKind == "4"  {
 
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -3158,7 +3205,7 @@ class PaySdk
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -3222,7 +3269,7 @@ class PaySdk
                         //여기서 sqlite에 거래 내역 저장 한다. 신용/현금인경우 리스너를 제거하고 영수증으로 보냄
                         var _cardKind = _resData["CardKind"] ?? ""
                         if _cardKind == "3" || _cardKind == "4" {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,
@@ -3251,7 +3298,7 @@ class PaySdk
                                                         ProductNum: productNum,_ddc: _resData["DDCYn"] ?? "",_edc: _resData["EDCYn"] ?? "",
                                                         _icInputType: PaySdk.instance.mICInputMethod,_emvTradeType: PaySdk.instance.mEMVTradeType,_pointCode: _resData["PtResCode"] ?? "",_serviceName: _resData["PtResService"] ?? "",_earnPoint: _resData["PtResEarnPoint"] ?? "",_usePoint: _resData["PtResUsePoint"] ?? "",_totalPoint: _resData["PtResTotalPoint"] ?? "",_percent:  _resData["PtResPercentPoint"] ?? "",_userName: _resData["PtResUserName"] ?? "",_pointStoreNumber: _resData["PtResStoreNumber"] ?? "",_MemberCardTypeText: _resData["MemberCardTypeText"] ?? "",_MemberServiceTypeText: _resData["MemberServiceTypeText"] ?? "",_MemberServiceNameText:  _resData["MemberServiceNameText"] ?? "",_MemberTradeMoneyText: _resData["MemberTradeMoneyText"] ?? "",_MemberSaleMoneyText: _resData["MemberSaleMoneyText"] ?? "",_MemberAfterTradeMoneyText: _resData["MemberAfterTradeMoneyText"] ?? "",_MemberAfterMemberPointText: _resData["MemberAfterMemberPointText"] ?? "",_MemberOptionCodeText: _resData["MemberOptionCodeText"] ?? "",_MemberStoreNoText: _resData["MemberStoreNoText"] ?? "")
                         } else {
-                            sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
+                            audateTimeValue = sqlite.instance.InsertTrade(Tid: PaySdk.instance.mTid,
                                                         StoreName: PaySdk.instance.mStoreName,
                                                         StoreAddr: PaySdk.instance.mStoreAddr,
                                                         StoreNumber: PaySdk.instance.mStoreNumber,

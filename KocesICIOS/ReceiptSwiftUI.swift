@@ -154,13 +154,13 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
     //TradelistController 이곳에서 값을 가져와서 셋팅한다
 
     func CashReciptDirectInput(CancelReason _CancelReason:String,Tid _Tid:String, AuDate _AuDate:String, AuNo _AuNo:String, Num _num:String, Command _Command:String, MchData _MchData:String, TrdAmt _TrdAmt:String, TaxAmt _TaxAmt:String, SvcAmt _SvcAmt:String, TaxFreeAmt _TaxFreeAmt:String, InsYn _InsYn:String, kocesNumber _kocesNumber:String) {
-        mpaySdk.CashReciptDirectInput(CancelReason: _CancelReason, Tid: _Tid, AuDate: _AuDate, AuNo: _AuNo, Num: _num, Command: _Command, MchData: _MchData, TrdAmt: _TrdAmt, TaxAmt: _TaxAmt, SvcAmt: _SvcAmt, TaxFreeAmt: _TaxFreeAmt, InsYn: _InsYn, kocesNumber: _kocesNumber, payLinstener: paylistener.delegate!,StoreName: StoreName,StoreAddr: StoreAddr,StoreNumber: BSN,StorePhone: StorePhone,StoreOwner: StoreOwner)
+        mpaySdk.CashReciptDirectInput(CancelReason: _CancelReason, Tid: _Tid, AuDate: _AuDate, AuNo: _AuNo, Num: _num, Command: _Command, MchData: _MchData, TrdAmt: _TrdAmt, TaxAmt: _TaxAmt, SvcAmt: _SvcAmt, TaxFreeAmt: _TaxFreeAmt, InsYn: _InsYn, kocesNumber: _kocesNumber, payLinstener: paylistener.delegate!,StoreName: StoreName,StoreAddr: StoreAddr,StoreNumber: BSN,StorePhone: StorePhone,StoreOwner: StoreOwner, Products: [])
 
     }
     
     func startPayment(Tid _Tid:String,Money _money:String,Tax _tax:Int,ServiceCharge _serviceCharge:Int,TaxFree _txf:Int,InstallMent _installment:String,OriDate _oriDate:String,
                       CancenInfo _cancelInfo:String,mchData _mchData:String,KocesTreadeCode _kocesTradeCode:String,CompCode _compCode:String) {
-        mpaySdk.CreditIC(Tid: _Tid, Money: _money, Tax: _tax, ServiceCharge: _serviceCharge, TaxFree: _txf, InstallMent: _installment, OriDate: _oriDate, CancenInfo: _cancelInfo, mchData: _mchData, KocesTreadeCode: _kocesTradeCode, CompCode: _compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener.delegate!,StoreName: StoreName,StoreAddr: StoreAddr,StoreNumber: BSN,StorePhone: StorePhone,StoreOwner: StoreOwner)
+        mpaySdk.CreditIC(Tid: _Tid, Money: _money, Tax: _tax, ServiceCharge: _serviceCharge, TaxFree: _txf, InstallMent: _installment, OriDate: _oriDate, CancenInfo: _cancelInfo, mchData: _mchData, KocesTreadeCode: _kocesTradeCode, CompCode: _compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener.delegate!,StoreName: StoreName,StoreAddr: StoreAddr,StoreNumber: BSN,StorePhone: StorePhone,StoreOwner: StoreOwner, Products: [])
     }
 
     
@@ -1240,7 +1240,7 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
                 return
             } else if tradeType == define.TradeMethod.CAT_Credit.rawValue {
                 //캣신용취소
-                mCatSdk.PayCredit(TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String("20" + AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 코세스거래고유번호: "", 할부: Inst, 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!)
+                mCatSdk.PayCredit(TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String("20" + AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 코세스거래고유번호: "", 할부: Inst, 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!, Products: [])
                 return
             } else if tradeType == define.TradeMethod.CAT_Cash.rawValue {
                 //캣현금취소
@@ -1270,11 +1270,11 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
                     }
                 }
                
-                mCatSdk.CashRecipt(TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String("20" + AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 코세스거래고유번호: "", 할부: "", 고객번호: _number, 개인법인구분: _개인법인구분, 취소: true, 최소사유: "1", 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!)
+                mCatSdk.CashRecipt(TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String("20" + AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 코세스거래고유번호: "", 할부: "", 고객번호: _number, 개인법인구분: _개인법인구분, 취소: true, 최소사유: "1", 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!, Products: [])
                 return
             } else if tradeType == define.TradeMethod.CAT_CashIC.rawValue {
                 //캣현금IC취소
-                mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Cancel, TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String(AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호, 간소화거래여부: "0", 카드정보수록여부: "0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!)
+                mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Cancel, TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String(AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호, 간소화거래여부: "0", 카드정보수록여부: "0", 취소: true, 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!, Products: [])
                 return
             } else if tradeType == define.TradeMethod.CAT_App.rawValue  ||
                         tradeType == define.TradeMethod.CAT_We.rawValue ||
@@ -1326,7 +1326,7 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
                     break
                 }
 
-                mCatSdk.EasyRecipt(TrdType: "A20", TID: TID, Qr: "", 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, EasyKind: mEasyKind, 원거래일자: String(AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 서브승인번호: "", 할부: Inst, 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner, CompletionCallback: catlistener.delegate!)
+                mCatSdk.EasyRecipt(TrdType: "A20", TID: TID, Qr: "", 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, EasyKind: mEasyKind, 원거래일자: String(AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 서브승인번호: "", 할부: Inst, 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner, CompletionCallback: catlistener.delegate!, Products: [])
 
                 return
             } else if tradeType == define.TradeMethod.Point_Redeem.rawValue  {
@@ -1442,7 +1442,7 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
                     return
                 }
                 
-                mCatSdk.CashRecipt(TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String("20" + AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 코세스거래고유번호: "", 할부: "", 고객번호: 신분확인번호, 개인법인구분: _InsYn, 취소: true, 최소사유: "1", 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!)
+                mCatSdk.CashRecipt(TID: TID, 거래금액: money, 세금: Tax, 봉사료: Svc, 비과세: Txf, 원거래일자: String("20" + AuDate.replacingOccurrences(of: " ", with: "").prefix(6)), 원승인번호: 승인번호.replacingOccurrences(of: " ", with: ""), 코세스거래고유번호: "", 할부: "", 고객번호: 신분확인번호, 개인법인구분: _InsYn, 취소: true, 최소사유: "1", 가맹점데이터: "", 여유필드: "", StoreName: StoreName, StoreAddr: StoreAddr, StoreNumber: BSN, StorePhone: StorePhone, StoreOwner: StoreOwner,CompletionCallback: catlistener.delegate!, Products: [])
             }
             else
             {
@@ -1488,7 +1488,7 @@ struct ReceiptSwiftUI: View, PayResultDelegate, PrintResultDelegate, CatResultDe
             
             //MSR 취소승인을 진행한다
             let mCanCelInfo = "0" + AuDate.prefix(6) + 승인번호
-            mpaySdk.CashRecipt(Tid: TID, Money: String(TotlaMonay), Tax: 0, ServiceCharge: 0, TaxFree: 0, PrivateOrBusiness: Int(_InsYn)!, ReciptIndex: "0000", CancelInfo: mCanCelInfo, OriDate: AuDate, InputMethod: CashMethod, CancelReason: _cancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "", payLinstener: paylistener.delegate!,StoreName: StoreName,StoreAddr: StoreAddr,StoreNumber: BSN,StorePhone: StorePhone,StoreOwner: StoreOwner)
+            mpaySdk.CashRecipt(Tid: TID, Money: String(TotlaMonay), Tax: 0, ServiceCharge: 0, TaxFree: 0, PrivateOrBusiness: Int(_InsYn)!, ReciptIndex: "0000", CancelInfo: mCanCelInfo, OriDate: AuDate, InputMethod: CashMethod, CancelReason: _cancelReason, ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "", payLinstener: paylistener.delegate!,StoreName: StoreName,StoreAddr: StoreAddr,StoreNumber: BSN,StorePhone: StorePhone,StoreOwner: StoreOwner, Products: [])
         }
         
     }

@@ -445,12 +445,12 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                     if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                         self.catlistener = CatResult()
                         self.catlistener?.delegate = self
-                        self.mCatSdk.PayCredit(TID: tid, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(installment), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: mStoreName, StoreAddr: mStoreAddr, StoreNumber: mStoreNumber, StorePhone: mStorePhone, StoreOwner: mStoreOwner,CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                        self.mCatSdk.PayCredit(TID: tid, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(installment), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: mStoreName, StoreAddr: mStoreAddr, StoreNumber: mStoreNumber, StorePhone: mStorePhone, StoreOwner: mStoreOwner,CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: basketItems)
                     } else {
                         self.paylistener = payResult()
                         self.paylistener?.delegate = self
                         // ... 나머지 값들 처리
-                        self.mpaySdk.CreditIC(Tid: tid, Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: String(installment), OriDate: "", CancenInfo: cancelInfo, mchData: mchData, KocesTreadeCode: kocesTradeCode, CompCode: compCode, SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+                        self.mpaySdk.CreditIC(Tid: tid, Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: String(installment), OriDate: "", CancenInfo: cancelInfo, mchData: mchData, KocesTreadeCode: kocesTradeCode, CompCode: compCode, SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner, Products: basketItems)
                     }
                   
                 }
@@ -474,12 +474,12 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                         if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                             self.catlistener = CatResult()
                             self.catlistener?.delegate = self
-                            self.mCatSdk.PayCredit(TID: TID, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                            self.mCatSdk.PayCredit(TID: TID, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: basketItems)
                         } else {
                             self.paylistener = payResult()
                             self.paylistener?.delegate = self
                             // ... 나머지 값들 처리
-                            self.mpaySdk.CreditIC(Tid: TID, Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: "0", OriDate: "", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER)
+                            self.mpaySdk.CreditIC(Tid: TID, Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: "0", OriDate: "", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER, Products: basketItems)
                         }
                       
                     }
@@ -490,12 +490,12 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                     if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                         self.catlistener = CatResult()
                         self.catlistener?.delegate = self
-                        self.mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                        self.mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: basketItems)
                     } else {
                         self.paylistener = payResult()
                         self.paylistener?.delegate = self
                         // ... 나머지 값들 처리
-                        self.mpaySdk.CreditIC(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: "0", OriDate: "", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER))
+                        self.mpaySdk.CreditIC(Tid: Setting.shared.getDefaultUserData(_key: define.STORE_TID), Money: String(taxResult["Money"] ?? 0), Tax: Int(taxResult["VAT"] ?? 0), ServiceCharge: Int(taxResult["SVC"] ?? 0), TaxFree: Int(taxResult["TXF"] ?? 0), InstallMent: "0", OriDate: "", CancenInfo: "", mchData: "", KocesTreadeCode: "", CompCode: "", SignDraw: "1", FallBackUse: "0",payLinstener: self.paylistener?.delegate! as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), Products: basketItems)
                     }
                   
                 }
@@ -521,15 +521,15 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                 if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                     self.catlistener = CatResult()
                     self.catlistener?.delegate = self
-                    self.mCatSdk.CashRecipt(TID: tid, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: usernum, 개인법인구분: insyn, 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: mStoreName, StoreAddr: mStoreAddr, StoreNumber: mStoreNumber, StorePhone: mStorePhone, StoreOwner: mStoreOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                    self.mCatSdk.CashRecipt(TID: tid, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: "", 고객번호: usernum, 개인법인구분: insyn, 취소: false, 최소사유: "", 가맹점데이터: "", 여유필드: "", StoreName: mStoreName, StoreAddr: mStoreAddr, StoreNumber: mStoreNumber, StorePhone: mStorePhone, StoreOwner: mStoreOwner,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: basketItems)
                 } else {
                     self.paylistener = payResult()
                     self.paylistener?.delegate = self
                     // ... 나머지 값들 처리
                     if usernum == "" {
-                        self.mpaySdk.CashRecipt(Tid: tid, Money: String(taxResult["Money"] ?? 0), Tax: taxResult["VAT"] ?? 0, ServiceCharge: taxResult["SVC"] ?? 0, TaxFree: taxResult["TXF"] ?? 0, PrivateOrBusiness: Int(insyn) ?? 0, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: "", ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+                        self.mpaySdk.CashRecipt(Tid: tid, Money: String(taxResult["Money"] ?? 0), Tax: taxResult["VAT"] ?? 0, ServiceCharge: taxResult["SVC"] ?? 0, TaxFree: taxResult["TXF"] ?? 0, PrivateOrBusiness: Int(insyn) ?? 0, ReciptIndex: "0000", CancelInfo: "", OriDate: "", InputMethod: "", CancelReason: "", ptCardCode: "", ptAcceptNum: "", BusinessData: "", Bangi: "", KocesTradeUnique: "",payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner, Products: basketItems)
                     } else {
-                        self.mpaySdk.CashReciptDirectInput(CancelReason: "", Tid: tid, AuDate: "", AuNo: "", Num: usernum, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(taxResult["Money"] ?? 0), TaxAmt: String(taxResult["VAT"] ?? 0), SvcAmt: String(taxResult["SVC"] ?? 0), TaxFreeAmt: String(taxResult["TXF"] ?? 0), InsYn: insyn, kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner)
+                        self.mpaySdk.CashReciptDirectInput(CancelReason: "", Tid: tid, AuDate: "", AuNo: "", Num: usernum, Command: Command.CMD_CASH_RECEIPT_REQ, MchData: "", TrdAmt: String(taxResult["Money"] ?? 0), TaxAmt: String(taxResult["VAT"] ?? 0), SvcAmt: String(taxResult["SVC"] ?? 0), TaxFreeAmt: String(taxResult["TXF"] ?? 0), InsYn: insyn, kocesNumber: "", payLinstener: paylistener?.delegate as! PayResultDelegate,StoreName: mStoreName,StoreAddr: mStoreAddr,StoreNumber: mStoreNumber,StorePhone: mStorePhone,StoreOwner: mStoreOwner, Products: basketItems)
                     }
                    
                 }
@@ -562,11 +562,11 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                     if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                       
                         
-                        self.mCatSdk.EasyRecipt(TrdType: "A10", TID: TID, Qr: "", 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                        self.mCatSdk.EasyRecipt(TrdType: "A10", TID: TID, Qr: "", 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: basketItems)
                     } else {
                   
                         // ... 나머지 값들 처리
-                        self.mKakaoSdk.EasyPay(Command: Command.CMD_KAKAOPAY_REQ, Tid:  TID, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelDevine: "", AuDate: "", AuNo: "", InputType: "B", BarCode: "", OTCCardCode: [UInt8](), Money: String(taxResult["Money"] ?? 0), Tax: String(taxResult["VAT"] ?? 0), ServiceCharge: String(taxResult["SVC"] ?? 0), TaxFree: String(taxResult["TXF"] ?? 0), Currency: "", Installment: "0", PayType: "", CancelMethod: "", CancelType: "", StoreCode: "", PEM: "", trid: "", CardBIN: "", SearchNumber: "", WorkingKeyIndex: "", SignUse: "", SignPadSerial: "", SignData: [UInt8](), StoreData: "", StoreInfo: "", KocesUniNum: "", payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, QrKind: "UN")
+                        self.mKakaoSdk.EasyPay(Command: Command.CMD_KAKAOPAY_REQ, Tid:  TID, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelDevine: "", AuDate: "", AuNo: "", InputType: "B", BarCode: "", OTCCardCode: [UInt8](), Money: String(taxResult["Money"] ?? 0), Tax: String(taxResult["VAT"] ?? 0), ServiceCharge: String(taxResult["SVC"] ?? 0), TaxFree: String(taxResult["TXF"] ?? 0), Currency: "", Installment: "0", PayType: "", CancelMethod: "", CancelType: "", StoreCode: "", PEM: "", trid: "", CardBIN: "", SearchNumber: "", WorkingKeyIndex: "", SignUse: "", SignPadSerial: "", SignData: [UInt8](), StoreData: "", StoreInfo: "", KocesUniNum: "", payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, QrKind: "UN", Products: basketItems)
                     }
                   
                 }
@@ -576,11 +576,11 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
                 if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
                  
-                    self.mCatSdk.EasyRecipt(TrdType: "A10", TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), Qr: "", 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER), CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                    self.mCatSdk.EasyRecipt(TrdType: "A10", TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), Qr: "", 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER), CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: basketItems)
                 } else {
                 
                     // ... 나머지 값들 처리
-                    self.mKakaoSdk.EasyPay(Command: Command.CMD_KAKAOPAY_REQ, Tid:  Setting.shared.getDefaultUserData(_key: define.STORE_TID), Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelDevine: "", AuDate: "", AuNo: "", InputType: "B", BarCode: "", OTCCardCode: [UInt8](), Money: String(taxResult["Money"] ?? 0), Tax: String(taxResult["VAT"] ?? 0), ServiceCharge: String(taxResult["SVC"] ?? 0), TaxFree: String(taxResult["TXF"] ?? 0), Currency: "", Installment: "0", PayType: "", CancelMethod: "", CancelType: "", StoreCode: "", PEM: "", trid: "", CardBIN: "", SearchNumber: "", WorkingKeyIndex: "", SignUse: "", SignPadSerial: "", SignData: [UInt8](), StoreData: "", StoreInfo: "", KocesUniNum: "", payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), QrKind: "UN")
+                    self.mKakaoSdk.EasyPay(Command: Command.CMD_KAKAOPAY_REQ, Tid:  Setting.shared.getDefaultUserData(_key: define.STORE_TID), Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelDevine: "", AuDate: "", AuNo: "", InputType: "B", BarCode: "", OTCCardCode: [UInt8](), Money: String(taxResult["Money"] ?? 0), Tax: String(taxResult["VAT"] ?? 0), ServiceCharge: String(taxResult["SVC"] ?? 0), TaxFree: String(taxResult["TXF"] ?? 0), Currency: "", Installment: "0", PayType: "", CancelMethod: "", CancelType: "", StoreCode: "", PEM: "", trid: "", CardBIN: "", SearchNumber: "", WorkingKeyIndex: "", SignUse: "", SignPadSerial: "", SignData: [UInt8](), StoreData: "", StoreInfo: "", KocesUniNum: "", payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), QrKind: "UN", Products: basketItems)
   
                 }
               
@@ -589,26 +589,78 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     @objc func otherButtonTapped() {
         print("기타결제 버튼 클릭")
-        // 팝업창 구현: UIAlertController에 텍스트필드와 분류 리스트 액션 추가
-        let alert = UIAlertController(title: "기타결제 선택", message: nil, preferredStyle: .alert)
-       
-        // 현금IC 선택
-        alert.addAction(UIAlertAction(title: "현금IC", style: .default, handler: { _ in
-            //CAT상태에서만 사용한다.
-            if KocesSdk.instance.bleState != define.TargetDeviceState.CATCONNECTED {
-                self.AlertBox(title: "에러", message: "CAT 단말기 사용시 거래 가능", text: "확인")
-            } else {
-                // cat 인 경우 실행
-                self.chshICPay()
-                
-            }
-        }))
+        // 메시지에 충분한 여백을 주어 커스텀 컨트롤을 위한 공간 확보
+        let alert = UIAlertController(title: "기타결제 선택", message: "\n\n\n", preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        // UISegmentedControl 생성 (아이템: "현금IC")
+        let segmentedControl = UISegmentedControl(items: ["현금IC"])
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        // 이벤트 발생 시 호출할 메소드 등록
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(chshICButtonTapped(_:)))
+        segmentedControl.addGestureRecognizer(tapGesture)
+          
+        alert.view.addSubview(segmentedControl)
+        
+        // 우선 임의의 기본값(나중에 cancel 버튼의 크기로 업데이트됨)으로 제약조건 생성
+        let widthConstraint = segmentedControl.widthAnchor.constraint(equalToConstant: 100)
+        let heightConstraint = segmentedControl.heightAnchor.constraint(equalToConstant: 44)
+        
+        // 제목과 버튼이 겹치지 않도록 상단 여백 확보
+        NSLayoutConstraint.activate([
+            segmentedControl.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor),
+            segmentedControl.topAnchor.constraint(equalTo: alert.view.topAnchor, constant: 70),
+            widthConstraint,
+            heightConstraint
+        ])
+        
+        // "취소" 버튼만 추가 (확인 버튼은 없음)
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        // Alert 표시 후 cancel 버튼의 크기를 찾아 segmentedControl 제약 업데이트
+        self.present(alert, animated: true) {
+            // alert.view 레이아웃이 완료된 시점에 cancel 버튼의 크기를 추출
+            if let cancelLabel = self.findLabel(withText: "취소", in: alert.view) {
+                let cancelFont = cancelLabel.font
+                // UISegmentedControl의 텍스트 속성에 동일한 폰트를 적용
+                let attributes: [NSAttributedString.Key: Any] = [.font: cancelFont]
+                segmentedControl.setTitleTextAttributes(attributes, for: .normal)
+                
+                // 만약 segmentedControl의 크기를 취소 버튼과 동일하게 맞추고 싶다면, cancelLabel의 superview의 프레임을 활용할 수도 있습니다.
+                 let cancelFrame = cancelLabel.superview?.frame ?? CGRect(x: 0, y: 0, width: 100, height: 44)
+                 widthConstraint.constant = alert.view.frame.width - 10
+                 heightConstraint.constant = cancelFrame.height
+                 alert.view.layoutIfNeeded()
+            }
+        }
     }
-    
-    func chshICPay() {
+
+    // 재귀적으로 view 내부를 탐색하여 특정 텍스트를 가진 UILabel을 찾는 헬퍼 메소드
+    func findLabel(withText text: String, in view: UIView) -> UILabel? {
+        for subview in view.subviews {
+            if let label = subview as? UILabel, label.text == text {
+                return label
+            }
+            if let found = findLabel(withText: text, in: subview) {
+                return found
+            }
+        }
+        return nil
+    }
+
+    @objc func chshICButtonTapped(_ sender: UITapGestureRecognizer) {
+        guard let segmentedControl = sender.view as? UISegmentedControl else { return }
+        
+        // 이미 탭 처리 중이라면 무시합니다.
+        if !segmentedControl.isUserInteractionEnabled { return }
+        
+        // 사용자 상호작용을 잠시 비활성화하여 연속 탭을 막음
+        segmentedControl.isUserInteractionEnabled = false
+        print("UISegmentedControl tapped")
+        // 현재 모달로 표시된 UIAlertController를 닫음
+        self.dismiss(animated: true, completion: nil)
+        
         // 그냥 여기서 거래를 진행한다
         self.catlistener = CatResult()
         self.catlistener?.delegate = self
@@ -621,7 +673,7 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
                     if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
   
-                        self.mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: TID, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                        self.mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: TID, 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: basketItems)
                     } else {
                         self.AlertBox(title: "에러", message: "CAT 단말기 사용시 거래 가능", text: "확인")
                     }
@@ -633,7 +685,7 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
                 if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
         
-                    self.mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate)
+                    self.mCatSdk.CashIC(업무구분: define.CashICBusinessClassification.Buy, TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), 원거래일자: "", 원승인번호: "", 간소화거래여부: "0", 카드정보수록여부: "0", 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate as! CatResultDelegate, Products: basketItems)
                 } else {
                     self.AlertBox(title: "에러", message: "CAT 단말기 사용시 거래 가능", text: "확인")
                 }

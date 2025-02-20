@@ -372,12 +372,12 @@ class PaymentSettingViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    private let testButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("테스트", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+//    private let testButton: UIButton = {
+//        let button = UIButton(type: .system)
+//        button.setTitle("테스트", for: .normal)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        return button
+//    }()
     private let finalSaveButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("저장", for: .normal)
@@ -631,9 +631,9 @@ class PaymentSettingViewController: UIViewController {
         // Section: 하단 버튼 영역
         contentStackView.addArrangedSubview(buttonStack)
         buttonStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        buttonStack.addArrangedSubview(testButton)
+//        buttonStack.addArrangedSubview(testButton)
         buttonStack.addArrangedSubview(finalSaveButton)
-        testButton.addTarget(self, action: #selector(testButtonTapped), for: .touchUpInside)
+//        testButton.addTarget(self, action: #selector(testButtonTapped), for: .touchUpInside)
         finalSaveButton.addTarget(self, action: #selector(finalSaveButtonTapped), for: .touchUpInside)
     }
 
@@ -677,13 +677,24 @@ class PaymentSettingViewController: UIViewController {
         svcRateTextField.isHidden = !show
     }
 
-    @objc func testButtonTapped() {
-        print("테스트 버튼 클릭")
-    }
 
     @objc func finalSaveButtonTapped() {
         print("최종 저장 버튼 클릭 - 결제설정 저장")
         // 저장 로직 구현
+        switch (transSegmented.selectedSegmentIndex) {
+        case 0: //일반거래
+            Setting.shared.setDefaultUserData(_data: define.UIMethod.Common.rawValue, _key: define.APP_UI_CHECK)
+            break
+        case 1: //상품거래
+            Setting.shared.setDefaultUserData(_data: define.UIMethod.Product.rawValue, _key: define.APP_UI_CHECK)
+            break
+        case 2: //앱투앱거래
+            Setting.shared.setDefaultUserData(_data: define.UIMethod.AppToApp.rawValue, _key: define.APP_UI_CHECK)
+            break
+        default:
+            break
+        }
+       
     }
 }
 

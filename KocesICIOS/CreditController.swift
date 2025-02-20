@@ -483,7 +483,7 @@ extension CreditController: PayResultDelegate,CatResultDelegate {
         paylistener = payResult()
         paylistener?.delegate = self
 
-        mpaySdk.CreditIC(Tid: _Tid, Money: _money, Tax: _tax, ServiceCharge: _serviceCharge, TaxFree: _txf, InstallMent: _installment, OriDate: "", CancenInfo: _cancelInfo, mchData: _mchData, KocesTreadeCode: _kocesTradeCode, CompCode: _compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: _mStoreName,StoreAddr: _mStoreAddr,StoreNumber: _mStoreNumber,StorePhone: _mStorePhone,StoreOwner: _mStoreOwner)
+        mpaySdk.CreditIC(Tid: _Tid, Money: _money, Tax: _tax, ServiceCharge: _serviceCharge, TaxFree: _txf, InstallMent: _installment, OriDate: "", CancenInfo: _cancelInfo, mchData: _mchData, KocesTreadeCode: _kocesTradeCode, CompCode: _compCode, SignDraw: "1", FallBackUse: "0",payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: _mStoreName,StoreAddr: _mStoreAddr,StoreNumber: _mStoreNumber,StorePhone: _mStorePhone,StoreOwner: _mStoreOwner, Products: [])
         
        
     }
@@ -1323,7 +1323,7 @@ extension CreditController: NumberPadDelegate {
                             return
                         }
                         
-                        mCatSdk.PayCredit(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(mInstallMent), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                        mCatSdk.PayCredit(TID: _tid, 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(mInstallMent), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: BSN, StoreAddr: ADDR, StoreNumber: NUM, StorePhone: PHONE, StoreOwner: OWNER,CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: [])
                     }
                     return
                 }
@@ -1338,7 +1338,7 @@ extension CreditController: NumberPadDelegate {
                     return
                 }
                 
-                mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(mInstallMent), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                mCatSdk.PayCredit(TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), 거래금액: String(mMoney), 세금: String(mTaxMoney), 봉사료: String(mSvcMoney), 비과세: String(mTaxFreeMoney), 원거래일자: "", 원승인번호: "", 코세스거래고유번호: "", 할부: String(mInstallMent), 취소: false, 가맹점데이터: "", 여유필드: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER),CompletionCallback: catlistener?.delegate! as! CatResultDelegate, Products: [])
             } else {
                 AlertBox(title: "에러", message: "연결 가능한 단말기가 존재하지 않습니다", text: "확인" )
             }

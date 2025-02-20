@@ -1119,7 +1119,7 @@
 				CODE_SIGN_ENTITLEMENTS = KocesICIOS/KocesICIOSDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GP68UT452X;
 				INFOPLIST_FILE = "$(SRCROOT)/KocesICIOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
@@ -1127,7 +1127,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.koces.KocesICIOSPay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1146,7 +1146,7 @@
 				CODE_SIGN_ENTITLEMENTS = KocesICIOS/KocesICIOS.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GP68UT452X;
 				INFOPLIST_FILE = "$(SRCROOT)/KocesICIOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
@@ -1154,7 +1154,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.koces.KocesICIOSPay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
