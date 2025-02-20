@@ -116,6 +116,7 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     var taxResult:[String:Int] = [:]  //결과값
     let mTaxCalc = TaxCalculator.Instance
     
+    var mKakaoSdk:KaKaoPaySdk = KaKaoPaySdk()
     var mpaySdk:PaySdk = PaySdk()
     var mKocesSdk:KocesSdk = KocesSdk.instance
     var mCatSdk:CatSdk = CatSdk.instance
@@ -545,13 +546,46 @@ class OrderViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     @objc func easyButtonTapped() {
         print("간편결제 버튼 클릭")
-        let storyboard:UIStoryboard? = getStoryBoard()
-        let controller = (storyboard!.instantiateViewController(identifier: "EasyPayController")) as EasyPayController
-        // 모달 내비게이션 컨트롤러로 감싸서 내비게이션 바를 사용할 수 있게 함
-        let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .automatic
-        navController.transitioningDelegate = controller  // 또는 별도로 지정
-        self.present(navController, animated: true, completion: nil)
+        self.catlistener = CatResult()
+        self.catlistener?.delegate = self
+        
+        self.paylistener = payResult()
+        self.paylistener?.delegate = self
+        // 그냥 여기서 거래를 진행한다
+        if Setting.shared.getDefaultUserData(_key: define.MULTI_STORE) != "" {
+            TidAlertBox(title: "거래하실 가맹점을 선택해 주세요") { [self](BSN,TID,NUM,PHONE,OWNER,ADDR) in
+                if TID == "" {
+                    AlertBox(title: "거래를 종료합니다.", message: "", text: "확인")
+                    return
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                    if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+                      
+                        
+                        self.mCatSdk.EasyRecipt(TrdType: "A10", TID: TID, Qr: "", 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                    } else {
+                  
+                        // ... 나머지 값들 처리
+                        self.mKakaoSdk.EasyPay(Command: Command.CMD_KAKAOPAY_REQ, Tid:  TID, Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelDevine: "", AuDate: "", AuNo: "", InputType: "B", BarCode: "", OTCCardCode: [UInt8](), Money: String(taxResult["Money"] ?? 0), Tax: String(taxResult["VAT"] ?? 0), ServiceCharge: String(taxResult["SVC"] ?? 0), TaxFree: String(taxResult["TXF"] ?? 0), Currency: "", Installment: "0", PayType: "", CancelMethod: "", CancelType: "", StoreCode: "", PEM: "", trid: "", CardBIN: "", SearchNumber: "", WorkingKeyIndex: "", SignUse: "", SignPadSerial: "", SignData: [UInt8](), StoreData: "", StoreInfo: "", KocesUniNum: "", payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: BSN,StoreAddr: ADDR,StoreNumber: NUM,StorePhone: PHONE,StoreOwner: OWNER, QrKind: "UN")
+                    }
+                  
+                }
+            }
+            return
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+                if KocesSdk.instance.bleState == define.TargetDeviceState.CATCONNECTED {
+                 
+                    self.mCatSdk.EasyRecipt(TrdType: "A10", TID: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_TID), Qr: "", 거래금액: String(taxResult["Money"] ?? 0), 세금: String(taxResult["VAT"] ?? 0), 봉사료: String(taxResult["SVC"] ?? 0), 비과세: String(taxResult["TXF"] ?? 0), EasyKind: "", 원거래일자: "", 원승인번호: "", 서브승인번호: "", 할부: "0", 가맹점데이터: "", 호스트가맹점데이터: "", 코세스거래고유번호: "", StoreName: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_NAME), StoreAddr: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_ADDR), StoreNumber: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_BSN), StorePhone: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_PHONE), StoreOwner: Setting.shared.getDefaultUserData(_key: define.CAT_STORE_OWNER), CompletionCallback: catlistener?.delegate! as! CatResultDelegate)
+                } else {
+                
+                    // ... 나머지 값들 처리
+                    self.mKakaoSdk.EasyPay(Command: Command.CMD_KAKAOPAY_REQ, Tid:  Setting.shared.getDefaultUserData(_key: define.STORE_TID), Date: Utils.getDate(format: "yyMMddHHmmss"), PosVer: define.TEST_SOREWAREVERSION, Etc: "", CancelDevine: "", AuDate: "", AuNo: "", InputType: "B", BarCode: "", OTCCardCode: [UInt8](), Money: String(taxResult["Money"] ?? 0), Tax: String(taxResult["VAT"] ?? 0), ServiceCharge: String(taxResult["SVC"] ?? 0), TaxFree: String(taxResult["TXF"] ?? 0), Currency: "", Installment: "0", PayType: "", CancelMethod: "", CancelType: "", StoreCode: "", PEM: "", trid: "", CardBIN: "", SearchNumber: "", WorkingKeyIndex: "", SignUse: "", SignPadSerial: "", SignData: [UInt8](), StoreData: "", StoreInfo: "", KocesUniNum: "", payLinstener: paylistener?.delegate! as! PayResultDelegate,StoreName: Setting.shared.getDefaultUserData(_key: define.STORE_NAME),StoreAddr: Setting.shared.getDefaultUserData(_key: define.STORE_ADDR),StoreNumber: Setting.shared.getDefaultUserData(_key: define.STORE_BSN),StorePhone: Setting.shared.getDefaultUserData(_key: define.STORE_PHONE),StoreOwner: Setting.shared.getDefaultUserData(_key: define.STORE_OWNER), QrKind: "UN")
+  
+                }
+              
+            }
+        }
     }
     @objc func otherButtonTapped() {
         print("기타결제 버튼 클릭")
