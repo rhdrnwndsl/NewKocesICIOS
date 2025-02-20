@@ -25,6 +25,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         label.text =  "상품관리"
         label.font = Utils.getTitleFont()
         label.textAlignment = .left
+        label.textColor = .darkGray
         return label
     }()
     
@@ -39,6 +40,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let label = UILabel()
         label.text = "상품관리가맹점 설정"
         label.font = Utils.getSubTitleFont()
+        label.textColor = .darkGray
         return label
     }()
     
@@ -51,8 +53,10 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
     // 그룹 컨테이너 (밝은 회색 배경, 라운드)
     private let merchantContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = define.layout_border_lightgrey
-        view.layer.cornerRadius = define.pading_wight
+//        view.backgroundColor = define.layout_border_lightgrey
+//        view.layer.cornerRadius = define.pading_wight
+        view.backgroundColor = UIColor.systemGray6
+        view.layer.cornerRadius = 8
         view.clipsToBounds = true
         return view
     }()
@@ -63,6 +67,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         label.text = "TID"
         label.textAlignment = .left
         label.font = Utils.getTextFont()
+        label.textColor = .darkGray
         return label
     }()
     
@@ -80,6 +85,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         label.text = "POS번호"
         label.font = Utils.getTextFont()
         label.textAlignment = .left
+        label.textColor = .darkGray
         return label
     }()
     
@@ -97,6 +103,10 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let button = UIButton(type: .system)
         button.setTitle("확인", for: .normal)
         button.titleLabel?.font = Utils.getSubTitleFont()
+        // 버튼 스타일 (배경, 텍스트 색상, 라운드)
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
         return button
     }()
     
@@ -105,6 +115,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let label = UILabel()
         label.text = "상품관리 설정"
         label.font = Utils.getSubTitleFont()
+        label.textColor = .darkGray
         return label
     }()
     
@@ -116,8 +127,10 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
     
     private let productContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = define.layout_border_lightgrey
-        view.layer.cornerRadius = define.pading_wight
+//        view.backgroundColor = define.layout_border_lightgrey
+//        view.layer.cornerRadius = define.pading_wight
+        view.backgroundColor = UIColor.systemGray6
+        view.layer.cornerRadius = 8
         view.clipsToBounds = true
         return view
     }()
@@ -128,6 +141,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         label.text = "상품관리"
         label.font = Utils.getTextFont()
         label.textAlignment = .left
+        label.textColor = .darkGray
         return label
     }()
     
@@ -135,6 +149,9 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let button = UIButton(type: .system)
         button.setTitle("상품등록", for: .normal)
         button.titleLabel?.font = Utils.getSubTitleFont()
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
         return button
     }()
     
@@ -142,6 +159,9 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let button = UIButton(type: .system)
         button.setTitle("상품수정", for: .normal)
         button.titleLabel?.font = Utils.getSubTitleFont()
+        button.backgroundColor = .systemGreen
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
         return button
     }()
     
@@ -151,6 +171,7 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         label.text = "상품정보백업"
         label.textAlignment = .left
         label.font = Utils.getTextFont()
+        label.textColor = .darkGray
         return label
     }()
     
@@ -158,6 +179,9 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let button = UIButton(type: .system)
         button.setTitle("내보내기", for: .normal)
         button.titleLabel?.font = Utils.getTextFont()
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
         return button
     }()
     
@@ -165,6 +189,9 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
         let button = UIButton(type: .system)
         button.setTitle("가져오기", for: .normal)
         button.titleLabel?.font = Utils.getTextFont()
+        button.backgroundColor = .systemGreen
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
         return button
     }()
     
@@ -179,7 +206,8 @@ class ProductSetViewController: UIViewController, UITextFieldDelegate, UIDocumen
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+//        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         title = "상품관리 설정" // 네비게이션 타이틀 등
         
         posNumberTextField.delegate = self

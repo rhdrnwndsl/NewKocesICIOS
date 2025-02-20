@@ -41,19 +41,7 @@ class StoreViewController: UIViewController {
     )
      
     // 서브사업자 (0~10개 가능)
-    private var subMerchants: [MerchantInfo] = [
-           // 10개 빈 객체 (필요한 경우 실제 데이터로 채워짐)
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""),
-           MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: "")
-       ]
+      private var subMerchants: [MerchantInfo] = Array(repeating: MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""), count: 10)
     
     // 서브사업자정보 표시 여부
     private var isSubMerchantExpanded: Bool = false
@@ -71,6 +59,7 @@ class StoreViewController: UIViewController {
         label.text = Utils.getIsCAT() ? "가맹점정보 : CAT":"가맹점정보 : POS"
         label.font = Utils.getTitleFont()
         label.textAlignment = .left
+        label.textColor = .darkGray
         return label
     }()
     
@@ -80,6 +69,7 @@ class StoreViewController: UIViewController {
         let label = UILabel()
         label.text = "대표사업자정보"
         label.font = Utils.getSubTitleFont()
+        label.textColor = .darkGray
         return label
     }()
     private let arrowButton: UIButton = {
@@ -89,7 +79,8 @@ class StoreViewController: UIViewController {
         if let image = UIImage(systemName: "chevron.down") {
             button.setImage(image, for: .normal)
         }
-        button.tintColor = .black
+        button.tintColor = .darkGray
+//        button.tintColor = .black
         return button
     }()
     
@@ -130,7 +121,7 @@ class StoreViewController: UIViewController {
     private lazy var segmentedControl: UISegmentedControl = {
         let segmented = UISegmentedControl(items: ["일반", "복수"])
         segmented.setTitleTextAttributes([
-            NSAttributedString.Key.foregroundColor: UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0),
+            NSAttributedString.Key.foregroundColor: UIColor.darkGray,
             NSAttributedString.Key.font: Utils.getTextFont()
         ], for: .normal)
         segmented.setTitleTextAttributes([
@@ -411,6 +402,8 @@ class StoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // light 모드에 맞춘 배경색 (환경분할 뷰와 통일)
+        view.backgroundColor = .systemBackground
         setupUI()
         setupLayout()
         configureActions()
@@ -432,6 +425,7 @@ class StoreViewController: UIViewController {
         titleStackView.axis = .vertical
         titleStackView.alignment = .fill
         titleStackView.distribution = .fill
+        titleStackView.spacing = define.pading_wight
         scrollView.addSubview(titleStackView)
         
         // --- titleStackView에 "POS" 영역 추가
@@ -447,6 +441,7 @@ class StoreViewController: UIViewController {
         contentStackView.axis = .vertical
         contentStackView.alignment = .fill
         contentStackView.distribution = .fill
+        contentStackView.spacing = define.pading_wight
         scrollView.addSubview(contentStackView)
         
         // --- 데이터 셋업
@@ -473,6 +468,7 @@ class StoreViewController: UIViewController {
         subMerchantStackView.axis = .vertical
         subMerchantStackView.alignment = .fill
         subMerchantStackView.distribution = .fill
+        subMerchantStackView.spacing = define.pading_wight
         contentStackView.addArrangedSubview(subMerchantStackView)
         
         // 서브사업자 UI(초기에 추가만 해두고, 펼쳐진 상태 업데이트는 toggle 로직으로 처리)
@@ -549,7 +545,23 @@ class StoreViewController: UIViewController {
     // 대표사업자 정보뷰(라운드 박스)
     private func setupRepresentativeInfoView() {
         representativeInfoView.backgroundColor = .clear
-        representativeInfoView.layer.cornerRadius = 0
+//        representativeInfoView.layer.cornerRadius = 0
+        // 세로 스택뷰에 SettingsKit과 유사한 배경과 라운드 처리 적용
+        // 전체를 세로 스택으로 묶어서 infoView에 추가
+//        let verticalStack = UIStackView()
+//        verticalStack.axis = .vertical
+//        verticalStack.alignment = .fill
+//        verticalStack.spacing = 5
+//        verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+//        verticalStack.layer.cornerRadius = 8
+        
+        let verticalStack = UIStackView()
+        verticalStack.axis = .vertical
+        verticalStack.alignment = .fill
+        verticalStack.spacing = 5
+        verticalStack.backgroundColor = UIColor.systemGray6
+        verticalStack.layer.cornerRadius = 8
+        
         // 예시: 6개의 항목 각각 가로 스택(왼쪽 타이틀, 오른쪽 데이터)
         let items: [(String, String)] = [
             ("TID", representativeMerchant.tid),
@@ -559,15 +571,7 @@ class StoreViewController: UIViewController {
             ("가맹점주소", representativeMerchant.address),
             ("대표자명", representativeMerchant.representativeName)
         ]
-        
-        // 전체를 세로 스택으로 묶어서 infoView에 추가
-        let verticalStack = UIStackView()
-        verticalStack.axis = .vertical
-        verticalStack.alignment = .fill
-        verticalStack.spacing = 5
-        verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
-        verticalStack.layer.cornerRadius = 8
-        
+  
         for (title, value) in items {
             let rowStack = createTwoLabelRow(title: title, value: value)
             verticalStack.addArrangedSubview(rowStack)
@@ -586,7 +590,7 @@ class StoreViewController: UIViewController {
     // 대표사업자 버튼 영역(배경/라운드 없음, 오른쪽 정렬)
     private func setupRepresentativeButtonView() {
         representativeButtonView.backgroundColor = .clear
-        representativeButtonView.layer.cornerRadius = 0
+//        representativeButtonView.layer.cornerRadius = 0
         
         // 수평 스택 뷰로 버튼을 오른쪽에 몰기 위해 스페이서 사용
         let spacerView = UIView()
@@ -652,11 +656,12 @@ class StoreViewController: UIViewController {
     private func createSubMerchantHeaderView() -> UIView {
         let container = UIView()
         container.backgroundColor = .clear
-        container.layer.cornerRadius = 0
+//        container.layer.cornerRadius = 0
 
         let label = UILabel()
         label.text = "서브사업자정보"
         label.font = Utils.getSubTitleFont()
+        label.textColor = .darkGray
         
         let stack = UIStackView(arrangedSubviews: [label])
         stack.axis = .vertical
@@ -679,7 +684,7 @@ class StoreViewController: UIViewController {
     private func createSubMerchantInfoView(merchant: MerchantInfo) -> UIView {
         let container = UIView()
         container.backgroundColor = .clear
-        container.layer.cornerRadius = 0
+//        container.layer.cornerRadius = 0
         
         let items: [(String, String)] = [
             ("TID", merchant.tid),
@@ -694,7 +699,8 @@ class StoreViewController: UIViewController {
         verticalStack.axis = .vertical
         verticalStack.alignment = .fill
         verticalStack.spacing = 5
-        verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+//        verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        verticalStack.backgroundColor = UIColor.systemGray6
         verticalStack.layer.cornerRadius = 8
         
         for (title, value) in items {
@@ -718,7 +724,7 @@ class StoreViewController: UIViewController {
     private func createSubMerchantButtonView(merchantIndex: Int) -> UIView {
         let container = UIView()
         container.backgroundColor = .clear
-        container.layer.cornerRadius = 0
+//        container.layer.cornerRadius = 0
         
         let removeButton = UIButton(type: .system)
         removeButton.setTitle("가맹점제거", for: .normal)
@@ -741,12 +747,8 @@ class StoreViewController: UIViewController {
         spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         let spacerView2 = UIView()
         spacerView2.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        var arrayView: [UIView]
-        if Utils.getIsCAT() {
-            arrayView = [spacerView, removeButton, editButton]
-        } else {
-            arrayView = [spacerView, spacerView2, editButton]
-        }
+        
+        let arrayView: [UIView] = Utils.getIsCAT() ? [spacerView, removeButton, editButton] : [spacerView, spacerView2, editButton]
         let buttonStack = UIStackView(arrangedSubviews: arrayView)
         buttonStack.axis = .horizontal
         buttonStack.alignment = .center
@@ -817,6 +819,7 @@ class StoreViewController: UIViewController {
         let downloadLabel = UILabel()
         downloadLabel.text = "가맹점 다운로드"
         downloadLabel.font = Utils.getSubTitleFont()
+        downloadLabel.textColor = .darkGray
         labelStack.addArrangedSubview(downloadLabel)
         
         // 구분선
@@ -906,6 +909,7 @@ class StoreViewController: UIViewController {
         let label = UILabel()
         label.text = labelText
         label.font = Utils.getTextFont()
+        label.textColor = .darkGray
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -938,6 +942,7 @@ class StoreViewController: UIViewController {
         let label = UILabel()
         label.text = "SN"
         label.font = Utils.getTextFont()
+        label.textColor = .darkGray
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -975,6 +980,7 @@ class StoreViewController: UIViewController {
         let label = UILabel()
         label.text = "복수가맹점"
         label.font = Utils.getTextFont()
+        label.textColor = .darkGray
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
@@ -1398,12 +1404,14 @@ extension StoreViewController {
         let titleLabel = UILabel()
         titleLabel.text = "  " + title
         titleLabel.font = Utils.getTextFont()
+        titleLabel.textColor = .darkGray
         titleLabel.textAlignment = .left
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         let valueLabel = UILabel()
         valueLabel.text = value
         valueLabel.font = Utils.getTextFont()
+        valueLabel.textColor = .darkGray
         valueLabel.textAlignment = .left
         // 필요하면 여러 줄 표시도 가능 (numberOfLines = 0)
         

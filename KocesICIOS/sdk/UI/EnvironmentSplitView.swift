@@ -21,6 +21,33 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         case PRIVACY = "개인정보처리방침"
         case APPINFO = "앱정보"
     }
+    
+    // MARK: - 새로운 아이콘 매핑 헬퍼 함수
+    private func iconForEnvironment(_ environment: EnvironmentSplit) -> UIImage? {
+        switch environment {
+        case .STORE:
+            return UIImage(systemName: "building.2")?.withRenderingMode(.alwaysTemplate)
+        case .TAX:
+            return UIImage(systemName: "creditcard")?.withRenderingMode(.alwaysTemplate)
+        case .BT:
+            return UIImage(systemName: "antenna.radiowaves.left.and.right")?.withRenderingMode(.alwaysTemplate)
+        case .CAT:
+            return UIImage(systemName: "square.grid.2x2")?.withRenderingMode(.alwaysTemplate)
+        case .PRINT:
+            return UIImage(systemName: "printer")?.withRenderingMode(.alwaysTemplate)
+        case .NETWORK:
+            return UIImage(systemName: "wifi")?.withRenderingMode(.alwaysTemplate)
+        case .PRODUCT:
+            return UIImage(systemName: "cart")?.withRenderingMode(.alwaysTemplate)
+        case .QNA:
+            return UIImage(systemName: "questionmark.circle")?.withRenderingMode(.alwaysTemplate)
+        case .PRIVACY:
+            return UIImage(systemName: "lock.shield")?.withRenderingMode(.alwaysTemplate)
+        case .APPINFO:
+            return UIImage(systemName: "info.circle")?.withRenderingMode(.alwaysTemplate)
+        }
+    }
+    
     private var isContentView = ""  //현재 실행중인 컨텐트뷰의 이름
     public var isStoreDownload = false //가맹점정보화면 = false 가맹점다운로드화면 = true
     public var isProduct = false //상품등록/상품수정화면이 아니면 = false 상품등록/상품수정화면 = true
@@ -274,6 +301,7 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell.backgroundView = bgView
     }
 
+    // MARK: - UITableViewDataSource 수정된 cellForRowAt
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 재사용 셀 생성
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -281,10 +309,9 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
         // 셀 기본 설정
         cell.backgroundColor = .clear
         cell.selectionStyle = .none
-        
-        // 기존 accessoryView는 제거
         cell.accessoryType = .none
         cell.accessoryView = nil
+        cell.imageView?.image = nil // 기존 이미지 초기화
         
         // 재사용에 대비해 기존 contentView의 인디케이터(태그 1000) 제거
         cell.contentView.subviews.forEach { subview in
@@ -303,18 +330,24 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
             switchView.isOn = false
             cell.accessoryView = switchView
         } else {
-            // 스위치가 없는 경우, 인디케이터를 cell.contentView에 추가
-            let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
-            indicator.tintColor = .lightGray
-            indicator.tag = 1000 // 재사용 시 제거하기 위한 태그
-            indicator.translatesAutoresizingMaskIntoConstraints = false
-            cell.contentView.addSubview(indicator)
-            NSLayoutConstraint.activate([
-                indicator.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
-                indicator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -define.pading_wight * 2),
-//                indicator.widthAnchor.constraint(equalToConstant: 12),
-//                indicator.heightAnchor.constraint(equalToConstant: 16)
-            ])
+            // EnvironmentSplit enum의 케이스와 타이틀이 일치하는지 확인
+            if let environment = EnvironmentSplit(rawValue: item.title),
+               let iconImage = iconForEnvironment(environment) {
+                // 매핑된 아이콘이 있으면 imageView에 할당
+                cell.imageView?.image = iconImage
+                cell.imageView?.tintColor = .darkGray
+            } else {
+                // 아이콘이 없을 경우 기본 chevron indicator 추가
+                let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
+                indicator.tintColor = .lightGray
+                indicator.tag = 1000 // 재사용 시 제거를 위한 태그
+                indicator.translatesAutoresizingMaskIntoConstraints = false
+                cell.contentView.addSubview(indicator)
+                NSLayoutConstraint.activate([
+                    indicator.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+                    indicator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -define.pading_wight * 2)
+                ])
+            }
         }
         
         return cell

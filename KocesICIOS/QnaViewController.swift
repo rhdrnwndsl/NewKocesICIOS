@@ -67,7 +67,9 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+//        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
+        self.title = "Q&A"
         
         // 테이블 뷰 설정
         tableView.delegate = self
@@ -88,7 +90,7 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
         
         // 여러 줄 셀 자동 계산
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 60
+        tableView.estimatedRowHeight = define.pad_title_height
     }
         
     // MARK: - UITableViewDataSource
@@ -97,9 +99,8 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section].isExpanded
-            ? sections[section].items.count + 1
-            : 1
+        // 헤더 1개 + 아이템 (펼쳐졌을 경우)
+        return sections[section].isExpanded ? sections[section].items.count + 1 : 1
     }
         
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -110,14 +111,16 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
         cell.textLabel?.lineBreakMode = .byWordWrapping
         
         if indexPath.row == 0 {
-            // 헤더
+            // 헤더: 질문 영역
             cell.textLabel?.text = sections[indexPath.section].title
             cell.textLabel?.textColor = .label
+            cell.textLabel?.textColor = .darkGray
             cell.backgroundColor = define.layout_border_lightgrey
         } else {
-            // 아이템
+            // 답변 영역
             cell.textLabel?.text = sections[indexPath.section].items[indexPath.row - 1]
             cell.textLabel?.textColor = .label
+            cell.textLabel?.textColor = .darkGray
             cell.backgroundColor = .white
         }
         return cell
@@ -127,7 +130,7 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
         
     // (1) 아코디언 펼치기/접기
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 헤더 탭
+        // 헤더 셀 선택 시 아코디언 효과
         if indexPath.row == 0 {
             let wasExpanded = sections[indexPath.section].isExpanded
             // 다른 섹션 모두 닫기
@@ -138,46 +141,27 @@ class QnaViewController: UIViewController,UITableViewDelegate, UITableViewDataSo
             sections[indexPath.section].isExpanded = !wasExpanded
             tableView.reloadSections(IndexSet(integersIn: 0..<sections.count), with: .automatic)
         } else {
-            // 아이템 탭하면 해당 섹션 닫기
+            // 답변 셀 선택 시 해당 섹션 닫기
             sections[indexPath.section].isExpanded = false
             tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
         }
     }
         
-    // (2) 셀 높이 설정: 한 줄이면 60, 여러 줄이면 automaticDimension
+    // (2) 셀 높이 설정: 한 줄이면 고정, 여러 줄이면 automaticDimension
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // ① 현재 셀의 텍스트 가져오기
-        let text: String
-        if indexPath.row == 0 {
-            // 헤더
-            text = sections[indexPath.section].title
-        } else {
-            // 아이템
-            text = sections[indexPath.section].items[indexPath.row - 1]
-        }
-        
-        // ② 한 줄로 표시 가능한지 판단 (boundingRect 사용)
+        let text: String = (indexPath.row == 0) ? sections[indexPath.section].title : sections[indexPath.section].items[indexPath.row - 1]
         let maxWidth = tableView.bounds.width - 40  // 좌우 마진 고려
-        let font = UIFont.systemFont(ofSize: 17)
-        
+        let font = Utils.getTextFont()
         let rect = (text as NSString).boundingRect(
             with: CGSize(width: maxWidth, height: .greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin, .usesFontLeading],
             attributes: [.font: font],
             context: nil
         )
-        
-        // ③ 한 줄 높이(대략) 측정
-        //    - 여기선 시스템 폰트 17pt 기준으로 약 20~22사이로 나옴
-        //    - 패딩 등을 고려해서 높이를 좀 더 여유 있게 계산
-        let singleLineHeight: CGFloat = font.lineHeight  // 대략 20.16 정도
-        
-        // ④ 판별
+        let singleLineHeight = font.lineHeight
         if rect.height <= singleLineHeight {
-            // 한 줄로 충분하면 고정 높이 60
-            return 60
+            return define.pad_title_height
         } else {
-            // 여러 줄이 필요하면 자동 계산
             return UITableView.automaticDimension
         }
     }
