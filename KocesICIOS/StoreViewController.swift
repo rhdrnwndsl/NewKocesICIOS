@@ -30,19 +30,12 @@ class StoreViewController: UIViewController {
     let mSqlite:sqlite = sqlite.instance
     //로딩 메세지박스
     var alertLoading = UIAlertController()
-    // 대표사업자 (무조건 1개)
-    private var representativeMerchant = MerchantInfo(
-        tid: "",
-        businessNumber: "",
-        storeName: "",
-        phoneNumber: "",
-        address: "",
-        representativeName: ""
-    )
-     
-    // 서브사업자 (0~10개 가능)
-      private var subMerchants: [MerchantInfo] = Array(repeating: MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""), count: 10)
     
+    // 대표사업자 (무조건 1개)
+    private var representativeMerchant = MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: "")
+    // 서브사업자 (0~10개 가능)
+    private var subMerchants: [MerchantInfo] = Array(repeating: MerchantInfo(tid: "", businessNumber: "", storeName: "", phoneNumber: "", address: "", representativeName: ""), count: 10)
+
     // 서브사업자정보 표시 여부
     private var isSubMerchantExpanded: Bool = false
     
@@ -122,11 +115,11 @@ class StoreViewController: UIViewController {
         let segmented = UISegmentedControl(items: ["일반", "복수"])
         segmented.setTitleTextAttributes([
             NSAttributedString.Key.foregroundColor: UIColor.darkGray,
-            NSAttributedString.Key.font: Utils.getTextFont()
+            NSAttributedString.Key.font: Utils.getSubTitleFont()
         ], for: .normal)
         segmented.setTitleTextAttributes([
             NSAttributedString.Key.foregroundColor: define.txt_blue,
-            NSAttributedString.Key.font: Utils.getTextFont()
+            NSAttributedString.Key.font: Utils.getSubTitleFont()
         ], for: .selected)
         return segmented
     }()
@@ -192,7 +185,6 @@ class StoreViewController: UIViewController {
                 }
 
             }
-
 
             print(deviceName)
             mKocesSdk.manager.connect(uuid: mKocesSdk.isPaireduuid)
@@ -344,12 +336,7 @@ class StoreViewController: UIViewController {
                     if key != "00" {
                         AlertBox(title: "장치정보", message: "키 갱신이 필요합니다", text: "확인")
                     } else {
-//                        let alertController = UIAlertController(title: "무결성검사", message: "무결성검사가 정상입니다", preferredStyle: UIAlertController.Style.alert)
-//                        let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default){_ in
-//
-//                        }
-//                        alertController.addAction(okButton)
-//                        self.present(alertController, animated: true, completion: nil)
+
                     }
                   
                     break
@@ -386,7 +373,6 @@ class StoreViewController: UIViewController {
                     
                     mKocesSdk.GetDeviceInfo(Date: Utils.getDate(format: "yyyyMMddHHmmss"))
 
-                    
                     break
                 default:
                     break
@@ -403,7 +389,8 @@ class StoreViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // light 모드에 맞춘 배경색 (환경분할 뷰와 통일)
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = define.layout_border_lightgrey
+        title = "가맹점 정보"
         setupUI()
         setupLayout()
         configureActions()
@@ -411,12 +398,9 @@ class StoreViewController: UIViewController {
         updateSubMerchantVisibility(animated: false)
     }
     
-    
 
     // MARK: - UI 설정
     private func setupUI() {
-        view.backgroundColor = .white
-        
         // scrollView + contentStackView
         scrollView.showsVerticalScrollIndicator = false
         view.addSubview(scrollView)
@@ -559,7 +543,7 @@ class StoreViewController: UIViewController {
         verticalStack.axis = .vertical
         verticalStack.alignment = .fill
         verticalStack.spacing = 5
-        verticalStack.backgroundColor = UIColor.systemGray6
+        verticalStack.backgroundColor = .white
         verticalStack.layer.cornerRadius = 8
         
         // 예시: 6개의 항목 각각 가로 스택(왼쪽 타이틀, 오른쪽 데이터)
@@ -700,7 +684,7 @@ class StoreViewController: UIViewController {
         verticalStack.alignment = .fill
         verticalStack.spacing = 5
 //        verticalStack.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
-        verticalStack.backgroundColor = UIColor.systemGray6
+        verticalStack.backgroundColor = .white
         verticalStack.layer.cornerRadius = 8
         
         for (title, value) in items {

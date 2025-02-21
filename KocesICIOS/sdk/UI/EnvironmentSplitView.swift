@@ -336,8 +336,19 @@ class EnvironmentSplitView: UIView, UITableViewDelegate, UITableViewDataSource {
                 // 매핑된 아이콘이 있으면 imageView에 할당
                 cell.imageView?.image = iconImage
                 cell.imageView?.tintColor = .darkGray
+                
+                // 아이콘이 있을 경우 기본 chevron indicator 도 추가
+                let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
+                indicator.tintColor = .lightGray
+                indicator.tag = 1000 // 재사용 시 제거를 위한 태그
+                indicator.translatesAutoresizingMaskIntoConstraints = false
+                cell.contentView.addSubview(indicator)
+                NSLayoutConstraint.activate([
+                    indicator.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+                    indicator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -define.pading_wight * 2)
+                ])
             } else {
-                // 아이콘이 없을 경우 기본 chevron indicator 추가
+                // 아이콘이 없을 경우 기본 chevron indicator 만 추가
                 let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
                 indicator.tintColor = .lightGray
                 indicator.tag = 1000 // 재사용 시 제거를 위한 태그
